@@ -3,9 +3,13 @@ Connection 建立客户端服务端信道
 
 */
 
-mod message;
-pub use crate::message::Message;
 
+
+pub use crate::message::Message;
+pub use crate::socket::socket_process;
+
+
+use std::net::{TcpListener, TcpStream, ToSocketAddrs};
 use crossbeam_channel::{Receiver, Sender};
 
 /// sender与receiver是一对通信者
@@ -25,15 +29,13 @@ impl Connection{
         // 
         let listener = TcpListener::bind(addr)?;
         // accept 会阻塞线程直到连接
-        if let Ok((stream, _)) = listener.accept(){
-            println!("Heard the connection request.");
-            println!("Generating the Channel...");
-            stream
+        let (stream, _) = listener.accept()?;
 
-        } else{
-            return Err();
-        }
-        
+        println!("Heard the connection request. 已经接收到连接请求");
+        println!("Generating the Channel...  正在生成信道...");
+
+
+
     }
 
 }
