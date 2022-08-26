@@ -3,7 +3,7 @@ Connection 建立客户端服务端信道
 
 */
 
-
+use std::io::prelude::*;
 
 use crate::socket::socket_process;
 
@@ -50,14 +50,44 @@ impl Connection{
 
 
 #[test]
-fn test_TCP_listener(){
-    let listener = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+fn test_TCP_server(){
+    // bind：listener 建立在当前addr这个地址
+    let listener = TcpListener::bind(("127.0.0.1", 35434)).unwrap();
+    
     let local_addr = listener.local_addr().unwrap();
-    println!("{}",listener.local_addr().unwrap());  
+    println!("listener: {}",listener.local_addr().unwrap());  
     
     // accept 会阻塞线程直到连接
-    let (stream, _) = listener.accept().unwrap();
+    let (stream, _client_socket) = listener.accept().unwrap();
+    println!("client: {}",_client_socket);  
 
+    println!("Heard the connection request. 已经接收到连接请求");
+    println!("Generating the Channel...  正在生成信道...");
+
+    let (connection, threads) = socket_process(stream);
+
+
+}
+
+
+// 随便写的小客户端
+// 保持通讯
+
+// 通信保持，stream 应当能够发送也能接受。两侧对等
+
+
+
+#[test]
+fn test_TCP_client()
+{
+
+
+    // 客户端应当有一个对等的通信条件， 同样拥有steam 以及messenger 
+    let mut stream = TcpStream::connect("127.0.0.1:35434").unwrap();
+    // 建立和server对等的通信?
+    let buf = "first_try".to_string();
+    
+    stream.write(buf.as_bytes());
 
 
 }
