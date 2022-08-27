@@ -16,6 +16,7 @@ impl Message{
         // 解tcpstream成信息
         // 创建一个bufreader实例?
         // println!("1231231231");
+        // 当前的问题，没办法读取到数据
         let mut reader = BufReader::new(stream);
         let mut buf = String::new();
         // reader.read_line(&mut buf);
