@@ -12,9 +12,6 @@ pub enum Var_type{
     Stref,// 不可变引用
 
 }
-
-
-
 // 变量 基本单位 
 pub struct Var{
     // string 变量的名称
@@ -23,6 +20,31 @@ pub struct Var{
     t: Var_type,
 
 }
+
+// 只在函数内部的cfg 要考虑函数间调用，但是视作一个图中的普通节点
+// 这是对单个函数做的分析，先不考虑其他函数
+pub enum node_type{
+    ENTRY,
+    MIXED,
+    USED,
+    DUMMY,
+    SEQUENTIAL,
+    FN,
+}
+
+#[derive(Clone)]
+pub struct node{
+    // fn_type: node_type,
+
+}
+
+impl node {
+    pub fn new() -> node{
+        node {  }
+    }
+}
+
+
 
 
 fn reader() -> Vec<String> 
@@ -86,7 +108,7 @@ fn deal_vec_lines(vec_lines: Vec<String>){
             .filter(|s| !s.is_empty())
             .collect();
         // println!("{:?}",fields);
-        // 遍历每一行的 fileds 先找到变量va
+        // ***遍历每一行的 fileds 先找到变量va 假设找到va的第一次出现
         for s2 in fields{
             if s2 == "//" || s2 == "/*" {
                 break;
@@ -101,7 +123,8 @@ fn deal_vec_lines(vec_lines: Vec<String>){
         a = a + 1;
     
     }
-
+    // 假设这里va是报错位置，已经获得了va的报错位置
+    // 需要寻找va的定义
     println!("{}",va_line_number);
 
 }
@@ -110,8 +133,16 @@ fn deal_vec_lines(vec_lines: Vec<String>){
 #[test]
 fn deal_test() {
     let v = reader();
-    deal_vec_lines(v);
+    // 获取到了每一行的内容 a是当前的数字
+    let a= deal_vec_lines(v);
 }
+
+#[test]
+fn callee_test() {
+    
+
+}
+
 
 
 // 测试读入文件 把文件转换成字符串存入
