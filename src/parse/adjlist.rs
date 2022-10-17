@@ -91,7 +91,7 @@ impl Adjlist{
     // 新建一条u到v的边
     pub fn add(&mut self, u: usize, v:usize){
         if u >= self.heads_list.len() ||  v >= self.heads_list.len(){
-            println!("not exist u or v");
+            println!("add : not exist u or v");
         } 
         let head = &mut self.heads_list[u];
         // 新节点
@@ -104,9 +104,11 @@ impl Adjlist{
             while !(cur.nxt.is_none()){
                 cur = cur.nxt.as_mut().unwrap();
             }
+ 
             cur.nxt = Some(new_node);
 
         }else { //后面没有边 创建一个节点直接塞进去
+
             head.nxt = Some(new_node);
         }
     }
@@ -116,13 +118,13 @@ impl Adjlist{
     pub fn delete(&mut self, u: usize, v:usize){
 
         if u >= self.heads_list.len() ||  v >= self.heads_list.len(){
-            println!("not exist u or v");
+            println!("delete: not exist u or v");
         } 
 
         let head = &mut self.heads_list[u];
 
         if head.nxt.is_none(){
-            println!("not exsit {} to {} ", u,v);
+            println!("delete: not exsit {} to {} ", u,v);
             return;
         }
 
@@ -163,9 +165,10 @@ impl Adjlist{
             print!("{}point edges::",i);
 
             if let Some(current) = & head.nxt{
+                print!("{} ", current.as_ref().get_num());
                 let mut cur = current.as_ref();
                 while !(cur.nxt.is_none()){
-                    print!("{} ",cur.get_num());
+                    print!("{} ",cur.nxt.as_ref().unwrap().get_num());
                     cur = cur.nxt.as_ref().unwrap();
                 }
             }
@@ -190,20 +193,22 @@ fn test_adjlist(){
     a.push(node::new());
     a.push(node::new());
 
+    // 只有第一个点add进去了？
+
     a.add(0, 1);
 
     a.add(0, 2);
 
     a.add(1, 2);
     a.add(2, 3);
-    a.add(4, 1);
+    a.add(3, 1);
 
 
     a.show();
 
     a.delete(0, 1);
-    a.show();
+    
     a.delete(0, 3);
-
+    a.show();
 
 }
