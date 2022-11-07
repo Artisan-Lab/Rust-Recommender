@@ -11,15 +11,16 @@ Eventually, we can recommend right Rust code segment to replace error code segme
 We divide the workflow into two parts.
 First part is the communication between IDE and backend.
 We do compilicate calculaition in the backend.
-![First](https://github.com/Artisan-Lab/Rust-Recommender/tree/master/image/howwork1.png)
+
+![First](https://raw.githubusercontent.com/Artisan-Lab/Rust-Recommender/master/image/howwork1.png)
 
 Then we see how the language server work.
 
-![Second](https://github.com/Artisan-Lab/Rust-Recommender/tree/master/image/howwork2.png)
+![Second](https://raw.githubusercontent.com/Artisan-Lab/Rust-Recommender/master/image/howwork2.png)
 
 ## What it will look like?
 
-![Little example](https://github.com/Artisan-Lab/Rust-Recommender/tree/master/image/looklike.png)
+![Little example](https://raw.githubusercontent.com/Artisan-Lab/Rust-Recommender/master/image/looklike.png)
 
 
 ## Usage
