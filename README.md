@@ -11,19 +11,19 @@ Eventually, we can recommend right Rust code segment to replace error code segme
 We divide the workflow into two parts.
 First part is the communication between IDE and backend.
 We do compilicate calculaition in the backend.
-![First](/image/howwork1.png)
+![First](https://github.com/Artisan-Lab/Rust-Recommender/image/howwork1.png)
 
 Then we see how the language server work.
 
-![Second](/image/howwork2.png)
+![Second](https://github.com/Artisan-Lab/Rust-Recommender/image/howwork2.png)
 
 ## What it will look like?
 
-![Little example](/image/looklike.png)
+![Little example](https://github.com/Artisan-Lab/Rust-Recommender/image/looklike.png)
 
 
 ## Usage
 ```shell
-To be completed
+Milestone
 ```
 
