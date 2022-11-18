@@ -2,8 +2,9 @@
 // 本想支持泛型，做一个完整的邻接表，但是发现如果邻接表表头用vec就不能泛型，但是不用vec就不能顺序存储直接查找会掉很多效率
 // 只能固定邻接表表头类型了，只有邻接表表头保存了数据，其他的边都是表示路径没有任何数据
 
-use super::parse_var::node;
+use super::parse_var::{node, VarInfo,stmt_node_type, block_node_type, FuncInfo};
 
+use super::parse_var;
 
 // // 邻接表内节点
 // pub struct adj_node<T>{
@@ -113,6 +114,70 @@ impl Adjlist{
         }
     }
 
+    pub fn push_node(&mut self ,statement: &(i32, bool, bool), name: &String) {
+        let var = VarInfo{Name: Some(name.to_string()), Reference: statement.1, Mutability: statement.2, Number: self.len_num() }; 
+        match statement.0 {
+            1 =>{
+                self.push(node { 
+                    stmt:Some(stmt_node_type::Owner(var)), 
+                    block: None 
+                });
+            }
+            2 =>{
+                self.push(node { 
+                    stmt:Some(stmt_node_type::MutRef(var)), 
+                    block: None 
+                });
+            }
+            3 => {
+                self.push(node { 
+                    stmt:Some(stmt_node_type::StaticRef(var)), 
+                    block: None 
+                });
+            }
+            _=>{}
+        }
+        
+    } 
+
+    pub fn push_func_node(&mut self , name: &String, start:bool, end:bool) {
+        self.push(node { 
+            stmt:Some(
+                stmt_node_type::Function(
+                    FuncInfo{
+                        Name: Some(name.to_string()), 
+                        Signiture:None, 
+                        Number: self.len_num(), 
+                        Start:start, 
+                        End:end
+                    })
+                ) , 
+            block: None 
+        });
+    }
+
+
+    pub fn push_block_start(&mut self) {
+        self.push(node { 
+            stmt: None, 
+            block: Some(block_node_type::BLOCK_START) 
+        });
+    }
+
+    pub fn push_block_end(&mut self) {
+        self.push(node { 
+            stmt: None, 
+            block: Some(block_node_type::BLOCK_END) 
+        });
+    }
+
+    pub fn push_block_none(&mut self) {
+        self.push(node { 
+            stmt: None, 
+            block: Some(block_node_type::BLOCK_NONE) 
+        });
+    }
+
     // delete 删除一条u到v的边 在图构造时使用
     
     pub fn delete(&mut self, u: usize, v:usize){
@@ -179,6 +244,9 @@ impl Adjlist{
             }
         }
     }
+    pub fn len_num(&self)-> usize{
+        self.heads_list.len()
+    }
 
 }
 
@@ -187,28 +255,28 @@ impl Adjlist{
 
 fn test_adjlist(){
     let mut a = Adjlist::new();
-    // node 里面啥也没放
-    a.push(node::new()); 
-    a.push(node::new());
-    a.push(node::new());
-    a.push(node::new());
 
-    // 只有第一个点add进去了？
+    // a.push(node::new()); 
+    // a.push(node::new());
+    // a.push(node::new());
+    // a.push(node::new());
 
-    a.add(0, 1);
+    // // 只有第一个点add进去了？
 
-    a.add(0, 2);
+    // a.add(0, 1);
 
-    a.add(1, 2);
-    a.add(2, 3);
-    a.add(3, 1);
+    // a.add(0, 2);
+
+    // a.add(1, 2);
+    // a.add(2, 3);
+    // a.add(3, 1);
 
 
-    a.show();
+    // a.show();
 
-    a.delete(0, 1);
+    // a.delete(0, 1);
     
-    a.delete(0, 3);
-    a.show();
+    // a.delete(0, 3);
+    // a.show();
 
 }
