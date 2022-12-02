@@ -241,6 +241,9 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                 // 对fn先创建fn节点
                 
                 // 当前函数入口认为是0节点
+
+                // todo 搞错了， 先只分析main函数。。。 不小心把其他函数与themin都加入了
+
                 graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), Signiture:None, Number: graph.len_num(), Start:true, End:false})) , block: None });
                 // todo? 需要传入前后节点吗?
                 // 用节点标号构图 节点标号不能有错误
@@ -255,7 +258,7 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
             }
 
 
-            _ => () // 先只分析函数
+            _ => () // 先只分析main函数
         }
     }   
     // test
@@ -330,13 +333,18 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // 对于建图 目前考虑和block类似 开头结尾构建func起点以及终点 对于owner需要考虑特殊标注？
             // 首先建立func节点
             if let Expr::Path(exprpath) = &*exprcall.func{
+
+
+
                 graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false);
+                graph.add(graph.len_num()-2, graph.len_num()-1);
 
                 for arg in &exprcall.args {
                     graph_expr(arg, var_def, graph, graph.len_num()-1);
                 }
 
                 graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true);
+                graph.add(graph.len_num()-2, graph.len_num()-1);
                 // 节点构建后遍历其signature
             }
         
@@ -383,24 +391,27 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             let if_start = graph.len_num()-1;
 
             graph_block(&exprif.then_branch, var_def, graph, if_start);
-
+            // graph.add(graph.len_num()-2, graph.len_num()-1);
             // 第一个branch的结尾 block节点
             let first_brach_end = graph.len_num()-1;
             
             // else branch后的 expr只可能是if 或者block 
-            // TODO 多个if分支会导致出现图变复杂，暂且不考虑 else if else if
+            // TODO 多个if分支会导致出现图变复杂，暂且不考虑 else if 
             if let Some(else_branch_expr) = &exprif.else_branch{
                 // 第二个block的前节点是 ifstart节点
                 graph_expr(else_branch_expr.1.as_ref(), var_def, graph, if_start);
-            } 
-            // 第二个branch尾节点
-            let second_branch_end = graph.len_num()-1;
-            // 创建一个空节点做if 的结尾
+                // 第二个branch尾节点
+                let second_branch_end = graph.len_num()-1;
+                // 创建一个空节点做if 的结尾
 
-            graph.push_block_none();
-            // 连接两个block尾节点和最后的空节点
-            graph.add(first_brach_end, graph.len_num()-1);
-            graph.add(second_branch_end, graph.len_num()-1);
+                graph.push_block_none();
+                // 连接两个block尾节点和最后的空节点
+                
+                graph.add(second_branch_end, graph.len_num()-1);
+                graph.add(first_brach_end, graph.len_num()-1);
+            }
+            
+            
 
 
             
@@ -423,6 +434,9 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         }
         Expr::Loop(exprloop) => {
             graph_block(&exprloop.body, var_def, graph, graph.len_num()-1);
+        }
+        Expr::Let(exprlet) => {
+            graph_pat(&exprlet.pat, var_def, graph, graph.len_num()-1);
         }
         Expr::Return(exprreturn) => {
             // Todo 设立return节点 
@@ -570,8 +584,8 @@ fn synparse_run() {
     // var_set.insert("max".to_string(),);
     // var_set.insert("min".to_string());
     var_set.insert("my_array".to_string(),(1 as i32,false,false));
-    var_set.insert("max".to_string(),(1 as i32,false,false));
-    var_set.insert("min".to_string(),(1 as i32,false,false));
+    // var_set.insert("max".to_string(),(1 as i32,false,false));
+    // var_set.insert("min".to_string(),(1 as i32,false,false));
 
     graph_generate(&ast, String::from("main"),&mut var_set);
     

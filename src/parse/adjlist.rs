@@ -128,12 +128,14 @@ impl Adjlist{
                     stmt:Some(stmt_node_type::MutRef(var)), 
                     block: None 
                 });
+                // println!("wrong");
             }
             3 => {
                 self.push(node { 
                     stmt:Some(stmt_node_type::StaticRef(var)), 
                     block: None 
                 });
+                // println!("wrong");
             }
             _=>{}
         }
@@ -227,7 +229,40 @@ impl Adjlist{
         loop{
 
             let head = &self.heads_list[i];
-            print!("{}point edges::",i);
+            print!("{}",i);
+
+            if let Some(a) = &head.data.stmt{
+                match a {
+                    stmt_node_type::Owner(info) => {
+                        print!("Owner:{:?}",info.Name);
+                    }
+                    stmt_node_type::MutRef(info) => {
+                        print!("MutRef:{:?}",info.Name);
+                    }
+                    stmt_node_type::StaticRef(info) => {
+                        print!("StaticRef:{:?}",info.Name);
+                    }
+                    stmt_node_type::Function(info) => {
+                        print!("Function:{:?}",info.Name);
+                    }
+                }
+            }
+            if let Some(b) = &head.data.block{
+                match b{
+                    block_node_type::BLOCK_START => {
+                        print!(" {{ ");
+                    }
+                    block_node_type::BLOCK_END => {
+                        print!(" }} ");
+                    }
+                    block_node_type::BLOCK_NONE => {
+                        print!(" 🔚 ");
+                    }
+                }
+            }
+            print!("point edges::");
+
+
 
             if let Some(current) = & head.nxt{
                 print!("{} ", current.as_ref().get_num());
