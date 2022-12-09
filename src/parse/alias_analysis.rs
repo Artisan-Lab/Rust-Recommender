@@ -260,9 +260,54 @@ fn alias_map_genarate(ast: &syn::File) -> Adjlist {
     graph
 }
 
+pub fn create_alias_hashmap() ->HashMap<String,(i32,bool,bool)>{
+    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+        .expect("Open file failed");
+
+    let mut content = String::new();
+    file.read_to_string(&mut content);
+
+    let ast = syn::parse_file(&content).expect("ast failed");
+    // 需要一个邻接表图表示？还是一个简单的并查集？
+    // 最后返回一个hashmap?
+    let graph = alias_map_genarate(&ast);
+    
+    // 解析graph 生成hashmap
+
+    let mut Varmap = HashMap::new();
+    for i in 0..graph.len_num() {
+        if let Some(stmtnode) = &graph.heads_list[i].data.stmt {
+            match  stmtnode {
+                // 新建加入节点
+                stmt_node_type::Owner(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        Varmap.insert(a.to_string(), (1 as i32, false, false));
+                    }
+                    
+                }
+                stmt_node_type::MutRef(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        Varmap.insert(a.to_string(), (2 as i32, varinfo.Reference, varinfo.Mutability));
+                    }
+                }
+                stmt_node_type::StaticRef(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        Varmap.insert(a.to_string(), (3 as i32, varinfo.Reference, varinfo.Mutability));
+                    }
+                }
+                _ => ()
+                
+            }
+        }
+
+    }
+
+    Varmap
+}
+
 
 #[test]
-fn create_alias_hashmap()
+fn test_create_alias_hashmap()
 {
     let mut file = File::open(Path::new("./src/parse/tester.rs"))
         .expect("Open file failed");
@@ -276,11 +321,9 @@ fn create_alias_hashmap()
     // 需要一个邻接表图表示？还是一个简单的并查集？
     // 最后返回一个hashmap?
 
-    
-
     let graph = alias_map_genarate(&ast);
     
-    graph.show();
+    // graph.show();
 
     // 根据图 创建所需要的别名表
 

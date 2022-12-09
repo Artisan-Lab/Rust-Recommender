@@ -371,8 +371,16 @@ class MyOwnDataset(Dataset):
         mid = 200
         train_code = all_codes[0:mid]
         val_code = all_codes[mid:max_len]
+
+
+        # train code 多少份代码，
+
+
         # print(len(train_code))
         # print(len(val_code))
+
+        # 注意代码份数 len(train code)
+        
         # ---------生成训练集-------------
         for j in range(len(train_code)):
             cur_code = train_code[j]

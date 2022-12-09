@@ -1,3 +1,5 @@
+
+
 use std::collections::{HashSet, HashMap};
 use std::fs::File;
 use std::path::Path;
@@ -5,7 +7,10 @@ use std::io::{self,prelude::*};
 use std::ptr::read;
 use std::vec;
 
+use csv;
+
 use super::adjlist::Adjlist;
+use super::alias_analysis;
 
 
 use log::{debug, info};
@@ -20,7 +25,7 @@ use syn::{self, Stmt, Local, Pat, PatIdent, Expr};
 // 是否存在问题？
 // 变量 基本单位 
 
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct VarInfo{
     // string 变量的名称
     pub Name: Option<String>,
@@ -32,7 +37,7 @@ pub struct VarInfo{
 }
 
 // 函数语句，考虑名字以外还有变量？ 参数/返回值？
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct FuncInfo {
     pub Name: Option<String>,
     pub Signiture: Option<String>,
@@ -46,7 +51,7 @@ pub struct FuncInfo {
 // 这是对单个函数做的分析，先不考虑其他函数
 
 // node
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub enum stmt_node_type {
     Owner(VarInfo),
     MutRef(VarInfo),
@@ -54,7 +59,7 @@ pub enum stmt_node_type {
     Function(FuncInfo),
 }
 
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub enum block_node_type{
     BLOCK_START,
     BLOCK_END,
@@ -66,7 +71,7 @@ pub enum block_node_type{
 // 图中的一个节点应当是block类型或者是普通语句类型
 // block 代表括号引起的scope分割
 // stmt 代表一个变量的使用/声明等等
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 // Todo ：return 节点
 pub struct node{
 
@@ -83,15 +88,11 @@ pub struct node{
 // graph.add(graph.len_num()-2, graph.len_num()-1);
 
 
-
-
 impl node {
     pub fn new(stmt:Option<stmt_node_type>, block : Option<block_node_type>) -> node{
         node { stmt, block }
     }
 }
-
-
 
 
 fn reader() -> Vec<String> 
@@ -173,7 +174,7 @@ fn deal_vec_lines(vec_lines: Vec<String>){
     }
     // 假设这里va是报错位置，已经获得了va的报错位置
     // 需要寻找va的定义
-    println!("{}",va_line_number);
+    // println!("{}",va_line_number);
 
 }
 
@@ -221,12 +222,12 @@ fn reader_test()
         vec_lines.push(lines);
     }
     //
-    println!("{:?}", vec_lines);
+    // println!("{:?}", vec_lines);
 
 }
 
 // 解析syn 生成图 提取attribute? // 假设已经知道 所需变量？
-fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/){
+fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/) -> Adjlist  {
     // 遍历item
 
     let mut graph = Adjlist::new();
@@ -244,16 +245,20 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
 
                 // todo 搞错了， 先只分析main函数。。。 不小心把其他函数与themin都加入了
 
-                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), Signiture:None, Number: graph.len_num(), Start:true, End:false})) , block: None });
-                // todo? 需要传入前后节点吗?
-                // 用节点标号构图 节点标号不能有错误
-                for stmt in &func.block.stmts {
-                    // 传入图 别名表
-                    let graph_num = graph.len_num();
-                    graph_stmt(&stmt , var_set, &mut graph, graph_num-1);
-                    
+                if func.sig.ident == "main".to_string(){
+                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), Signiture:None, Number: graph.len_num(), Start:true, End:false})) , block: None });
+                    // todo? 需要传入前后节点吗?
+                    // 用节点标号构图 节点标号不能有错误
+                    for stmt in &func.block.stmts {
+                        // 传入图 别名表
+                        let graph_num = graph.len_num();
+                        graph_stmt(&stmt , var_set, &mut graph, graph_num-1);
 
+                    }
+                    
                 }
+                
+                
 
             }
 
@@ -262,8 +267,10 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
         }
     }   
     // test
-    graph.show();
+    // graph.show();
 
+    // println!("{:#?}",graph);
+    graph
 
 }
 
@@ -527,7 +534,7 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
             // 还是let声明 不需要存储正在定义的变量 只需要后面出现的变量？
             // 这里需要后面出现的变量名称返回值改名为当前let语句中的identifyname 
             if pushornot {
-                println!("{:?}qweqw",varloc.Name);
+                // println!("{:?}qweqw",varloc.Name);
                 varloc.Number = graph.len_num();
                 // todo statement 需要根据Ident/Reference修改吗？
                 if let Some(value) = var_def.get(&var_str) {
@@ -580,14 +587,73 @@ fn synparse_run() {
 
     // get hashset 获取别名表
     // Todo ： hashset 需要保存的不只string 还有mut ref等info
-    let mut var_set = HashMap::new();
+    // let mut var_set = HashMap::new();
     // var_set.insert("max".to_string(),);
     // var_set.insert("min".to_string());
-    var_set.insert("my_array".to_string(),(1 as i32,false,false));
+
+    let mut var_set = alias_analysis::create_alias_hashmap();
+
+
+    // var_set.insert("my_array".to_string(),(1 as i32,false,false));
     // var_set.insert("max".to_string(),(1 as i32,false,false));
     // var_set.insert("min".to_string(),(1 as i32,false,false));
+    
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set);
+    // 生成csv x / edge 向量
 
-    graph_generate(&ast, String::from("main"),&mut var_set);
+    
     
 }
 
+
+// 输出csv文件
+
+#[test]
+fn csv_create_test() 
+{
+    // 表示图的构建
+    // todo: 批处理？生成多个x edge？
+    use csv::Writer;
+    // 先不考虑多个文件？
+
+    // 读取源代码
+    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+        .expect("Open file failed");
+    let mut content = String::new();
+    file.read_to_string(&mut content);
+    let ast = syn::parse_file(&content)
+        .expect("ast failed");
+    let mut var_set = alias_analysis::create_alias_hashmap();
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set);
+    // 获取得到cfg
+    // 暂时只考虑main函数
+    // graph.show();
+
+    let mut wtr1 = Writer::from_path("./src/graphcsv/1x.csv").expect("read_wrong");
+    let mut wtr2 = Writer::from_path("./src/graphcsv/1edge.csv").expect("read_wrong");
+    // 对graph进行解析 生成 x向量和 edge向量
+    // 对每个节点生成x 与edge
+    // x输出
+    for i in 0..graph.len_num() {
+        let x = graph.vector_x_attribute(i);
+        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string(),x.5.to_string(),x.6.to_string()])
+            .expect("write_wrong");
+
+    }
+    for i in 0..graph.len_num() {
+        let edge = graph.vector_edge_attribute(i);
+        for e in edge {
+            // println!("123123123");
+            wtr2.write_record(&[i.to_string(), e.to_string()])
+                .expect("write_wrong");
+        }
+    } 
+    
+
+
+    // wtr.write_record(&["a", "b", "c"]).expect("write_wrong");
+    // wtr.write_record(&["x", "2", "z"]).expect("write_wrong");
+    wtr1.flush().expect("write_wrong");
+    wtr2.flush().expect("write_wrong");
+
+}

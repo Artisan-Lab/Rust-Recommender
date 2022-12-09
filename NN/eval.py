@@ -86,7 +86,7 @@ def perform_GNN(gnn1, gnn2, scale):
     time_end = time.time()
     time_cost = time_end - time_start
     return time_cost
-
+    # 在这里跑模型测试
 def perform_GNN_right_rate(GNN1, GNN2):
     cos = torch.nn.CosineSimilarity()
     # 跑测试集

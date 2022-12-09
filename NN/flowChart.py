@@ -26,7 +26,7 @@ class Node(object):
     """
     节点对象
     """
-    connectedTo: dict[Any, Any]
+    # connectedTo: dict[Any, Any]
 
     # 有向图的边，connectedTo是从本节点到其他节点的边
     def __init__(self, index: int, kind: NodeKind,content , label=None):
@@ -759,8 +759,16 @@ class Graph(object):
         edge_index.append(tedge)
         # print(f"x is {x}")
         # print(f"edge is {edge_index}")
+
+        # 在这里输入 x edge 组合 
+
         edge_index = torch.tensor(edge_index, dtype=torch.long)
         x = torch.tensor(x, dtype=torch.float)
+
+
+        
+
+
         data = Data(x=x, edge_index=edge_index)
         self.data = data
         return data

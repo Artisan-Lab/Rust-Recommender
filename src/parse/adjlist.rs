@@ -20,7 +20,7 @@ use super::parse_var;
 
 // 边界点，单纯用来保存点相连的边，不存储其他信息
 
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct edge_node{
     head_num:usize,
     nxt: Option<Box<edge_node>>,
@@ -38,12 +38,12 @@ impl  edge_node {
         self.head_num
     }
 }
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct adj_node{
     // 节点编号
     head_num: i32,
     // node 是真正的节点信息，包括节点是不是fn函数/ 是不是mixed等等
-    data: node,
+    pub data: node,
 
     // 下一个节点
     nxt: Option<Box<edge_node>>,
@@ -68,9 +68,9 @@ impl adj_node{
 
 
 // 只有head节点中的保存数据，后面的next形成的链表节点中的data并无意义 单纯用来存储边关系
-#[derive(Clone)]
+#[derive(Clone,Debug)]
 pub struct Adjlist{
-    heads_list: Vec<adj_node>,
+    pub heads_list: Vec<adj_node>,
     // tail_list: Vec<>
 }
 
@@ -281,6 +281,88 @@ impl Adjlist{
     }
     pub fn len_num(&self)-> usize{
         self.heads_list.len()
+    }
+
+    // 返回节点acfg信息: x ((attribute1, a2,a3,a4, a5, a6 ,a7),(,,,,,)    )
+    pub fn vector_x_attribute(&self, i: usize) -> (String, i32, i32, i32, String, i32, i32) { // 返回节点为i的attribute 等 
+        // 前四个 name/type/mute/ref 后两个 funcname/funcscope  最后 block
+        let mut x = ("var_name".to_string(),-1,-1,-1,"func_name".to_string(), -1, -1);
+        // 根据data开始 计算attribute
+        if let Some(stmt) = &self.heads_list[i].data.stmt{
+            match  stmt {
+                // 新建加入节点
+                stmt_node_type::Owner(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        x.0 = a.to_string();
+                        x.1 = 1;
+                        x.2 = varinfo.Mutability as i32;
+                        x.3 = varinfo.Reference as i32;
+                    }
+                    
+                }
+                stmt_node_type::MutRef(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        x.0 = a.to_string();
+                        x.1 = 2;
+                        x.2 = varinfo.Mutability as i32;
+                        x.3 = varinfo.Reference as i32;
+                    }
+                }
+                stmt_node_type::StaticRef(varinfo) => {
+                    if let Some(a) = &varinfo.Name {
+                        x.0 = a.to_string();
+                        x.1 = 3;
+                        x.2 = varinfo.Mutability as i32;
+                        x.3 = varinfo.Reference as i32;
+                    }
+                }
+                stmt_node_type::Function(funcinfo) => {
+                    if let Some(a) = &funcinfo.Name {
+                        x.4 = a.to_string();
+                        if funcinfo.Start {
+                            x.5 = 0;
+                        }else if funcinfo.End{
+                            x.5 = 1;
+                        }
+                    }
+                }
+                
+            }
+        }
+        if let Some(block) = &self.heads_list[i].data.block{
+            match block{
+                block_node_type::BLOCK_START=>{
+                    x.6 = 0;
+                }
+                block_node_type::BLOCK_END=>{
+                    x.6 = 1;
+                }
+                block_node_type::BLOCK_NONE=>{
+                    x.6 = 2;
+                }
+            }
+        }
+        return x;
+
+    }
+    pub fn vector_edge_attribute(&self,i: usize) ->Vec<usize> { // 返回节点为i的所有边？
+        let mut edge = Vec::new();
+
+        let head = &self.heads_list[i];
+        if let Some(current) = & head.nxt{
+            edge.push(current.as_ref().get_num());
+
+            let mut cur = current.as_ref();
+            while !(cur.nxt.is_none()){
+                // get_num 既边的序号  
+                edge.push(cur.nxt.as_ref().unwrap().get_num());
+                cur = cur.nxt.as_ref().unwrap();
+            }
+        }
+
+    
+        edge // 当前节点的所有边
+        
     }
 
 }
