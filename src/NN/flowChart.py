@@ -4,7 +4,7 @@ import torch
 from torch_geometric.data import Data
 from DataPreprocessing import *
 from enum import Enum
-
+import csv
 
 # 这个节点
 class NodeKind(Enum):
@@ -757,11 +757,13 @@ class Graph(object):
             tedge.append(hash_map.get(self.edgeList[i].t.index))
         edge_index.append(fedge)
         edge_index.append(tedge)
-        # print(f"x is {x}")
-        # print(f"edge is {edge_index}")
+        
+        print(f"x is {x}")
+        print(f"edge is {edge_index}")
 
         # 在这里输入 x edge 组合 
-
+        # 在这里将自己的 x edge 替换成tensor
+        
         edge_index = torch.tensor(edge_index, dtype=torch.long)
         x = torch.tensor(x, dtype=torch.float)
 
@@ -780,10 +782,10 @@ def test():
     #fileName = r"testdata/return/2.txt"
     # fileName = r"testdata/break/1.txt"
     # fileName = r"testdata/continue/1.txt"
-    fileName = r"G:\Asset\Programs\Python3\NNDL\HW1\Rust-unsafe-to-safe-code-retrivial\database\github\offset_1-4\unsafe\15.rs"
+    fileName = r"NN/test/1.rs"
     content, strTable = generating_content(fileName)
-    print(f"Content is \n{content}")  # 注释替换后的代码内容
-    print(f"dict is \n{strTable}")  # 字典存放的注释内容
+    # print(f"Content is \n{content}")  # 注释替换后的代码内容
+    # print(f"dict is \n{strTable}")  # 字典存放的注释内容
     flowChart = Graph(content)
     flowChart.gen_flowchart()
     flowChart.gen_node_embedding()
@@ -792,12 +794,12 @@ def test():
     print(flowChart.edgeList)
 
     flowChart.show()
-    for i in flowChart.nodeList[0].connectedTo.keys():
-        print(type(i))
-        print(i.index)
-    for i in flowChart.nodeList[0].connectedFrom.keys():
-        print(type(i))
-        print(i.index)
+    # for i in flowChart.nodeList[0].connectedTo.keys():
+    #    # print(type(i))
+    #    # print(i.index)
+    # for i in flowChart.nodeList[0].connectedFrom.keys():
+    #     print(type(i))
+    #     print(i.index)
     # print()
 
     flowChart.nodeEmbedding
@@ -808,7 +810,8 @@ def test():
     return
 
 def gen_data_from_rs(fileName):
-    # 为神经网络设计的，ACFG，从文件中生成
+
+    # 为神经网络设计的，ACFG，从文件中生成 x edge
     content, strTable = generating_content(fileName)
     flowChart = Graph(content)
     flowChart.gen_flowchart()
@@ -817,6 +820,49 @@ def gen_data_from_rs(fileName):
     # flowChart.show()
     # print(flowChart.data.x,flowChart.data.edge_index)
     return flowChart.data
+    
+# 不管那么多 直接读取内容生成一个 data(x, edge)
+# 这里filename代表了icsv的名字 从graphcsv种获得
+# number 表示需要读取的序号是一个str 最后回送给一个number
+# 在使用的时候， 传入number直接就可以返回处理好的torch数据
+def gen_data_from_csv(number):
+    # number 是一个str
+    xfile = 'x.csv'
+    edgefile = 'edge.csv'
+    filebefore = 'src/graphcsv/'
+    # filename 格式
+    filenamex = filebefore+number+xfile
+    filenameedge = filebefore+number+edgefile
+    x = []
+    edge = []
+    with open(filenamex) as fx:
+        fx_csv = csv.reader(fx)
+        
+        # 用row 0 1 2 3 4 来表示？
+        for row in fx_csv :
+            y = []
+            for i in range(5) :
+                y.append(int(row[i]))
+            x.append(y)
+        # print(x)
+
+    with open(filenameedge) as fedge:
+        fedge_csv = csv.reader(fedge)
+        edge1 = []
+        edge2 = []
+        for row in fedge_csv:
+            edge1.append(int(row[0]))
+            edge2.append(int(row[1]))
+        edge.append(edge1)
+        edge.append(edge2)
+    edge = torch.tensor(edge, dtype=torch.long)
+    x = torch.tensor(x, dtype=torch.float)
+
+    data = Data(x=x, edge_index=edge)
+    # 最终返回的是data 
+    return data
+
+
 
 def gen_acfg_from_txt(file,index=0):
     # 为神经网络设计的，ACFG，从str中直接生成
@@ -831,6 +877,9 @@ def gen_acfg_from_txt(file,index=0):
     # print(flowChart.data.x,flowChart.data.edge_index)
     return flowChart.data
 
+# def gendata_from_csv():
+#     da
+
 def gen_nodes_from_rs(codeString):
     # 为二部图匹配设计的，只返回节点不返回边
     content, strTable = generating_content_by_txt(codeString)
@@ -843,7 +892,7 @@ def gen_nodes_from_rs(codeString):
     nodes = []
     for key,value in flowChart.nodeList.items():
         if value.kind !=NodeKind.MIXED and value.kind !=NodeKind.USED:
-            nodes.append(value);
+            nodes.append(value)
     return nodes
 
 if __name__ == "__main__":

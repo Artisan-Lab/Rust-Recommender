@@ -288,6 +288,7 @@ impl Adjlist{
         // 前四个 name/type/mute/ref 后两个 funcname/funcscope  最后 block
         let mut x = ("var_name".to_string(),-1,-1,-1,"func_name".to_string(), -1, -1);
         // 根据data开始 计算attribute
+        // x 的attribute是否 不需要string？ 考虑删除string
         if let Some(stmt) = &self.heads_list[i].data.stmt{
             match  stmt {
                 // 新建加入节点

@@ -629,14 +629,18 @@ fn csv_create_test()
     // 暂时只考虑main函数
     // graph.show();
 
-    let mut wtr1 = Writer::from_path("./src/graphcsv/1x.csv").expect("read_wrong");
-    let mut wtr2 = Writer::from_path("./src/graphcsv/1edge.csv").expect("read_wrong");
+    let mut wtr1 = Writer::from_path("./src/graphcsv/4x.csv").expect("read_wrong");
+    let mut wtr2 = Writer::from_path("./src/graphcsv/4edge.csv").expect("read_wrong");
     // 对graph进行解析 生成 x向量和 edge向量
     // 对每个节点生成x 与edge
     // x输出
     for i in 0..graph.len_num() {
-        let x = graph.vector_x_attribute(i);
-        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string(),x.5.to_string(),x.6.to_string()])
+        // 变量名称如何表示？
+        let y = graph.vector_x_attribute(i);
+        let x = (y.1,y.2,y.3,y.5,y.6);
+
+        // 暂且考虑没有任何string
+        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string()])
             .expect("write_wrong");
 
     }
@@ -655,5 +659,6 @@ fn csv_create_test()
     // wtr.write_record(&["x", "2", "z"]).expect("write_wrong");
     wtr1.flush().expect("write_wrong");
     wtr2.flush().expect("write_wrong");
+    // 创建了两个csv表，一个是x向量，一个是edge向量
 
 }

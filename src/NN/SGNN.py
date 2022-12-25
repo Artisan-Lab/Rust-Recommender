@@ -295,8 +295,8 @@ def train_respective():
         TN = 0
         FP = 0
         FN = 0
-        F1 = 0;
-        F1_max = -1;
+        F1 = 0
+        F1_max = -1
         with torch.no_grad():
             for data in dataset_val:
                 data1, data2, simlarity, t1, t2, l1, n1, l2, n2 = data
@@ -351,6 +351,8 @@ def train_respective():
         print("验证集精确率", TP / (TP + FP))
         print("验证集准确率", (TP + TN) / (TP + TN + FP + FN))
     return
+
+
 
 
 def train_respective_only_test():
@@ -464,8 +466,8 @@ def train_respective_only_test():
         TN = 0
         FP = 0
         FN = 0
-        F1 = 0;
-        F1_max = -1;
+        F1 = 0
+        F1_max = -1
         API_list = knowledge_code_pair.api_name_kind_list;
         all_result = []
         for idx in range(len(test_set.pair_list)):
@@ -567,4 +569,5 @@ def main():
 if __name__ == '__main__':
     print(__name__)
     # main()
-    train_respective_only_test()
+    # train_respective_only_test()
+    data_process_read_from_csv()

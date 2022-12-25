@@ -4,8 +4,8 @@ from collections.abc import Sequence
 from typing import Any, List
 import torch
 from torch_geometric.data import Dataset
-from data_augmentation.del_file import del_pre_file
-from data_augmentation.augmentation import add_noise
+# from data_augmentation.del_file import del_pre_file
+# from data_augmentation.augmentation import add_noise
 from flowChart import *
 import random
 
@@ -603,8 +603,10 @@ def init_dataset(root):
     dataset = MyOwnDataset(root)
     pass
 
-
+# 整个过程是 先通过Mydataset.py 用torch生成数据集保存到root路径，再在SGNN中提取dataset进行训练
 if __name__ == "__main__":
+
+
     # root = r"G:\Asset\Programs\Python3\NNDL\HW1\Rust-unsafe-to-safe-code-retrivial\test_dataset\boxed"
     root = "G:\\Asset\\Programs\\Python3\\NNDL\\HW1\\Rust-unsafe-to-safe-code-retrivial\\database"
     dataset = MyOwnDataset(root)
