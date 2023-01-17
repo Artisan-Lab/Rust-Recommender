@@ -260,8 +260,8 @@ fn alias_map_genarate(ast: &syn::File) -> Adjlist {
     graph
 }
 
-pub fn create_alias_hashmap() ->HashMap<String,(i32,bool,bool)>{
-    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+pub fn create_alias_hashmap(path_name: &str) ->HashMap<String,(i32,bool,bool)>{
+    let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
 
     let mut content = String::new();
@@ -309,7 +309,7 @@ pub fn create_alias_hashmap() ->HashMap<String,(i32,bool,bool)>{
 #[test]
 fn test_create_alias_hashmap()
 {
-    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+    let mut file = File::open(Path::new("./src/graphcsv/code/2.rs"))
         .expect("Open file failed");
 
     let mut content = String::new();
@@ -323,7 +323,7 @@ fn test_create_alias_hashmap()
 
     let graph = alias_map_genarate(&ast);
     
-    // graph.show();
+    graph.show();
 
     // 根据图 创建所需要的别名表
 

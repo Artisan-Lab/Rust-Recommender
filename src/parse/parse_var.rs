@@ -426,18 +426,23 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         Expr::While(exprwhile) => {
 
             graph_expr (&exprwhile.cond.as_ref(), var_def, graph, graph.len_num()-1);
+            let v = graph.len_num();
             graph_block(&exprwhile.body, var_def, graph, graph.len_num()-1);
-
+            let u = graph.len_num()-1;
+            graph.add(u, v);
 
         }
         Expr::ForLoop(exprfor) => {
-
+            // 循环在前后block加入一条返回边
             // pat需要单独解析！
             // Todo: 理解 pat 与siginature关系 
             graph_pat(&exprfor.pat, var_def, graph, last_node_num);
-
+            
             graph_expr (&exprfor.expr.as_ref(), var_def, graph, graph.len_num()-1);
+            let v = graph.len_num();
             graph_block(&exprfor.body, var_def, graph, graph.len_num()-1);
+            let u = graph.len_num()-1;
+            graph.add(u, v);
         }
         Expr::Loop(exprloop) => {
             graph_block(&exprloop.body, var_def, graph, graph.len_num()-1);
@@ -572,7 +577,10 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
 
 #[test]
 fn synparse_run() {
-    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+
+    let path_name = "./src/parse/tester.rs";
+
+    let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
 
     let mut content = String::new();
@@ -591,7 +599,7 @@ fn synparse_run() {
     // var_set.insert("max".to_string(),);
     // var_set.insert("min".to_string());
 
-    let mut var_set = alias_analysis::create_alias_hashmap();
+    let mut var_set = alias_analysis::create_alias_hashmap(path_name);
 
 
     // var_set.insert("my_array".to_string(),(1 as i32,false,false));
@@ -617,20 +625,23 @@ fn csv_create_test()
     // 先不考虑多个文件？
 
     // 读取源代码
-    let mut file = File::open(Path::new("./src/parse/tester.rs"))
+
+    let path_name = "./src/graphcsv/code/7.rs";
+
+    let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
     let mut content = String::new();
     file.read_to_string(&mut content);
     let ast = syn::parse_file(&content)
         .expect("ast failed");
-    let mut var_set = alias_analysis::create_alias_hashmap();
+    let mut var_set = alias_analysis::create_alias_hashmap(path_name);
     let graph = graph_generate(&ast, String::from("main"),&mut var_set);
     // 获取得到cfg
     // 暂时只考虑main函数
     // graph.show();
 
-    let mut wtr1 = Writer::from_path("./src/graphcsv/4x.csv").expect("read_wrong");
-    let mut wtr2 = Writer::from_path("./src/graphcsv/4edge.csv").expect("read_wrong");
+    let mut wtr1 = Writer::from_path("./src/graphcsv/csv/7x.csv").expect("read_wrong");
+    let mut wtr2 = Writer::from_path("./src/graphcsv/csv/7edge.csv").expect("read_wrong");
     // 对graph进行解析 生成 x向量和 edge向量
     // 对每个节点生成x 与edge
     // x输出
