@@ -4,3 +4,5 @@ extern crate syn;
 extern crate csv;
 mod test_read;
 mod alias_analysis;
+
+mod method_call;

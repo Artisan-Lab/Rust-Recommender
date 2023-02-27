@@ -2,6 +2,8 @@
 // 本想支持泛型，做一个完整的邻接表，但是发现如果邻接表表头用vec就不能泛型，但是不用vec就不能顺序存储直接查找会掉很多效率
 // 只能固定邻接表表头类型了，只有邻接表表头保存了数据，其他的边都是表示路径没有任何数据
 
+use syn::Signature;
+
 use super::parse_var::{node, VarInfo,stmt_node_type, block_node_type, FuncInfo};
 
 use super::parse_var;
@@ -141,17 +143,35 @@ impl Adjlist{
         }
         
     } 
-
-    pub fn push_func_node(&mut self , name: &String, start:bool, end:bool) {
+    // func call
+    pub fn push_func_node(&mut self , name: &String, start:bool, end:bool, arg_number: usize) {
         self.push(node { 
             stmt:Some(
                 stmt_node_type::Function(
                     FuncInfo{
                         Name: Some(name.to_string()), 
-                        Signiture:None, 
+                        arg_number: arg_number, 
                         Number: self.len_num(), 
                         Start:start, 
-                        End:end
+                        End:end,
+                        method_call: -1,
+                    })
+                ) , 
+            block: None 
+        });
+    }
+    // methodcall
+    pub fn push_method_node(&mut self , name: &String, start:bool, end:bool, method_self: i32, arg_number: usize) {
+        self.push(node { 
+            stmt:Some(
+                stmt_node_type::Function(
+                    FuncInfo{
+                        Name: Some(name.to_string()), 
+                        arg_number: arg_number, 
+                        Number: self.len_num(), 
+                        Start:start, 
+                        End:end,
+                        method_call: method_self,
                     })
                 ) , 
             block: None 
@@ -285,7 +305,7 @@ impl Adjlist{
 
     // 返回节点acfg信息: x ((attribute1, a2,a3,a4, a5, a6 ,a7),(,,,,,)    )
     pub fn vector_x_attribute(&self, i: usize) -> (String, i32, i32, i32, String, i32, i32) { // 返回节点为i的attribute 等 
-        // 前四个 name/type/mute/ref 后两个 funcname/funcscope  最后 block
+        // 前四个 name/type/mute/ref 后两个 funcname/funcscope /todo: 缺少两个signature numbers/methodcallself /最后 block
         let mut x = ("var_name".to_string(),-1,-1,-1,"func_name".to_string(), -1, -1);
         // 根据data开始 计算attribute
         // x 的attribute是否 不需要string？ 考虑删除string
@@ -317,6 +337,7 @@ impl Adjlist{
                         x.3 = varinfo.Reference as i32;
                     }
                 }
+                // 包括 method call
                 stmt_node_type::Function(funcinfo) => {
                     if let Some(a) = &funcinfo.Name {
                         x.4 = a.to_string();

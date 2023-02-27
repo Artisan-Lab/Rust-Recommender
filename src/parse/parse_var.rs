@@ -11,11 +11,11 @@ use csv;
 
 use super::adjlist::Adjlist;
 use super::alias_analysis;
-
+use super::method_call::method_call_names;
 
 use log::{debug, info};
 
-use syn::{self, Stmt, Local, Pat, PatIdent, Expr};
+use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Signature};
 
 
 
@@ -33,17 +33,21 @@ pub struct VarInfo{
     pub Mutability: bool,
     pub Number: usize, // Number 表示在图中的编号
     // 关注变量的类型
-
+    // todo::变量类型 结构体
 }
 
 // 函数语句，考虑名字以外还有变量？ 参数/返回值？
 #[derive(Clone,Debug)]
+
+// function call 与 methodcall合并
 pub struct FuncInfo {
     pub Name: Option<String>,
-    pub Signiture: Option<String>,
+    pub arg_number: usize, // 传参数量 需要考虑？
     pub Number:usize,
     pub Start: bool,
     pub End: bool,
+    pub method_call: i32,
+    // method_call -1表示不是方法调用 0表示self 1表示&self 2表示 mut self 3表示 &mut self
 }
 
 
@@ -178,8 +182,6 @@ fn deal_vec_lines(vec_lines: Vec<String>){
 
 }
 
-
-
 #[test]
 fn deal_test() {
     let v = reader();
@@ -187,6 +189,7 @@ fn deal_test() {
     let a= deal_vec_lines(v);
 }
 
+// 处理一个hash表 获取是所有method name 以及返回值？  返回值意义?
 
 
 // 测试读入文件 把文件转换成字符串存入
@@ -226,8 +229,12 @@ fn reader_test()
 
 }
 
+
+
+
+
 // 解析syn 生成图 提取attribute? // 假设已经知道 所需变量？
-fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/) -> Adjlist  {
+fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/, method_map: &HashMap<String,(i32,usize)>/*methodinfo */) -> Adjlist  {
     // 遍历item
 
     let mut graph = Adjlist::new();
@@ -246,13 +253,13 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                 // todo 搞错了， 先只分析main函数。。。 不小心把其他函数与themin都加入了
 
                 if func.sig.ident == "main".to_string(){
-                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), Signiture:None, Number: graph.len_num(), Start:true, End:false})) , block: None });
+                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
                     // todo? 需要传入前后节点吗?
                     // 用节点标号构图 节点标号不能有错误
                     for stmt in &func.block.stmts {
                         // 传入图 别名表
                         let graph_num = graph.len_num();
-                        graph_stmt(&stmt , var_set, &mut graph, graph_num-1);
+                        graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1);
 
                     }
                     
@@ -276,7 +283,7 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
 
 // 解析节点插入
 
-fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, last_node_num: usize){
+fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, method_map: &HashMap<String,(i32,usize)> ,last_node_num: usize){
     // 建图需要 前后加block节点
 
     // Todo： stmt中可能没有任何hashset变量出现，可能不需要插入任何节点 是否需要stmt中不进行任何节点插入操作，
@@ -285,7 +292,7 @@ fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)
     graph.add(last_node_num, graph.len_num()-1);
     //
     for stmt in &block.stmts {
-        graph_stmt(stmt, var_def, graph, graph.len_num()-1); 
+        graph_stmt(stmt, var_def, graph, method_map,graph.len_num()-1); 
         // 存在可能性stmt中没有任何一个节点需要添加？
     }
     //
@@ -330,7 +337,7 @@ fn path_fmt(exprpath : &syn::ExprPath) -> String {
 }
 
 // 对一个表达式进行构图，关键是寻找出现的变量是否在hashset之中\
-fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, last_node_num: usize){
+fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, method_map: &HashMap<String,(i32,usize)>,last_node_num: usize){
     // 表达式可能出现多个变量的情况
     match expr {
         // 函数调用
@@ -342,15 +349,15 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             if let Expr::Path(exprpath) = &*exprcall.func{
 
 
-
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false);
+                let arg_number = exprcall.args.len();
+                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, arg_number);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
 
                 for arg in &exprcall.args {
-                    graph_expr(arg, var_def, graph, graph.len_num()-1);
+                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
                 }
 
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true);
+                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,arg_number);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
                 // 节点构建后遍历其signature
             }
@@ -359,22 +366,41 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         }
         // 方法调用
         Expr::MethodCall(exprmethod) => {
-            // 结构体没读明白
+            // methodcall 节点与func call相同 创建methodcall节点 并且遍历其arg
+            // method 节点插入
+            let method_name = &String::from(format!("{}",exprmethod.method));
+            if let Some(method_info) = method_map.get(method_name){
+                // method_info.0是self选项 method_info.1是arg number
+                // 找到当前method
+                // 
+                graph.push_method_node(method_name, true, false, method_info.0 ,method_info.1);
+                graph.add(graph.len_num()-2, graph.len_num()-1);
+                for arg in &exprmethod.args {
+                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
+                }
+                graph.push_method_node(method_name, false, true, method_info.0, method_info.1);
+                graph.add(graph.len_num()-2, graph.len_num()-1);
+            }
+
+
+            // 优先处理一个method_call hash表 根据表进行处理
+
         }
+        // todo:: exprindex 数组元素
         Expr::Assign(exprassign) => {
-            graph_expr(&exprassign.left.as_ref(), var_def, graph, graph.len_num()-1);
-            graph_expr(&exprassign.right.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map, graph.len_num()-1);
+            graph_expr(&exprassign.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
         Expr::AssignOp(exprassignop) => {
-            graph_expr(&exprassignop.left.as_ref(), var_def, graph, graph.len_num()-1);
-            graph_expr(&exprassignop.right.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
         Expr::Cast(exprcast) => {
-            graph_expr(&exprcast.expr.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
         Expr::Block(exprblock) => {
             
-            graph_block(&exprblock.block, var_def, graph, last_node_num);
+            graph_block(&exprblock.block, var_def, graph, method_map, last_node_num);
 
         }
         Expr::Struct(exprstruct) => {
@@ -384,20 +410,20 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
 
         }
         Expr::Reference(exprreference ) => {
-            graph_expr(&exprreference.expr.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr(&exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
 
         Expr::If(exprif) => {
             // 重写
 
             // if 前的判断语句
-            graph_expr (&exprif.cond.as_ref(), var_def, graph, last_node_num);
+            graph_expr (&exprif.cond.as_ref(), var_def, graph, method_map,last_node_num);
             // 建立分支节点
 
             // block start 前的节点
             let if_start = graph.len_num()-1;
 
-            graph_block(&exprif.then_branch, var_def, graph, if_start);
+            graph_block(&exprif.then_branch, var_def, graph, method_map, if_start);
             // graph.add(graph.len_num()-2, graph.len_num()-1);
             // 第一个branch的结尾 block节点
             let first_brach_end = graph.len_num()-1;
@@ -406,7 +432,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // TODO 多个if分支会导致出现图变复杂，暂且不考虑 else if 
             if let Some(else_branch_expr) = &exprif.else_branch{
                 // 第二个block的前节点是 ifstart节点
-                graph_expr(else_branch_expr.1.as_ref(), var_def, graph, if_start);
+                graph_expr(else_branch_expr.1.as_ref(), var_def, graph, method_map,if_start);
                 // 第二个branch尾节点
                 let second_branch_end = graph.len_num()-1;
                 // 创建一个空节点做if 的结尾
@@ -425,9 +451,9 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         }
         Expr::While(exprwhile) => {
 
-            graph_expr (&exprwhile.cond.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr (&exprwhile.cond.as_ref(), var_def, graph, method_map,graph.len_num()-1);
             let v = graph.len_num();
-            graph_block(&exprwhile.body, var_def, graph, graph.len_num()-1);
+            graph_block(&exprwhile.body, var_def, graph, method_map, graph.len_num()-1);
             let u = graph.len_num()-1;
             graph.add(u, v);
 
@@ -438,14 +464,14 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // Todo: 理解 pat 与siginature关系 
             graph_pat(&exprfor.pat, var_def, graph, last_node_num);
             
-            graph_expr (&exprfor.expr.as_ref(), var_def, graph, graph.len_num()-1);
+            graph_expr (&exprfor.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
             let v = graph.len_num();
-            graph_block(&exprfor.body, var_def, graph, graph.len_num()-1);
+            graph_block(&exprfor.body, var_def, graph, method_map, graph.len_num()-1);
             let u = graph.len_num()-1;
             graph.add(u, v);
         }
         Expr::Loop(exprloop) => {
-            graph_block(&exprloop.body, var_def, graph, graph.len_num()-1);
+            graph_block(&exprloop.body, var_def, graph, method_map,graph.len_num()-1);
         }
         Expr::Let(exprlet) => {
             graph_pat(&exprlet.pat, var_def, graph, graph.len_num()-1);
@@ -475,14 +501,17 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         Expr::Closure(exprclosure) => {
             // Todo 
         }
-
+        Expr::Unsafe(exprunsafe) => {
+            // Todo
+            graph_block(&exprunsafe.block, var_def, graph, method_map, graph.len_num()-1);
+        }
         _ => {}
     }
 
 } // 
 
 
-fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, graph: &mut Adjlist, last_node_num: usize){
+fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, graph: &mut Adjlist,method_map: &HashMap<String,(i32,usize)> , last_node_num: usize){
     //stmt;别名表;图; 表示节点应该插入在哪个节点的后面 ？ 节点后的位置如何判定 连边？
     // 有多个
 
@@ -529,7 +558,7 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
             // 赋值后面语句的表达式
             if let Some((_eq, expr)) = &loc.init {
 
-                graph_expr(expr, var_def, graph, graph.len_num());
+                graph_expr(expr, var_def, graph, method_map,graph.len_num());
             }
 
 
@@ -554,10 +583,10 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
 
         },
         Stmt::Semi(expr,_semi) => {
-            graph_expr(expr, var_def, graph,graph.len_num()-1);
+            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1);
         },
         Stmt::Expr(expr) => {
-            graph_expr(expr, var_def, graph,graph.len_num()-1);
+            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1);
         }
         Stmt::Item(item) => {
             // Item fn?
@@ -601,12 +630,12 @@ fn synparse_run() {
 
     let mut var_set = alias_analysis::create_alias_hashmap(path_name);
 
-
+    let method_map = method_call_names(path_name);
     // var_set.insert("my_array".to_string(),(1 as i32,false,false));
     // var_set.insert("max".to_string(),(1 as i32,false,false));
     // var_set.insert("min".to_string(),(1 as i32,false,false));
     
-    let graph = graph_generate(&ast, String::from("main"),&mut var_set);
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map);
     // 生成csv x / edge 向量
 
     
@@ -626,7 +655,7 @@ fn csv_create_test()
 
     // 读取源代码
 
-    let path_name = "./src/graphcsv/code/7.rs";
+    let path_name = "./src/graphcsv/code/test.rs";
 
     let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
@@ -634,14 +663,18 @@ fn csv_create_test()
     file.read_to_string(&mut content);
     let ast = syn::parse_file(&content)
         .expect("ast failed");
+
+    // 从ast中获取methodcall
+    let method_map = method_call_names(path_name);
+
     let mut var_set = alias_analysis::create_alias_hashmap(path_name);
-    let graph = graph_generate(&ast, String::from("main"),&mut var_set);
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map);
     // 获取得到cfg
     // 暂时只考虑main函数
     // graph.show();
 
-    let mut wtr1 = Writer::from_path("./src/graphcsv/csv/7x.csv").expect("read_wrong");
-    let mut wtr2 = Writer::from_path("./src/graphcsv/csv/7edge.csv").expect("read_wrong");
+    let mut wtr1 = Writer::from_path("./src/graphcsv/csv/testx.csv").expect("read_wrong");
+    let mut wtr2 = Writer::from_path("./src/graphcsv/csv/testedge.csv").expect("read_wrong");
     // 对graph进行解析 生成 x向量和 edge向量
     // 对每个节点生成x 与edge
     // x输出
