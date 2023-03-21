@@ -5,9 +5,11 @@ use std::fs::File;
 use std::path::Path;
 use std::io::{self,prelude::*};
 use std::ptr::read;
-use std::vec;
+use std::{vec, string};
+
 
 use csv;
+use proc_macro2::Ident;
 
 use super::adjlist::Adjlist;
 use super::alias_analysis;
@@ -234,28 +236,56 @@ fn reader_test()
 
 
 // 解析syn 生成图 提取attribute? // 假设已经知道 所需变量？
-fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/, method_map: &HashMap<String,(i32,usize)>/*methodinfo */) -> Adjlist  {
+fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<String,(i32,bool,bool)>/*  别名表*/, method_map: &HashMap<String,(i32,usize)>/*methodinfo */, askfunction: &str) -> Adjlist  {
     // 遍历item
 
     let mut graph = Adjlist::new();
 
     for item in &ast.items{
-        // match fn 对于fn对象来构成图 // 假设当前函数为main 不考虑其他
+        // match fn 对于fn对象来构成图 // 寻找函数名称
         match item{
             syn::Item::Fn(func) => {
                 // println!("{:?}",func.sig.ident);
 
-                // Todo：for arg in &func.sig.inputs {} 暂时先不看main所有的signiture
+                // for arg in &func.sig.inputs {} 
                 // 对fn先创建fn节点
                 
                 // 当前函数入口认为是0节点
 
                 // todo 搞错了， 先只分析main函数。。。 不小心把其他函数与themin都加入了
 
-                if func.sig.ident == "main".to_string(){
-                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some("main".to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                if func.sig.ident == askfunction.to_string(){
+                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
                     // todo? 需要传入前后节点吗?
                     // 用节点标号构图 节点标号不能有错误
+
+                    // signature
+                    for arg in &func.sig.inputs {
+                        match arg {
+                            syn::FnArg::Typed(pattyped) => {
+                                // patident 是名字
+                                match &*pattyped.pat{
+                                    Pat::Ident(patident) => {
+                                        if var_set.contains_key(&String::from(format!("{}",patident.ident))){
+                                            
+                                            let var_str = String::from(format!("{}",patident.ident));
+                                            if let Some(value) = var_set.get(&var_str) {
+                                                graph.push_node(value, &var_str);
+                                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                                            }
+                                            else { println!("wrong value of hashmap");}
+                            
+                                        }
+                                    }
+                                    _ => {}
+                                }
+                                
+                                
+                            }
+                            _ => {}
+                        }
+                    } 
+
                     for stmt in &func.block.stmts {
                         // 传入图 别名表
                         let graph_num = graph.len_num();
@@ -268,9 +298,52 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                 
 
             }
+            // 函数在impl块内
+            syn::Item::Impl(Itemimpl) => {
+                for method in &Itemimpl.items{
+                    match method {
+                        syn::ImplItem::Method(itemMethod) => {
+                            if itemMethod.sig.ident == askfunction.to_string() {
+                                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                                for arg in &itemMethod.sig.inputs {
+                                    match arg {
+                                        syn::FnArg::Typed(pattyped) => {
+                                            // patident 是名字
+                                            match &*pattyped.pat{
+                                                Pat::Ident(patident) => {
+                                                    if var_set.contains_key(&String::from(format!("{}",patident.ident))){
+                                                        
+                                                        let var_str = String::from(format!("{}",patident.ident));
+                                                        if let Some(value) = var_set.get(&var_str) {
+                                                            graph.push_node(value, &var_str);
+                                                            graph.add(graph.len_num()-2, graph.len_num()-1);
+                                                        }
+                                                        else { println!("wrong value of hashmap");}
+                                        
+                                                    }
+                                                }
+                                                _ => {}
+                                            } 
+                                        }
+                                        _ => {}
+                                    }
+                                } 
 
+                                // signature
 
-            _ => () // 先只分析main函数
+                                for stmt in &itemMethod.block.stmts {
+                                    let graph_num = graph.len_num();
+                                    graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1);
+                                }
+                            }
+                        }
+                        
+                        _ => ()
+                    }
+                    
+                }
+            }
+            _ => () // 
         }
     }   
     // test
@@ -505,6 +578,44 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // Todo
             graph_block(&exprunsafe.block, var_def, graph, method_map, graph.len_num()-1);
         }
+        Expr::Macro(exprmacro) => {
+            // 只看println 不管别的 mac path无用
+            let mut tokentree_buff = Vec::new();
+            let mut first_lit = false;
+            for item in exprmacro.mac.tokens.clone() {
+                match item {
+                    proc_macro2::TokenTree::Punct(punct) => {
+                        if (!first_lit) {
+                            tokentree_buff.clear();
+                            first_lit =true;
+                        }else {
+                            let mut tokensteram = proc_macro2::TokenStream::new();
+                            tokensteram.extend(tokentree_buff);
+                            let res: Result<syn::Expr, syn::Error> = syn::parse2(tokensteram);
+                            match  res{
+                                Ok(exp) => graph_expr(&exp, var_def, graph, method_map, last_node_num),
+                                Err(_) => println!("erro macro"),
+                            }
+                            tokentree_buff = Vec::new();
+                        }
+                    }
+                    _ => {
+                        tokentree_buff.push(item);
+                    }
+                }
+            }
+            // for 循环结束再做一遍
+            let mut tokenstream_buff = proc_macro2::TokenStream::new();
+            tokenstream_buff.extend(tokentree_buff);
+            let res: Result<syn::Expr, syn::Error> = syn::parse2(tokenstream_buff);
+            match res {
+                Ok(exp) => graph_expr(&exp, var_def, graph, method_map, last_node_num),
+                Err(_) => debug!("Assert macro parse error"),
+            }
+
+
+
+        }
         _ => {}
     }
 
@@ -627,24 +738,90 @@ fn synparse_run() {
     // let mut var_set = HashMap::new();
     // var_set.insert("max".to_string(),);
     // var_set.insert("min".to_string());
-
-    let mut var_set = alias_analysis::create_alias_hashmap(path_name);
+    let name ="main";
+    let mut var_set = alias_analysis::create_alias_hashmap(path_name,name);
 
     let method_map = method_call_names(path_name);
     // var_set.insert("my_array".to_string(),(1 as i32,false,false));
     // var_set.insert("max".to_string(),(1 as i32,false,false));
     // var_set.insert("min".to_string(),(1 as i32,false,false));
-    
-    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map);
+    let name = String::from("main");
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map, &name);
     // 生成csv x / edge 向量
-
+    
     
     
 }
 
 
-// 输出csv文件
+// 对于单个的code代码，通过graph_generate生成csv x/edge
+pub fn csv_creat(code_path: &str, csv_path: &str, funcname: &str)
+{
+    // 目录是当前cmd下目录相对路径
+    // 读取文件
+    let mut file = File::open(Path::new(code_path))
+        .expect("open file failed ");
+    let mut content = String::new();
+    file.read_to_string(&mut content);
+    let ast = syn::parse_file(&content)
+        .expect("ast failed");
+    // 图生成
+    let method_map = method_call_names(code_path);
 
+    let mut var_set = alias_analysis::create_alias_hashmap(code_path,funcname);
+    // let name = String::from("main");
+    let graph = graph_generate(&ast, funcname.to_string(),&mut var_set, &method_map, funcname);
+    // 已经得到graph之后
+    use csv::Writer;
+    let xcsv = csv_path.to_string() + "x.csv";
+    let edgecsv = csv_path.to_string() + "edge.csv";
+
+    let mut wtr1 = Writer::from_path(&xcsv).expect("read csv wrong");
+    let mut wtr2 = Writer::from_path(&edgecsv).expect("read csv wrong");
+    // graph.show(); 函数体内部有bug
+    // 生成x
+    // todo ： 这里的节点有一定问题
+    for i in 0..graph.len_num() {
+        // 变量名称如何表示？
+        let y = graph.vector_x_attribute(i);
+        // 暂且不管function call的名字 只考虑变量名相同关系
+        // 用hashmap中的顺位表示变量的string有待商榷
+        let mut varnumber =0;
+        for key in var_set.keys() {
+            if key.to_string() == y.0.to_string() {
+                break;
+            }
+            varnumber+= 1;
+        }
+        let x = (varnumber,y.1,y.2,y.3,-1,y.5,y.6,y.7);        
+        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string(),x.5.to_string(),x.6.to_string(),x.7.to_string()])
+            .expect("write_wrong");
+    }
+    for i in 0..graph.len_num() {
+        let edge = graph.vector_edge_attribute(i);
+        for e in edge {
+            // println!("123123123");
+            wtr2.write_record(&[i.to_string(), e.to_string()])
+                .expect("write_wrong");
+        }
+    } 
+    
+    wtr1.flush().expect("write_wrong");
+    wtr2.flush().expect("write_wrong");
+    // 创建了两个csv表，一个是x向量，一个是edge向量
+
+
+    // 输出到csv中
+}
+#[test]
+fn csv_create_test2(){
+    let a ="./spider_stackoverflow/src/dataok/code0/0.rs";
+    let b = "./spider_stackoverflow/src/dataok/code0/0";
+    let c = "f";
+    csv_creat(a,b,c);
+}
+
+// 输出csv文件
 #[test]
 fn csv_create_test() 
 {
@@ -666,9 +843,10 @@ fn csv_create_test()
 
     // 从ast中获取methodcall
     let method_map = method_call_names(path_name);
-
-    let mut var_set = alias_analysis::create_alias_hashmap(path_name);
-    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map);
+    let name ="main";
+    let mut var_set = alias_analysis::create_alias_hashmap(path_name,name);
+    let name = String::from("main");
+    let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map, &name);
     // 获取得到cfg
     // 暂时只考虑main函数
     // graph.show();
@@ -681,12 +859,18 @@ fn csv_create_test()
     for i in 0..graph.len_num() {
         // 变量名称如何表示？
         let y = graph.vector_x_attribute(i);
-        let x = (y.1,y.2,y.3,y.5,y.6);
-
-        // 暂且考虑没有任何string
-        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string()])
+        // 暂且不管function call的名字 只考虑变量名相同关系
+        // 用hashmap中的顺位表示变量的string有待商榷
+        let mut varnumber =0;
+        for key in var_set.keys() {
+            if key.to_string() == y.0.to_string() {
+                break;
+            }
+            varnumber+= 1;
+        }
+        let x = (varnumber,y.1,y.2,y.3,-1,y.5,y.6,y.7);        
+        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string(),x.5.to_string(),x.6.to_string(),x.7.to_string()])
             .expect("write_wrong");
-
     }
     for i in 0..graph.len_num() {
         let edge = graph.vector_edge_attribute(i);
@@ -697,8 +881,6 @@ fn csv_create_test()
         }
     } 
     
-
-
     // wtr.write_record(&["a", "b", "c"]).expect("write_wrong");
     // wtr.write_record(&["x", "2", "z"]).expect("write_wrong");
     wtr1.flush().expect("write_wrong");

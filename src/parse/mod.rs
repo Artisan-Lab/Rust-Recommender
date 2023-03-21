@@ -2,7 +2,8 @@ mod parse_var;
 mod adjlist;
 extern crate syn;
 extern crate csv;
-mod test_read;
+extern crate proc_macro2;
+mod test_read_write;
 mod alias_analysis;
 
 mod method_call;

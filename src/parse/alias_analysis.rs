@@ -3,7 +3,7 @@
 use std::io::Read;
 use std::path::Path;
 use std::fs::File;
-use syn::{self, Stmt, Local, Pat, PatIdent, Expr};
+use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Type};
 use super::parse_var::{node, VarInfo,stmt_node_type, block_node_type, FuncInfo};
 use super::adjlist::Adjlist;
 
@@ -217,7 +217,7 @@ fn alias_name_stmt(stmt: &syn::Stmt, graph: &mut Adjlist, var_map: &mut HashMap<
 
 
 
-fn alias_map_genarate(ast: &syn::File) -> Adjlist {
+fn alias_map_genarate(ast: &syn::File, funcname: &str) -> Adjlist {
     // graph 存储别名关系 连边
     let mut graph = Adjlist::new();
     // varmap负责查找variable对应名称的graph节点序号
@@ -238,9 +238,48 @@ fn alias_map_genarate(ast: &syn::File) -> Adjlist {
                 // Todo：for arg in &func.sig.inputs {} 暂时先不看main所有的signiture
                 // todo 先只分析main函数
                 // todo 暂且不考虑结构体
-                if func.sig.ident == "main".to_string(){ //是否会出现情况导致无法进入分支条件？
+                if func.sig.ident == funcname{ //是否会出现情况导致无法进入分支条件？
                     // println!("123");
-                    // todo 暂时先不考虑signature
+                    // 考虑signature
+                    
+
+                    for arg in &func.sig.inputs {
+                        let mut let_var = (0, false, false, "for".to_string());
+                        match arg {
+                            syn::FnArg::Typed(pattyped) => {
+                                // patident 是名字
+                                match &*pattyped.pat{
+                                    Pat::Ident(patident) => {
+                                        let_var.3 = (String::from(format!("{}", patident.ident)));
+                                    }
+                                    _ => {}
+                                } 
+                                match &*pattyped.ty{
+                                    Type::Reference(TyRef) =>{
+                                        let_var.1 = true;
+                                        
+                                        if let Some(_mutability) = &TyRef.mutability{//mutref
+                                            let_var.0 = 3;
+                                            let_var.2 =true;
+                                        }else {//staticref
+                                            let_var.2 = false;
+                                            let_var.0 = 2;
+                                        }
+                                    }
+                                    Type::Path(typa) => {
+                                        let_var.0 = 1;
+                                        let_var.1 = false;
+                                        let_var.2 = false;
+
+                                    }
+                                    _ =>{}
+                                }
+                            }
+                            _ => {}
+                        }
+
+                    } 
+
 
                     for stmt in &func.block.stmts {    
                         // 从let 开始加入所有语句 主要是搜索所有的let语句，找到所有的定义变量，再进行加边
@@ -251,7 +290,60 @@ fn alias_map_genarate(ast: &syn::File) -> Adjlist {
                 }
 
             }
-            _ => () // 先只分析main函数
+            syn::Item::Impl(Itemimpl) =>{
+                for method in &Itemimpl.items{
+                    match method {
+                        syn::ImplItem::Method(itemMethod) => {
+                            if itemMethod.sig.ident == funcname.to_string() {
+                                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(funcname.to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                                for arg in &itemMethod.sig.inputs {
+                                    let mut let_var = (0, false, false, "for".to_string());
+                                    match arg {
+                                        syn::FnArg::Typed(pattyped) => {
+                                            // patident 是名字
+                                            match &*pattyped.pat{
+                                                Pat::Ident(patident) => {
+                                                    let_var.3 = (String::from(format!("{}", patident.ident)));
+                                                }
+                                                _ => {}
+                                            } 
+                                            match &*pattyped.ty{
+                                                Type::Reference(TyRef) =>{
+                                                    let_var.1 = true;
+                                                    
+                                                    if let Some(_mutability) = &TyRef.mutability{//mutref
+                                                        let_var.0 = 3;
+                                                        let_var.2 =true;
+                                                    }else {//staticref
+                                                        let_var.2 = false;
+                                                        let_var.0 = 2;
+                                                    }
+                                                }
+                                                Type::Path(typa) => {
+                                                    let_var.0 = 1;
+                                                    let_var.1 = false;
+                                                    let_var.2 = false;
+
+                                                }
+                                                _ =>{}
+                                            }
+                                        }
+                                        _ => {}
+                                    }
+                                } 
+
+                                // signature
+
+                            }
+                        }
+                        
+                        _ => ()
+                    }
+                    
+                }
+            }
+
+            _ => () 
         }
     }
 
@@ -260,7 +352,7 @@ fn alias_map_genarate(ast: &syn::File) -> Adjlist {
     graph
 }
 
-pub fn create_alias_hashmap(path_name: &str) ->HashMap<String,(i32,bool,bool)>{
+pub fn create_alias_hashmap(path_name: &str, funcname: &str) ->HashMap<String,(i32,bool,bool)>{
     let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
 
@@ -270,7 +362,8 @@ pub fn create_alias_hashmap(path_name: &str) ->HashMap<String,(i32,bool,bool)>{
     let ast = syn::parse_file(&content).expect("ast failed");
     // 需要一个邻接表图表示？还是一个简单的并查集？
     // 最后返回一个hashmap?
-    let graph = alias_map_genarate(&ast);
+
+    let graph = alias_map_genarate(&ast,funcname);
     
     // 解析graph 生成hashmap
 
@@ -320,8 +413,8 @@ fn test_create_alias_hashmap()
 
     // 需要一个邻接表图表示？还是一个简单的并查集？
     // 最后返回一个hashmap?
-
-    let graph = alias_map_genarate(&ast);
+    let name = "main";
+    let graph = alias_map_genarate(&ast,name);
     
     graph.show();
 

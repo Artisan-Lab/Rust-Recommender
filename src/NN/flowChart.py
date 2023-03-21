@@ -822,17 +822,20 @@ def gen_data_from_rs(fileName):
     return flowChart.data
     
 # 不管那么多 直接读取内容生成一个 data(x, edge)
-# 这里filename代表了icsv的名字 从graphcsv种获得
-# number 表示需要读取的序号是一个str 最后回送给一个number
-# 在使用的时候， 传入number直接就可以返回处理好的torch数据
-def gen_data_from_csv(number):
+# code num 代表第几份code
+# aug num 代表第几份数据增强代码
+
+def gen_data_from_csv(code_num, aug_num):
     # number 是一个str
-    xfile = 'x.csv'
-    edgefile = 'edge.csv'
-    filebefore = 'src/graphcsv/'
+
+    filenamex = f'spider_stackoverflow/src/dataok/code{code_num}/{aug_num}x.csv'
+    filenameedge = f'spider_stackoverflow/src/dataok/code{code_num}/{aug_num}edge.csv'
+    
+    # 处理文件名字 需要加i
+
+    
+
     # filename 格式
-    filenamex = filebefore+number+xfile
-    filenameedge = filebefore+number+edgefile
     x = []
     edge = []
     with open(filenamex) as fx:
@@ -841,7 +844,7 @@ def gen_data_from_csv(number):
         # 用row 0 1 2 3 4 来表示？
         for row in fx_csv :
             y = []
-            for i in range(5) :
+            for i in range(8) :
                 y.append(int(row[i]))
             x.append(y)
         # print(x)

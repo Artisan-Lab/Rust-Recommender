@@ -304,9 +304,9 @@ impl Adjlist{
     }
 
     // 返回节点acfg信息: x ((attribute1, a2,a3,a4, a5, a6 ,a7),(,,,,,)    )
-    pub fn vector_x_attribute(&self, i: usize) -> (String, i32, i32, i32, String, i32, i32) { // 返回节点为i的attribute 等 
-        // 前四个 name/type/mute/ref 后两个 funcname/funcscope /todo: 缺少两个signature numbers/methodcallself /最后 block
-        let mut x = ("var_name".to_string(),-1,-1,-1,"func_name".to_string(), -1, -1);
+    pub fn vector_x_attribute(&self, i: usize) -> (String, i32, i32, i32, String, i32, i32,i32) { // 返回节点为i的attribute 等 
+        // 前四个 name/type/mute/ref 后两个 funcname/funcscope 后一个methodcall self /最后 block
+        let mut x = ("var_name".to_string(),-1,-1,-1,"func_name".to_string(),-1, -1, -1);
         // 根据data开始 计算attribute
         // x 的attribute是否 不需要string？ 考虑删除string
         if let Some(stmt) = &self.heads_list[i].data.stmt{
@@ -342,11 +342,12 @@ impl Adjlist{
                     if let Some(a) = &funcinfo.Name {
                         x.4 = a.to_string();
                         if funcinfo.Start {
-                            x.5 = 0;
+                            x.6 = 0;
                         }else if funcinfo.End{
-                            x.5 = 1;
+                            x.6 = 1;
                         }
                     }
+                    x.5 =funcinfo.method_call;
                 }
                 
             }
@@ -354,13 +355,13 @@ impl Adjlist{
         if let Some(block) = &self.heads_list[i].data.block{
             match block{
                 block_node_type::BLOCK_START=>{
-                    x.6 = 0;
+                    x.7 = 0;
                 }
                 block_node_type::BLOCK_END=>{
-                    x.6 = 1;
+                    x.7 = 1;
                 }
                 block_node_type::BLOCK_NONE=>{
-                    x.6 = 2;
+                    x.7 = 2;
                 }
             }
         }

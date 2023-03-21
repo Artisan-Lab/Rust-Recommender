@@ -25,8 +25,8 @@ impl Pool {
         for i in 1..10 {
             let string = format!("{}", i);
             self.new_string(string);
-            let string = &self.strings[i - 1];
-            v.push(&string[..]);
+            let string2 = &self.strings[i - 1];
+            v.push(&string2[..]);
         }
         v
     }

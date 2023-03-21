@@ -129,34 +129,54 @@ def datas_knowledge_base(Num):
 
 
 # 生成的是训练集 这里的是读取训练集CSV
-def data_process_read_from_csv_TRAIN(Num):
+
+# 有两个num 分别是代码份数/每份代码的数据增强份数
+
+def data_process_read_from_csv_TRAIN(Code_num=31, aug_num = 30):
     # 当前csv几个 N就是几个 目前5个
-    N = Num
+
     # 保存x/edge 的datas
     datas = []
-    for i in range(N):
+    for i in range(Code_num):
+        for j in range (aug_num):
         # print(gen_data_from_csv(str(i+1)))
-        datas.append(gen_data_from_csv(str(i+1)))
+            datas.append(gen_data_from_csv(i,j))
     # print(data[0].x)
 
     # data生成处理
-    dataset = dataset_generate(datas)
+    dataset = dataset_generate(datas,Code_num,aug_num)
     # 返回数据集
     return dataset
     
 # 对datas做一个处理
-def dataset_generate(datas):
+def dataset_generate(datas,code_nums, aug_nums):
     dataset = []
     N = len(datas)
+    print("N= ",N)
+    # 31*30 = 930
     # 生成相似代码对 第3个是similarity
     # Todo augmentation
-    for i in range(N):
-        dataset.append(data_item(data1= datas[i], data2=datas[i],similarity=1))
-    # 生成不相似代码对 粗略生成
-    for i in range(N):
-        for j in range(N):
-            if i < j :
-                dataset.append(data_item(data1= datas[i], data2=datas[j],similarity=0))
+
+    # 生成相似代码对
+    code_num_now = aug_nums
+    for i in range(0,N):
+        if i == code_num_now :
+            code_num_now = code_num_now+aug_nums
+        for j in range(i+1,N):
+            similarity22 = 0
+            if j<code_num_now :
+                similarity22 = 1
+            dataset.append(data_item(data1= datas[i], data2=datas[i],similarity=similarity22))
+    #
+
+    # for i in range(code_nums):
+    #     for j in range(aug_nums)
+    #     dataset.append(data_item(data1= datas[i], data2=datas[i],similarity=1))
+    # # 生成不相似代码对 粗略生成
+    # for i in range(N):
+    #     for j in range(N):
+    #         if i < j :
+    #             dataset.append(data_item(data1= datas[i], data2=datas[j],similarity=0))
     
     # for data in dataset:
     #     print(data.data1)
@@ -298,5 +318,36 @@ def Model_TRAIN(dataset, N):
 
 
 if __name__ == "__main__":
-    dataset_train = data_process_read_from_csv_TRAIN(5)
-    Model_TRAIN(dataset_train, 5)
+
+
+    # 获取code 代码量
+    # codei文件夹数量
+    import os
+    path_csv = 'spider_stackoverflow/src/dataok/'
+    #数code文件夹数量
+    code_numbers = 0
+    for i in range(0,1000):
+        fullname = f"{path_csv}code{i}"
+        if os.path.isdir(fullname) == False :
+            break
+        else :
+            code_numbers = code_numbers + 1
+    #数据增强份数
+    path_code = 'spider_stackoverflow/src/dataok/code0/'
+    aug_numbers = 0
+    for i in range(0,1000):
+        name = f"{path_code}{i}.rs"
+        if os.path.isfile(name) == False :
+            break 
+        else :
+            aug_numbers = aug_numbers + 1
+
+    # print(code_numbers)
+    # print(aug_numbers)
+    
+    
+
+
+
+    dataset_train = data_process_read_from_csv_TRAIN(code_numbers, aug_numbers)
+    Model_TRAIN(dataset_train, code_numbers*aug_numbers)

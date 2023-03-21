@@ -13,6 +13,8 @@ features = ["parsing", "full", "extra-traits"]
 
 [dependencies]
 crossbeam-channel = "0.5.5"
+clap = "2.33.3"
+proc-macro2 = "1.0"
 quote = "1.0"
 csv = "1.1"
 log = "0.4.14"

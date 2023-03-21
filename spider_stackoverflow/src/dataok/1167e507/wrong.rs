@@ -22,3 +22,7 @@ impl Bar {
         self.0 = self.0.get_a_new_foo();
     }
 }
+fn main()
+{
+    
+}

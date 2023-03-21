@@ -16,3 +16,4 @@ fn main()
     
     let c =f(&mut a,true);
 }
+// 必须表明f函数
