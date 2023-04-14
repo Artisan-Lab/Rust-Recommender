@@ -15,7 +15,7 @@ impl Pool {
         let mut v = vec![];
         
         // for i in 1..10 {
-        //     let string = format!("{}", i);let augment0 = 1;
+        //     let string = format!("{}", i);let mut augment0 = 1;
         //     self.new_string(string);
         // }
         // for i in 1..10 {

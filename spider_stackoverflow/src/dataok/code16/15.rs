@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+
 struct Calculation {
     value: Option<i32>
 }
@@ -14,7 +15,7 @@ impl Struct {
 
     fn it(&mut self) -> Option<&Box<Calculation>> {
         for key in vec!["1","2","3"] {
-            let result = self.find(&key.to_owned());let mut augment15 = &1;let augment14 = &1;let mut augment12 = 1;let mut augment10 = 1;
+            let result = self.find(&key.to_owned());let augment15 = &1;let mut augment14 = &1;let augment13 = &1;let augment12 = 1;
             if result.is_some() {
                 return result
             }

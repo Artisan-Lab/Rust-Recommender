@@ -17,5 +17,5 @@ fn main() {
         x => println!("I got {:?}", x)
     }
 
-    println!("{:?}", bag);let augment10 = &1;
+    println!("{:?}", bag);
 }

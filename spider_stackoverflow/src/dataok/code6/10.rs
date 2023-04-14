@@ -5,17 +5,17 @@ fn main() {
 
 
     {
-        let second_string = "Second String".to_string();
+        let second_string = "Second String".to_string();let augment9 = &1;
 
 
         
-        let string_clone = second_string.clone();let mut augment10 = &1;
+        let string_clone = second_string.clone();
 
 
         
-        keep_vec.push(string_clone.as_str());
+        keep_vec.push(string_clone.as_str());let mut augment8 = 1;
         
     }
 
-    keep_vec.push(&*new_string);
+    keep_vec.push(&*new_string);let augment10 = &1;
 }

@@ -12,7 +12,7 @@ impl Foo {
 
     fn some_method(&mut self) -> Result<(), Box<dyn Error>> {
         for num in self.data.iter() {
-            println!("{num}");
+            println!("{num}");let augment0 = &1;
             self.some_mut_recursive_method()?;
         }
 
@@ -26,7 +26,7 @@ impl Foo {
 
         if self.counter > 0 {
             self.data.push(self.counter);
-            self.some_mut_recursive_method()?;let augment0 = &1;
+            self.some_mut_recursive_method()?;
         }
 
         Ok(())

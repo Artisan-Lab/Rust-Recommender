@@ -9,8 +9,8 @@ struct MainStruct {
 impl MainStruct {
     pub fn call_helper(&mut self) { 
         // &mut self because the_method changes inner state of HelperStruct
-        self.helper.the_method(self);let augment0 = &1;
-        // HelperStruct::the_method(self);
+        self.helper.the_method(self);
+        // HelperStruct::the_method(self);let mut augment0 = 1;
     }
 }
 

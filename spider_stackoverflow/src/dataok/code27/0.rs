@@ -9,7 +9,7 @@ impl Foo {
             Foo::A => Foo::B(vec![]),
             Foo::B(mut v) => {
                 let len = v.len() as u32;
-                v.push(len - 1);
+                v.push(len - 1);let augment0 = 1;
                 Foo::B(v)
             }
         }

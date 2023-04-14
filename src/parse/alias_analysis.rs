@@ -79,9 +79,6 @@ fn alias_name_expr(expr: &syn::Expr, let_var: &mut (i32, bool, bool, String), va
                 graph.push_node(&(let_var2.0,let_var2.1,let_var2.2), &let_var2.3);
             }
 
-            
-            
-
         }
         Expr::ForLoop(expr_for) => {
             // for loop 

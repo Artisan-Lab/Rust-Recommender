@@ -1,11 +1,11 @@
 
 fn main()
 {
-    let mut u:[usize;3]= [0;3];
-    let mut v = vec![];let augment1 = 1;
+    let mut u:[usize;3] = [0;3];let mut augment8 = 1;
+    let mut v = vec![];
     for i in 0..3 {
-        u[i] = i;let augment3 = 1;let mut augment2 = 1;
-        let e = &(u[i]);let mut augment9 = &1;let augment4 = 1;
-        v.push(e);let mut augment8 = &1;let augment5 = &1;
+        u[i] = i;
+        let e = &(u[i]);let mut augment9 = 1;
+        v.push(e);
     }
 }

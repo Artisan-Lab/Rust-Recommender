@@ -14,7 +14,7 @@ impl Val {
     }
 
     fn set(&mut self, k: u16, v: u16) {
-        self.t.insert(k, v);let mut augment0 = 1;
+        self.t.insert(k, v);let augment0 = &1;
         self.l.insert(v);
     }
 

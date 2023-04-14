@@ -1,6 +1,6 @@
 fn main() {
-    let mut s = String::from("Hello World!!");let augment11 = &1;let augment10 = &1;
-    try_changes(&mut s);
+    let mut s = String::from("Hello World!!");let mut augment9 = &1;
+    try_changes(&mut s);let mut augment11 = &1;let augment10 = &1;let mut augment8 = 1;
 }
 
 fn try_changes(s: &mut String) {

@@ -1,9 +1,9 @@
 fn main() {
-    let mut s = String::from("hello");let mut augment12 = &1;
+    let mut s = String::from("hello");
     println!("{}", &s);
     let r = &s;
-    let x = &mut s;let mut augment11 = &1;
+    let x = &mut s;
     println!("{}", r);
     
-    println!("{}", x);let augment10 = 1;
+    println!("{}", x);let mut augment12 = &1;
 }

@@ -14,15 +14,15 @@ fn main() {
 
     vec1.push(88);
 
-    println!("{} has length {} content `{:?}`", "vec1", vec1.len(), vec1);let augment0 = 1;
+    println!("{} has length {} content `{:?}`", "vec1", vec1.len(), vec1);
 }
 
 fn fill_vec(vec: &Vec<i32>) -> &Vec<i32> {
-    let mut vec = vec;let mut augment1 = &1;
+    let mut vec = vec;let mut augment1 = 1;let mut augment0 = &1;
 
-    vec.push(22);let mut augment2 = &1;
+    vec.push(22);
     vec.push(44);
-    vec.push(66);
+    vec.push(66);let augment2 = 1;
 
     vec
 }

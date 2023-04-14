@@ -2,7 +2,7 @@ fn main() {
     let mut s = String::from("hello");
 
     let r1 = &mut s;
-    let r2 = & s;let augment12 = &1;let mut augment10 = 1;
+    let r2 = & s;let augment12 = 1;
 
-    println!("{}", r1);let augment11 = &1;
+    println!("{}", r1);
 }

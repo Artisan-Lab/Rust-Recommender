@@ -25,6 +25,6 @@ fn main() {
     };
 
     let both = d.get_both();
-    let x = d.get_val1();
-    let y = d.get_val2();let augment0 = &1;
+    let x = d.get_val1();let mut augment0 = 1;
+    let y = d.get_val2();
 }

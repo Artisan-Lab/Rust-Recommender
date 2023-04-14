@@ -11,7 +11,7 @@ fn main() {
     for mut s in &mut v {
         // cannot borrow `s` as mutable, as it is not declared as mutable
         // cannot borrow data in a `&` reference as mutable
-        to_pig_latin(&mut s);
+        to_pig_latin(&mut s);let augment0 = 1;
     }
 
     for (i, s) in v.iter().enumerate() {
@@ -27,7 +27,7 @@ fn main() {
 
 fn to_pig_latin(mut s: &mut str) {
     let first = s.chars().nth(0).unwrap();
-    let mut pig;let augment0 = 1;
+    let mut pig;
 
     if "aeiouAEIOU".contains(first) {
         pig = format!("{}-{}", s, "hay");

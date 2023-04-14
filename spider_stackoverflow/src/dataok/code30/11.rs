@@ -17,7 +17,7 @@ fn sort() -> Partitioned {
 
     for i in 1..30 {
         let mut s = if i % 2 == 0 { even } else { odd };
-        s.count = s.count + 1;let mut augment11 = &1;let augment10 = &1;
+        s.count = s.count + 1;let mut augment11 = 1;let augment10 = &1;let augment9 = 1;let mut augment8 = 1;
         // ... a lot of other code
     }
 

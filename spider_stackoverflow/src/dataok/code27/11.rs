@@ -8,8 +8,8 @@ impl Foo {
         match self {
             Foo::A => Foo::B(vec![]),
             Foo::B(mut v) => {
-                let len = v.len() as u32;let mut augment11 = 1;
-                v.push(len - 1);let augment10 = 1;
+                let len = v.len() as u32;let augment10 = 1;let augment8 = 1;
+                v.push(len - 1);let mut augment11 = &1;let mut augment9 = &1;
                 Foo::B(v)
             }
         }

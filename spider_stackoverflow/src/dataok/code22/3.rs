@@ -11,23 +11,23 @@ fn main() {
     for mut s in &mut v {
         // cannot borrow `s` as mutable, as it is not declared as mutable
         // cannot borrow data in a `&` reference as mutable
-        to_pig_latin(&mut s);let mut augment3 = &1;
+        to_pig_latin(&mut s);let augment0 = 1;
     }
 
     for (i, s) in v.iter().enumerate() {
         print!("{}", s);
 
         if i < v.len() - 1 {
-            print!(", ");
+            print!(", ");let augment2 = 1;
         }
     }
 
-    io::stdout().flush().unwrap();
+    io::stdout().flush().unwrap();let mut augment1 = 1;
 }
 
 fn to_pig_latin(mut s: &mut str) {
     let first = s.chars().nth(0).unwrap();
-    let mut pig;let mut augment2 = 1;let augment0 = 1;
+    let mut pig;
 
     if "aeiouAEIOU".contains(first) {
         pig = format!("{}-{}", s, "hay");
@@ -42,6 +42,6 @@ fn to_pig_latin(mut s: &mut str) {
         }
 
         pig = format!("{}-{}{}", word, first.to_lowercase(), "ay");
-        s = &mut pig[..]; // `pig` does not live long enough
+        s = &mut pig[..];let augment3 = &1; // `pig` does not live long enough
     }
 }

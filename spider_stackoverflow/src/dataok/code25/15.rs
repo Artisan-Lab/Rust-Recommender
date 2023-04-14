@@ -11,11 +11,11 @@ struct Bag {
 }
 
 fn main() {
-    let bag = Bag { food: Food::Cake };let augment15 = &1;
+    let bag = Bag { food: Food::Cake };
     match bag.food {
         Food::Cake => println!("I got cake"),
         x => println!("I got {:?}", x)
     }
 
-    println!("{:?}", bag);let augment14 = 1;let augment13 = 1;let augment12 = 1;let mut augment11 = &1;let augment10 = &1;
+    println!("{:?}", bag);
 }

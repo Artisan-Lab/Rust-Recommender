@@ -9,7 +9,7 @@ fn main() {
 
 
         
-        let string_clone = second_string.clone();
+        let string_clone = second_string.clone();let mut augment0 = 1;
 
 
         
@@ -17,5 +17,5 @@ fn main() {
         
     }
 
-    keep_vec.push(&*new_string);let mut augment0 = &1;
+    keep_vec.push(&*new_string);
 }

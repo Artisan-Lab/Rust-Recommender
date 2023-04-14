@@ -15,7 +15,7 @@ impl Struct {
 
     fn it(&mut self) -> Option<&Box<Calculation>> {
         for key in vec!["1","2","3"] {
-            let result = self.find(&key.to_owned());
+            let result = self.find(&key.to_owned());let augment2 = &1;let augment1 = 1;let augment0 = 1;
             if result.is_some() {
                 return result
             }

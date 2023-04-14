@@ -6,12 +6,12 @@ fn main() {
         String::from("Apple"),
         String::from("everett"),
         String::from("Robin"),
-    ];
+    ];let mut augment9 = 1;
 
     for mut s in &mut v {
         // cannot borrow `s` as mutable, as it is not declared as mutable
         // cannot borrow data in a `&` reference as mutable
-        to_pig_latin(&mut s);
+        to_pig_latin(&mut s);let mut augment10 = 1;
     }
 
     for (i, s) in v.iter().enumerate() {
@@ -30,10 +30,10 @@ fn to_pig_latin(mut s: &mut str) {
     let mut pig;
 
     if "aeiouAEIOU".contains(first) {
-        pig = format!("{}-{}", s, "hay");
+        pig = format!("{}-{}", s, "hay");let augment8 = 1;
         s = &mut pig[..]; // `pig` does not live long enough
     } else {
-        let mut word = String::new();let mut augment10 = &1;
+        let mut word = String::new();
 
         for (i, c) in s.char_indices() {
             if i != 0 {

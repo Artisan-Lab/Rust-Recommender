@@ -187,6 +187,7 @@ def Model_TRAIN(dataset, N):
     dataset_train = dataset
     loss = nn.CosineEmbeddingLoss(margin=0.5)
     GNN1 = SiameseNetworkRespective(in_channels=inchannel, out_channels=embedding_size)
+
     GNN2 = SiameseNetworkRespective(in_channels=inchannel, out_channels=embedding_size)
     optim1 = torch.optim.Adam(GNN1.parameters(), lr=learning_rate)
     optim2 = torch.optim.Adam(GNN2.parameters(), lr=learning_rate)
@@ -268,51 +269,56 @@ def Model_TRAIN(dataset, N):
         print("训练集准确率", (TP + TN) / (TP + TN + FP + FN))
 
     # -------------------------------------------------------------------------
-    ### TEST_SET TOdo 目前拿训练集加进去做个测试
-    test_set = datas_knowledge_base(N)
-    knowledge_set = datas_knowledge_base(N)
-    # 测试集
-
-    best_choose = []
-    best_cos = []
-    for test in test_set :
-        
-        candidate = []
-
-        x1 = test.x
-        edge1 = test.edge_index
-        u1 = torch.zeros(x1.shape[0], embedding_size)
-
-        
-        # 知识库
-        for knowledge in knowledge_set :
-            x2 = knowledge.x
-            edge2 = knowledge.edge_index
-            u2 = torch.zeros(x2.shape[0], embedding_size)
-
-            g1 = GNN1(x1, u1, edge1)
-            g2 = GNN2(x2, u2, edge2)
-
-            candidate.append(cos(g1,g2))
-
-        # 取出cos值最大的 找到下标
-        max_cos = -0.1
-        max_index = -1
-        for j in range(len(candidate)):
-            value = candidate[j]
-            if value > max_cos:
-                max_cos = value
-                max_index = j
-
-        best_choose.append(max_index)
-        best_cos.append(max_cos)
-    # 根据Knowledge中的x edge 获取最大cos
     
-    # 打印结果
-    print("#############################")
-    for i in range(len(test_set)) :
-        print(i," choose ",best_choose[i], " whose best_cos is: ",best_cos[i])
-    print("#############################")
+    torch.save()
+    
+    # ### TEST_SET TOdo 目前拿训练集加进去做个测试
+    # test_set = datas_knowledge_base(N)
+    # knowledge_set = datas_knowledge_base(N)
+    # # 测试集
+
+    
+
+    # best_choose = []
+    # best_cos = []
+    # for test in test_set :
+        
+    #     candidate = []
+
+    #     x1 = test.x
+    #     edge1 = test.edge_index
+    #     u1 = torch.zeros(x1.shape[0], embedding_size)
+
+        
+    #     # 知识库
+    #     for knowledge in knowledge_set :
+    #         x2 = knowledge.x
+    #         edge2 = knowledge.edge_index
+    #         u2 = torch.zeros(x2.shape[0], embedding_size)
+
+    #         g1 = GNN1(x1, u1, edge1)
+    #         g2 = GNN2(x2, u2, edge2)
+
+    #         candidate.append(cos(g1,g2))
+
+    #     # 取出cos值最大的 找到下标
+    #     max_cos = -0.1
+    #     max_index = -1
+    #     for j in range(len(candidate)):
+    #         value = candidate[j]
+    #         if value > max_cos:
+    #             max_cos = value
+    #             max_index = j
+
+    #     best_choose.append(max_index)
+    #     best_cos.append(max_cos)
+    # # 根据Knowledge中的x edge 获取最大cos
+    
+    # # 打印结果
+    # print("#############################")
+    # for i in range(len(test_set)) :
+    #     print(i," choose ",best_choose[i], " whose best_cos is: ",best_cos[i])
+    # print("#############################")
 
 
 
@@ -345,9 +351,10 @@ if __name__ == "__main__":
     # print(code_numbers)
     # print(aug_numbers)
     
-    
-
+    x = torch.zeros([1, 1])
+    torch.save(x, f"src/NN/model/GNN1_0.pth")
+    torch.save(x, f"src/NN/model/GNN2_0.pth")
 
 
     dataset_train = data_process_read_from_csv_TRAIN(code_numbers, aug_numbers)
-    Model_TRAIN(dataset_train, code_numbers*aug_numbers)
+    # Model_TRAIN(dataset_train, code_numbers*aug_numbers)

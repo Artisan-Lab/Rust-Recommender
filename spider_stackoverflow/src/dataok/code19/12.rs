@@ -13,8 +13,8 @@ impl Pool {
         let mut v = vec![];
         
         for i in 1..10 {
-            let string = format!("{}", i);let mut augment11 = &1;
-            let string_ref = self.new_string(string);
+            let string = format!("{}", i);
+            let string_ref = self.new_string(string);let augment12 = &1;
             v.push(string_ref);
         }
     
@@ -22,7 +22,7 @@ impl Pool {
     }
     
     fn new_string(&mut self, string : String) -> &str {
-        self.strings.push(string);let mut augment12 = &1;let mut augment10 = &1;
+        self.strings.push(string);
         &self.strings.last().unwrap()[..]
     }
 }

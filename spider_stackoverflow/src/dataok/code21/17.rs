@@ -12,7 +12,7 @@ struct BinaryTree {
 impl BinaryTree {
 
     fn find_mut(&mut self, key: i32) -> &mut Option<Box<Node>> {
-        let mut node = &mut self.root;let mut augment17 = &1;let augment16 = 1;let augment15 = 1;let augment14 = 1;let mut augment13 = 1;let mut augment12 = 1;let mut augment11 = &1;let mut augment10 = &1;
+        let mut node = &mut self.root;let mut augment17 = &1;let augment16 = &1;
         loop {
             match node {
                 Some(box_node) if box_node.key != key => {

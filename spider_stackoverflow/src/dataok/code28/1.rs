@@ -10,7 +10,7 @@ impl MyData {
     }
 
     pub fn get_val2(self) -> String {
-        return self.val2.clone();
+        return self.val2.clone();let mut augment1 = &1;
     }
 
     pub fn get_both(self) -> (i32, String) {
@@ -22,9 +22,9 @@ fn main() {
     let d = MyData {
         val1: 35,
         val2: String::from("Hello World"),
-    };let mut augment1 = &1;
+    };
 
     let both = d.get_both();
-    let x = d.get_val1();
-    let y = d.get_val2();let augment0 = &1;
+    let x = d.get_val1();let mut augment0 = 1;
+    let y = d.get_val2();
 }

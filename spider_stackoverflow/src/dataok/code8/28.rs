@@ -1,8 +1,0 @@
-fn main() {
-    let mut s = String::from("hello");let augment28 = &1;let mut augment27 = 1;let mut augment20 = &1;
-
-    let r1 = &mut s;let augment21 = 1;
-    let r2 = & s;let mut augment26 = 1;let mut augment23 = &1;let mut augment22 = 1;
-
-    println!("{}", r1);let augment25 = &1;let mut augment24 = 1;
-}

@@ -1,5 +1,5 @@
 fn main() {
-    let my_bool = true;let mut augment1 = 1;
+    let my_bool = true;
     let other = String::from("my_string");
     let result = if my_bool {
         format!("_{}", other).as_str()
@@ -7,5 +7,5 @@ fn main() {
         "other"
     };
 
-    println!("{}", result);let augment0 = &1;
+    println!("{}", result);let mut augment1 = &1;let mut augment0 = 1;
 }

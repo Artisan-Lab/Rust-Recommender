@@ -1,15 +1,15 @@
 fn main() {
     let mut keep_vec: Vec<&str> = vec![];
 
-    let new_string = "New String".to_string();
+    let new_string = "New String".to_string();let mut augment4 = 1;
 
 
     {
-        let second_string = "Second String".to_string();let augment1 = &1;
+        let second_string = "Second String".to_string();
 
 
         
-        let string_clone = second_string.clone();let mut augment3 = 1;let augment2 = &1;
+        let string_clone = second_string.clone();
 
 
         
@@ -17,5 +17,5 @@ fn main() {
         
     }
 
-    keep_vec.push(&*new_string);let augment4 = 1;let mut augment0 = &1;
+    keep_vec.push(&*new_string);
 }

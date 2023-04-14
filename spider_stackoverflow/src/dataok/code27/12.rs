@@ -8,8 +8,8 @@ impl Foo {
         match self {
             Foo::A => Foo::B(vec![]),
             Foo::B(mut v) => {
-                let len = v.len() as u32;let mut augment11 = 1;
-                v.push(len - 1);let mut augment12 = 1;let augment10 = 1;
+                let len = v.len() as u32;
+                v.push(len - 1);
                 Foo::B(v)
             }
         }
@@ -19,7 +19,7 @@ impl Foo {
 struct Bar(Foo);
 impl Bar {
     fn replace_foo(&mut self) -> () {
-        self.0 = self.0.get_a_new_foo();
+        self.0 = self.0.get_a_new_foo();let augment12 = &1;
     }
 }
 fn main()

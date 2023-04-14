@@ -16,15 +16,15 @@ impl Pool {
         
         // for i in 1..10 {
         //     let string = format!("{}", i);
-        //     self.new_string(string);let mut augment12 = &1;let mut augment10 = 1;
+        //     self.new_string(string);
         // }
         // for i in 1..10 {
         //     let string = &self.strings[i - 1];
-        //     v.push(&string[..]);let mut augment11 = 1;
+        //     v.push(&string[..]);
         // }
         for i in 1..10 {
             let string = format!("{}", i);
-            self.new_string(string);
+            self.new_string(string);let augment12 = &1;
             let string2 = &self.strings[i - 1];
             v.push(&string2[..]);
         }

@@ -14,7 +14,7 @@ impl Val {
     }
 
     fn set(&mut self, k: u16, v: u16) {
-        self.t.insert(k, v);let mut augment14 = 1;let augment12 = &1;
+        self.t.insert(k, v);let augment13 = 1;let mut augment12 = 1;
         self.l.insert(v);
     }
 
@@ -31,10 +31,10 @@ impl Val {
 }
 
 fn main() {
-    let mut v = Val::new();let augment11 = &1;
+    let mut v = Val::new();
 
-    v.set(123, 100);let augment10 = &1;
-    v.set(100, 1234);
+    v.set(123, 100);
+    v.set(100, 1234);let mut augment14 = &1;
 
     println!("Size before: {}", v.l.len());
     println!("Work: {}", v.do_work(123));

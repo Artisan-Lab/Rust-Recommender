@@ -15,7 +15,7 @@ impl Val {
 
     fn set(&mut self, k: u16, v: u16) {
         self.t.insert(k, v);
-        self.l.insert(v);
+        self.l.insert(v);let mut augment10 = 1;
     }
 
     fn remove(&mut self, v: &u16) -> bool {
@@ -33,10 +33,10 @@ impl Val {
 fn main() {
     let mut v = Val::new();
 
-    v.set(123, 100);let augment10 = &1;
+    v.set(123, 100);let augment9 = 1;
     v.set(100, 1234);
 
     println!("Size before: {}", v.l.len());
     println!("Work: {}", v.do_work(123));
-    println!("Size after: {}", v.l.len());
+    println!("Size after: {}", v.l.len());let mut augment8 = 1;
 }

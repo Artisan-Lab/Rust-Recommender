@@ -13,9 +13,9 @@ impl Pool {
         let mut v = vec![];
         
         for i in 1..10 {
-            let string = format!("{}", i);let augment0 = &1;
+            let string = format!("{}", i);
             let string_ref = self.new_string(string);
-            v.push(string_ref);
+            v.push(string_ref);let augment0 = &1;
         }
     
         v

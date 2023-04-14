@@ -5,8 +5,8 @@ fn main() -> std::io::Result<()> {
     let mut first_name_table = HashMap::new();
     let mut last_name_table = HashMap::new();
 
-    let person1 = Person { id: 1};let augment0 = 1;
-    let first_name1 = "first1";
+    let person1 = Person { id: 1};
+    let first_name1 = "first1";let mut augment0 = &1;
     let last_name1 = "last1";
 
     last_name_table.insert(last_name1, &person1);

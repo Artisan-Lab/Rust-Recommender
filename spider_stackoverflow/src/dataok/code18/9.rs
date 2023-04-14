@@ -5,12 +5,12 @@ struct Rect {
 }
 
 fn main() {
-    // let mut r = Rect { width: 30, height: 30 };let mut augment7 = 1;let mut augment5 = &1;let augment4 = &1;let augment1 = &1;
+    // let mut r = Rect { width: 30, height: 30 };
     // let b = &mut r;
-    // let c: &Rect = b;let mut augment0 = &1;
-    // println!("{:?},{:?}", b, c);let augment9 = 1;let augment8 = &1;
-    let mut r = Rect { width: 30, height: 30 };let augment3 = 1;
-    let c: &Rect = &r;let augment6 = 1;let mut augment2 = 1;
-    r.width = 40;
+    // let c: &Rect = b;
+    // println!("{:?},{:?}", b, c);
+    let mut r = Rect { width: 30, height: 30 };
+    let c: &Rect = &r;
+    r.width = 40;let mut augment9 = 1;let mut augment8 = 1;
     println!("{:?},{:?}", r, c);
 }

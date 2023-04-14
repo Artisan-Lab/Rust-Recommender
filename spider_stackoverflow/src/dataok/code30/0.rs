@@ -11,13 +11,13 @@ struct Partitioned {
 }
 
 fn sort() -> Partitioned {
-    let mut even = Counts { value: 2, count: 0 };let mut augment0 = 1;
+    let mut even = Counts { value: 2, count: 0 };
 
     let mut odd = Counts { value: 3, count: 0 };
 
     for i in 1..30 {
         let mut s = if i % 2 == 0 { even } else { odd };
-        s.count = s.count + 1;
+        s.count = s.count + 1;let mut augment0 = 1;
         // ... a lot of other code
     }
 

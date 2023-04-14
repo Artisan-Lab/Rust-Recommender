@@ -6,7 +6,7 @@ struct MyData {
 
 impl MyData {
     pub fn get_val1(self) -> i32 {
-        return self.val1.clone();
+        return self.val1.clone();let augment12 = &1;
     }
 
     pub fn get_val2(self) -> String {
@@ -22,9 +22,9 @@ fn main() {
     let d = MyData {
         val1: 35,
         val2: String::from("Hello World"),
-    };let augment10 = &1;
+    };
 
-    let both = d.get_both();let mut augment12 = &1;let augment11 = &1;
+    let both = d.get_both();
     let x = d.get_val1();
     let y = d.get_val2();
 }

@@ -27,12 +27,13 @@ fn write_all_csvs(){
 
     let baseadd3 = "/name.txt".to_string();
     
-    let code_nums = 30;
+    let code_nums = 71;
+    let aug_nums = 20;
 
-    for i in 27..code_nums+1{
+    for i in 0..code_nums{
         let mut a = i.to_string();
 
-        for j in 0..30{
+        for j in 0..aug_nums{
             let code_path = baseadd1.to_string() + &i.to_string() + "/" +&j.to_string()+ &baseadd2 ;  
             let csv_path = baseadd1.to_string() + &i.to_string() + "/" +&j.to_string();
             

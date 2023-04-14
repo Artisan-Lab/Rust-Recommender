@@ -1,7 +1,7 @@
 fn f(v: &mut Vec<i32>, a: bool) -> &i32 {
     match &v[0] {
         _ if a => {
-            f(v, !a);let augment18 = 1;let augment16 = 1;let augment15 = &1;let augment11 = &1;
+            f(v, !a);let augment19 = &1;
             &v[0]
         }
         x => {
@@ -11,9 +11,9 @@ fn f(v: &mut Vec<i32>, a: bool) -> &i32 {
 }
 fn main()
 {
-    let mut a = Vec::<i32>::new();let mut augment19 = 1;let mut augment17 = &1;let augment13 = 1;
-    a.push(1);let augment14 = 1;let mut augment12 = &1;
+    let mut a = Vec::<i32>::new();
+    a.push(1);let augment17 = &1;
     
-    let c =f(&mut a,true);let augment10 = 1;
+    let c =f(&mut a,true);let augment18 = &1;let mut augment16 = &1;
 }
 // 必须表明f函数

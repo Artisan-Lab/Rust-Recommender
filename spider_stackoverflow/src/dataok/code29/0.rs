@@ -7,5 +7,5 @@ fn main() {
         "other"
     };
 
-    println!("{}", result);let augment0 = &1;
+    println!("{}", result);let mut augment0 = 1;
 }
