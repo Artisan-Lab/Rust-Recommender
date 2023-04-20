@@ -17,7 +17,7 @@ use super::method_call::method_call_names;
 
 use log::{debug, info};
 
-use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Signature};
+use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Signature, ExprReference};
 
 
 
@@ -44,14 +44,15 @@ pub struct VarInfo{
 // function call 与 methodcall合并
 pub struct FuncInfo {
     pub Name: Option<String>,
-    pub arg_number: usize, // 传参数量 需要考虑？
+    pub return_value: usize, //  返回值用什么表示？    0:没有返回值/返回值非引用 1:返回值& 2:&mut
     pub Number:usize,
     pub Start: bool,
     pub End: bool,
     pub method_call: i32,
     // method_call -1表示不是方法调用 0表示self 1表示&self 2表示 mut self 3表示 &mut self
 }
-
+// 新增返回值 传参数量变成返回值
+// 对signature需要解path tuple typereference
 
 // 只在函数内部的cfg 要考虑函数间调用，但是视作一个图中的普通节点
 // 这是对单个函数做的分析，先不考虑其他函数
@@ -252,10 +253,10 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                 
                 // 当前函数入口认为是0节点
 
-                // todo 搞错了， 先只分析main函数。。。 不小心把其他函数与themin都加入了
+                
 
                 if func.sig.ident == askfunction.to_string(){
-                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), return_value: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
                     // todo? 需要传入前后节点吗?
                     // 用节点标号构图 节点标号不能有错误
 
@@ -304,7 +305,8 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                     match method {
                         syn::ImplItem::Method(itemMethod) => {
                             if itemMethod.sig.ident == askfunction.to_string() {
-                                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), arg_number: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                                // 如果是方法的
+                                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), return_value: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
                                 for arg in &itemMethod.sig.inputs {
                                     match arg {
                                         syn::FnArg::Typed(pattyped) => {
@@ -372,7 +374,7 @@ fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)
     graph.push_block_end();
     graph.add(graph.len_num()-2, graph.len_num()-1);
 }
-
+// 普通的pat
 fn graph_pat (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, last_node_num: usize)
 {
     match pat {
@@ -396,6 +398,37 @@ fn graph_pat (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,grap
         _=> {}
     }
 }
+// pat2 一个新的临时变量，一定是& / &mut，必须设置成引用
+fn graph_pat2 (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, last_node_num: usize, new_mut:bool)
+{
+    match pat {
+        Pat::Ident(patident) => {
+            if var_def.contains_key(&String::from(format!("{}",patident.ident))){
+                
+                let var_str = String::from(format!("{}",patident.ident));
+                if let Some(value) = var_def.get(&var_str) {
+                    let mut new_value = (-1,false,false);
+                    if new_mut{
+                        new_value = (2,true,true);
+                    }else{
+                        new_value = (3,true,false);
+                    }
+                    graph.push_node(&new_value, &var_str);
+                    graph.add(graph.len_num()-2, graph.len_num()-1);
+                }
+                else { println!("wrong value of hashmap");}
+
+            }
+        }
+        Pat::Tuple(pattuple) => {
+            for element in &pattuple.elems {
+                graph_pat2(element, var_def, graph, graph.len_num()-1,new_mut);
+            }
+        }
+        _=> {}
+    }
+}
+
 
 
 // func名称解析
@@ -419,18 +452,23 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // signature
             // 对于建图 目前考虑和block类似 开头结尾构建func起点以及终点 对于owner需要考虑特殊标注？
             // 首先建立func节点
+            // 对于建立func节点 
             if let Expr::Path(exprpath) = &*exprcall.func{
 
 
-                let arg_number = exprcall.args.len();
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, arg_number);
+                let return_value = exprcall.args.len();
+                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, return_value);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
+                // 1 代表owner； 2代表mut ref ；3代表immutref；接下来是 ref 和 mutability
+                
+                
+                
 
                 for arg in &exprcall.args {
                     graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
                 }
 
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,arg_number);
+                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,return_value);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
                 // 节点构建后遍历其signature
             }
@@ -448,6 +486,32 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
                 // 
                 graph.push_method_node(method_name, true, false, method_info.0 ,method_info.1);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
+
+                // 获取了当前的method 还需要插入一个self节点？ 隐式调用了self 把self放进去 插入一个self名字的节点
+                let mut statement = (0,false,false);
+                if method_info.0 == 0 {
+                    statement.0 = 1;
+                    statement.1 = false;
+                    statement.2 = false;
+                }else if method_info.0 == 1 {
+                    statement.0 = 3;
+                    statement.1 = true;
+                    statement.2 = false;
+                }else if method_info.0 == 2 {
+                    statement.0 = 1;
+                    statement.1 = false;
+                    statement.2 = true;
+                }else if method_info.0 == 3 {
+                    statement.0 = 2;
+                    statement.1 = true;
+                    statement.2 = true;
+                }
+                let var_str = "self".to_string();
+                graph.push_node(&statement, &var_str);
+                graph.add(graph.len_num()-2, graph.len_num()-1);
+
+
+
                 for arg in &exprmethod.args {
                     graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
                 }
@@ -468,6 +532,10 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1);
             graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
+        Expr::Binary(exprbinary) => {
+            graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprbinary.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+        }
         Expr::Cast(exprcast) => {
             graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
@@ -479,11 +547,48 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         Expr::Struct(exprstruct) => {
             // struct 表达式与 pat相关
         }
-        Expr::Macro(exprmacro) => {
-
-        }
         Expr::Reference(exprreference ) => {
-            graph_expr(&exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            // 临时变量的产生 在这里会有变量变化的疑问，直接在在这里解开比较合适 解开method call
+
+            // 临时变量 处理三个？path 
+            // 有reference证明是存在 &需要跟上&
+            // 这个必定是个临时变量 需要修改
+            let mut mutable = false;
+            if let Some(_) = &exprreference.mutability{
+                mutable = true;
+            }  
+            // pat一个新的 
+            match exprreference.expr.as_ref(){
+                Expr::Path(exprpath) => {
+                    // 获取了新的 mutalble和 ref = true 
+                    if let Some(var_name) = exprpath.path.get_ident(){
+                        //如果名称在hashset之内就可以进行存储
+                        if var_def.contains_key(&String::from(format!("{}",var_name))){
+                            // 获取元组 从三个变量中获得 需要push的节点的信息
+                            if let Some(_) = var_def.get(&String::from(format!("{}",var_name))) {
+                                let mut new_value = (-1,false,false);
+                                if mutable{
+                                    new_value = (2,true,true);
+                                }else{
+                                    new_value = (3,true,false);
+                                }
+                                graph.push_node(&new_value, &String::from(format!("{}",var_name)));
+                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                            }
+                            else { println!("wrong value of hashmap");}
+        
+                        }
+                    } 
+                }
+                Expr::MethodCall(exprmethodcall) => {
+                    // reference 右侧如果是新的method
+                    graph_expr(exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+                }
+                _ => (),
+            }
+
+
+            // graph_expr(&exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
 
         Expr::If(exprif) => {
@@ -576,7 +681,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         }
         Expr::Unsafe(exprunsafe) => {
             // Todo
-            graph_block(&exprunsafe.block, var_def, graph, method_map, graph.len_num()-1);
+            // graph_block(&exprunsafe.block, var_def, graph, method_map, graph.len_num()-1);
         }
         Expr::Macro(exprmacro) => {
             // 只看println 不管别的 mac path无用
@@ -667,9 +772,30 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
             }
 
             // 赋值后面语句的表达式
+            // 不能直接expr 与表达式有关
             if let Some((_eq, expr)) = &loc.init {
-
-                graph_expr(expr, var_def, graph, method_map,graph.len_num());
+                
+                match expr.as_ref() {
+                    Expr::Path(exprpath) =>{
+                        // 如果是path就无所谓
+                    }
+                    // 如果是普通的命名 就不管后面的
+                    // 如果是method 直接就call到method 下来
+                    Expr::Reference(exprReference) => {
+                        // reference 右侧如果也是path就也无所谓
+                        match exprReference.expr.as_ref() {
+                            Expr::Path(exprpath) =>{
+                                // 如果是path就无所谓
+                            }
+                            _ =>{
+                                graph_expr(expr, var_def, graph, method_map,graph.len_num());
+                            }
+                        }
+                    }
+                    _=>{
+                        graph_expr(expr, var_def, graph, method_map,graph.len_num());
+                    }
+                }      
             }
 
 
@@ -688,10 +814,6 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
                 }
                 else { println!("wrong value of hashmap");}
             }
-            
-
-
-
         },
         Stmt::Semi(expr,_semi) => {
             graph_expr(expr, var_def, graph,method_map,graph.len_num()-1);
@@ -717,8 +839,8 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
 
 #[test]
 fn synparse_run() {
-
-    let path_name = "./src/parse/tester.rs";
+    // 跑一个case 查看跑出来的东西
+    let path_name = "./src/parse/tests/1.rs";
 
     let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
@@ -738,17 +860,29 @@ fn synparse_run() {
     // let mut var_set = HashMap::new();
     // var_set.insert("max".to_string(),);
     // var_set.insert("min".to_string());
+    
     let name ="main";
+
+    
+
     let mut var_set = alias_analysis::create_alias_hashmap(path_name,name);
 
     let method_map = method_call_names(path_name);
+    // 打印别名表
+    println!("{:?}",var_set);
+    
+    // 打印方法表
+    // println!("{:?}",method_map);
+
+
     // var_set.insert("my_array".to_string(),(1 as i32,false,false));
     // var_set.insert("max".to_string(),(1 as i32,false,false));
     // var_set.insert("min".to_string(),(1 as i32,false,false));
-    let name = String::from("main");
+    //let name = String::from("main");
+    // 生成并且打印图 获取图的样貌
     let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map, &name);
     // 生成csv x / edge 向量
-    
+    graph.show();
     
     
 }

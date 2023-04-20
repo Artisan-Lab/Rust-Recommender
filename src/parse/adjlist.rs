@@ -115,7 +115,7 @@ impl Adjlist{
             head.nxt = Some(new_node);
         }
     }
-
+    // 1 代表owner； 2代表mut ref ；3代表immutref；接下来是 ref 和 mutability
     pub fn push_node(&mut self ,statement: &(i32, bool, bool), name: &String) {
         let var = VarInfo{Name: Some(name.to_string()), Reference: statement.1, Mutability: statement.2, Number: self.len_num() }; 
         match statement.0 {
@@ -144,13 +144,13 @@ impl Adjlist{
         
     } 
     // func call
-    pub fn push_func_node(&mut self , name: &String, start:bool, end:bool, arg_number: usize) {
+    pub fn push_func_node(&mut self , name: &String, start:bool, end:bool, return_value: usize) {
         self.push(node { 
             stmt:Some(
                 stmt_node_type::Function(
                     FuncInfo{
                         Name: Some(name.to_string()), 
-                        arg_number: arg_number, 
+                        return_value: return_value, 
                         Number: self.len_num(), 
                         Start:start, 
                         End:end,
@@ -161,13 +161,13 @@ impl Adjlist{
         });
     }
     // methodcall
-    pub fn push_method_node(&mut self , name: &String, start:bool, end:bool, method_self: i32, arg_number: usize) {
+    pub fn push_method_node(&mut self , name: &String, start:bool, end:bool, method_self: i32, return_value: usize) {
         self.push(node { 
             stmt:Some(
                 stmt_node_type::Function(
                     FuncInfo{
                         Name: Some(name.to_string()), 
-                        arg_number: arg_number, 
+                        return_value: return_value, 
                         Number: self.len_num(), 
                         Start:start, 
                         End:end,
@@ -254,16 +254,22 @@ impl Adjlist{
             if let Some(a) = &head.data.stmt{
                 match a {
                     stmt_node_type::Owner(info) => {
-                        print!("Owner:{:?}",info.Name);
+                        if(info.Mutability){
+                            print!("Mut Owner: {:?}",info.Name);
+                        }else{
+                            print!("Imut Owner: {:?}",info.Name);
+                        }
+                        
+
                     }
                     stmt_node_type::MutRef(info) => {
-                        print!("MutRef:{:?}",info.Name);
+                        print!("Mut Ref: {:?}",info.Name);
                     }
                     stmt_node_type::StaticRef(info) => {
-                        print!("StaticRef:{:?}",info.Name);
+                        print!("Imut Ref: {:?}",info.Name);
                     }
                     stmt_node_type::Function(info) => {
-                        print!("Function:{:?}",info.Name);
+                        print!("Function: {:?}",info.Name);
                     }
                 }
             }
