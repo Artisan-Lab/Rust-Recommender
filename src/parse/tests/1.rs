@@ -1,22 +1,32 @@
-fn f(v: &mut Vec<i32>, a: bool) -> &i32 {
-    match &v[0] {
-        _ if a => {
-            f(v, !a);
-            &v[0]
+struct Pool {
+    strings : Vec<String>
+}
+
+impl Pool {
+    pub fn new() -> Self {
+        Self {
+            strings: vec![]
         }
-        x => {
-            x
+    }
+
+    pub fn some_f(&mut self) -> Vec<&str> {
+        let mut v = vec![];
+        
+        for i in 1..10 {
+            let string = format!("{}", i);
+            let string_ref = self.new_string(string);
+            v.push(string_ref);
         }
+    
+        v
+    }
+    
+    fn new_string(&mut self, string : String) -> &str {
+        self.strings.push(string);
+        &self.strings.last().unwrap()[..]
     }
 }
 fn main()
 {
-    let mut a = Vec::<i32>::new();
-    a.push(1);
     
-    let c =f(&mut a,true);
 }
-// 必须表明f函数
-
-// 这里的问题是 如果是x，不会copy，则x生命周期和v一样 
-

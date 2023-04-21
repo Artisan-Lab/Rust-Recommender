@@ -1,4 +1,4 @@
-
+#[allow(warnings)]
 use std::io::Read;
 use std::path::{Path, self};
 use std::fs::File;
@@ -463,6 +463,72 @@ pub fn get_union(worng_variable: &Vec<String>, path_name:&str, function_name: &s
     new_aliasmap
 }
 
+pub fn get_steengaard_alias(path_name:&str, function_name: &str, variable_set: &Vec<String>) 
+        -> HashMap<String,(i32,bool,bool)>
+{
+    let mut file = File::open(Path::new(path_name))
+        .expect("Steengaard Open file failed");
+    let mut content = String::new();
+    file.read_to_string(&mut content);
+
+    
+    let ast = syn::parse_file(&content).expect("ast failed");
+    
+    let mut return_value_map = method_call_names(path_name);
+    // 获取变量map
+    let alias_map = create_alias_hashmap(path_name,function_name);
+
+    let (mut unionfind,new_alias_map) = alias_Steensgaard(&ast,&alias_map,&return_value_map,&function_name);
+
+    let mut new_alias_map_after_union = HashMap::<String,(i32,bool,bool)>::new();
+
+    for var_target in variable_set{
+        if let Some((number_var,_)) = new_alias_map.get(var_target){
+            let var_parrent = unionfind.find(number_var.clone());
+
+            // 获取parent之后 找到所有的parent是这个string的加入新map里         
+            for (name_alias,numbers) in new_alias_map.iter() {
+                if unionfind.find(numbers.0.clone()) == var_parrent {
+                    // print!("{},",name_alias);
+                    // 把namealias parent等于 var_parrent的加进去
+                    if let Some(target_get) = alias_map.get(name_alias){
+                        
+                        let value = (target_get.0,target_get.1,target_get.2);
+                    
+                        new_alias_map_after_union.insert(name_alias.to_string(), value);
+                    } 
+                    
+                }
+            }
+                
+
+
+        }
+        
+
+
+
+
+    }
+
+    new_alias_map_after_union
+
+}
+
+
+#[test]
+fn test_alias2(){
+
+    let path_name = "./src/parse/tests/1.rs";
+    let name = "some_f";
+    let mut variable_set = Vec::new();
+    variable_set.push("v".to_string());
+    variable_set.push("self".to_string());
+    
+    let d = get_steengaard_alias(path_name,name,&variable_set);
+    println!("{:?}",d);
+}
+
 #[test]
 fn test_alias()
 {
@@ -470,7 +536,7 @@ fn test_alias()
     let mut file = File::open(Path::new(path_name))
         .expect("Open file failed");
     // funcname
-    let name = "f";
+    let name = "some_f";
     
     let mut content = String::new();
     file.read_to_string(&mut content);
@@ -485,7 +551,6 @@ fn test_alias()
     // 获取变量map
     let alias_map = create_alias_hashmap(path_name,name);
 
-    
 
     // 根据 alias_map 大小创建一个并查集
     let (mut unionfind,new_alias_map) = alias_Steensgaard(&ast,&alias_map,&return_value_map,&name);
@@ -502,17 +567,6 @@ fn test_alias()
         }
         print!("}}");
     }
-
-
-
-
-    // 
-    
-
-    
-    // graph.show();
-
-    // 根据图 创建所需要的别名表
 
 }
 

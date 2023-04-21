@@ -726,7 +726,11 @@ pub fn create_alias_hashmap(path_name: &str, funcname: &str) ->HashMap<String,(i
                 // 新建加入节点
                 stmt_node_type::Owner(varinfo) => {
                     if let Some(a) = &varinfo.Name {
-                        Varmap.insert(a.to_string(), (1 as i32, false, false));
+                        let mut mutabe = false;
+                        if varinfo.Mutability{
+                            mutabe = true;
+                        }
+                        Varmap.insert(a.to_string(), (1 as i32, false, mutabe));
                     }
                     
                 }

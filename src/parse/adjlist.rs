@@ -256,20 +256,32 @@ impl Adjlist{
                     stmt_node_type::Owner(info) => {
                         if(info.Mutability){
                             print!("Mut Owner: {:?}",info.Name);
+                            print!("  ");
                         }else{
                             print!("Imut Owner: {:?}",info.Name);
+                            print!("  ");
                         }
                         
 
                     }
                     stmt_node_type::MutRef(info) => {
                         print!("Mut Ref: {:?}",info.Name);
+                        print!("  ");
                     }
                     stmt_node_type::StaticRef(info) => {
                         print!("Imut Ref: {:?}",info.Name);
+                        print!("  ");
                     }
                     stmt_node_type::Function(info) => {
+                        
                         print!("Function: {:?}",info.Name);
+                        
+                        if info.Start{
+                            print!("Start");
+                        }else {
+                            print!("End");
+                        }
+                        print!("  ");
                     }
                 }
             }
@@ -277,19 +289,19 @@ impl Adjlist{
                 match b{
                     block_node_type::BLOCK_START => {
                         print!(" {{ ");
+                        print!("  ");
                     }
                     block_node_type::BLOCK_END => {
                         print!(" }} ");
+                        print!("  ");
                     }
                     block_node_type::BLOCK_NONE => {
                         print!(" 🔚 ");
+                        print!("  ");
                     }
                 }
             }
-            print!("point edges::");
-
-
-
+            print!("边连接 edges::");
             if let Some(current) = & head.nxt{
                 print!("{} ", current.as_ref().get_num());
                 let mut cur = current.as_ref();

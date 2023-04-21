@@ -2,7 +2,7 @@
 Connection 建立客户端服务端信道
 
 */
-
+#[allow(warnings)]
 use std::io::prelude::*;
 
 use crate::socket::socket_process;

@@ -1,6 +1,7 @@
 
 
-use std::collections::{HashSet, HashMap};
+
+use std::collections::{ HashMap};
 use std::fs::File;
 use std::path::Path;
 use std::io::{self,prelude::*};
@@ -10,6 +11,9 @@ use std::{vec, string};
 
 use csv;
 use proc_macro2::Ident;
+use syn::token::Continue;
+
+use crate::parse::steengaard;
 
 use super::adjlist::Adjlist;
 use super::alias_analysis;
@@ -17,7 +21,7 @@ use super::method_call::method_call_names;
 
 use log::{debug, info};
 
-use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Signature, ExprReference};
+use syn::{self, Stmt, Local, Pat, PatIdent, Expr, Signature, ExprReference, ExprBreak};
 
 
 
@@ -248,52 +252,62 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
             syn::Item::Fn(func) => {
                 // println!("{:?}",func.sig.ident);
 
-                // for arg in &func.sig.inputs {} 
-                // 对fn先创建fn节点
-                
-                // 当前函数入口认为是0节点
-
-                
-
                 if func.sig.ident == askfunction.to_string(){
-                    graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), return_value: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
-                    // todo? 需要传入前后节点吗?
-                    // 用节点标号构图 节点标号不能有错误
 
-                    // signature
-                    for arg in &func.sig.inputs {
-                        match arg {
-                            syn::FnArg::Typed(pattyped) => {
-                                // patident 是名字
-                                match &*pattyped.pat{
-                                    Pat::Ident(patident) => {
-                                        if var_set.contains_key(&String::from(format!("{}",patident.ident))){
-                                            
-                                            let var_str = String::from(format!("{}",patident.ident));
-                                            if let Some(value) = var_set.get(&var_str) {
-                                                graph.push_node(value, &var_str);
-                                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                    if let Some((_,return_value)) = method_map.get(&askfunction.to_string()){
+                        graph.push_func_node(&askfunction.to_string(), true, false, return_value.clone());
+                        // todo? 需要传入前后节点吗?
+                        // 用节点标号构图 节点标号不能有错误
+
+                        // signature
+
+                        let mut continue_now = 0 as usize;
+                        let mut break_vec = Vec::<i32>::new();
+                        let mut return_vec = Vec::<usize>::new();
+
+                        for arg in &func.sig.inputs {
+                            match arg {
+                                syn::FnArg::Typed(pattyped) => {
+                                    // patident 是名字
+                                    match &*pattyped.pat{
+                                        Pat::Ident(patident) => {
+                                            if var_set.contains_key(&String::from(format!("{}",patident.ident))){
+                                                
+                                                let var_str = String::from(format!("{}",patident.ident));
+                                                if let Some(value) = var_set.get(&var_str) {
+                                                    graph.push_node(value, &var_str);
+                                                    graph.add(graph.len_num()-2, graph.len_num()-1);
+                                                }
+                                                else { println!("wrong value of hashmap");}
+                                
                                             }
-                                            else { println!("wrong value of hashmap");}
-                            
                                         }
+                                        _ => {}
                                     }
-                                    _ => {}
+                                    
+                                    
                                 }
-                                
-                                
+                                _ => {}
                             }
-                            _ => {}
+                        } 
+
+                        for stmt in &func.block.stmts {
+                            // 传入图 别名表
+                            let graph_num = graph.len_num();
+                            graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1,&mut continue_now,&mut break_vec,&mut return_vec);
+
                         }
-                    } 
-
-                    for stmt in &func.block.stmts {
-                        // 传入图 别名表
-                        let graph_num = graph.len_num();
-                        graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1);
-
+                        
+                        graph.push_func_node(&askfunction.to_string(), false, true,return_value.clone());
+                        graph.add(graph.len_num()-2, graph.len_num()-1);
+                        // 结束时添加所有return节点
+                        while !return_vec.is_empty(){
+                            if let Some(u) = return_vec.pop(){
+                                graph.add(u, graph.len_num()-1);
+                            }
+                        }
+                        
                     }
-                    
                 }
                 
                 
@@ -306,36 +320,51 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                         syn::ImplItem::Method(itemMethod) => {
                             if itemMethod.sig.ident == askfunction.to_string() {
                                 // 如果是方法的
-                                graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), return_value: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
-                                for arg in &itemMethod.sig.inputs {
-                                    match arg {
-                                        syn::FnArg::Typed(pattyped) => {
-                                            // patident 是名字
-                                            match &*pattyped.pat{
-                                                Pat::Ident(patident) => {
-                                                    if var_set.contains_key(&String::from(format!("{}",patident.ident))){
-                                                        
-                                                        let var_str = String::from(format!("{}",patident.ident));
-                                                        if let Some(value) = var_set.get(&var_str) {
-                                                            graph.push_node(value, &var_str);
-                                                            graph.add(graph.len_num()-2, graph.len_num()-1);
+                                if let Some((method_self_get,return_value_get)) = method_map.get(&askfunction.to_string()){
+                                    let mut continue_now = 0 as usize;
+                                    let mut break_vec = Vec::<i32>::new();
+                                    let mut return_vec = Vec::<usize>::new();
+                                    
+                                    graph.push_method_node(&askfunction.to_string(), true, false, method_self_get.clone(), return_value_get.clone());
+                                    // graph.push(node { stmt:Some(stmt_node_type::Function(FuncInfo{Name: Some(askfunction.to_string()), return_value: 0 , Number: graph.len_num(), Start:true, End:false, method_call: -1})) , block: None });
+                                    for arg in &itemMethod.sig.inputs {
+                                        match arg {
+                                            syn::FnArg::Typed(pattyped) => {
+                                                // patident 是名字
+                                                match &*pattyped.pat{
+                                                    Pat::Ident(patident) => {
+                                                        if var_set.contains_key(&String::from(format!("{}",patident.ident))){
+                                                            
+                                                            let var_str = String::from(format!("{}",patident.ident));
+                                                            if let Some(value) = var_set.get(&var_str) {
+                                                                graph.push_node(value, &var_str);
+                                                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                                                            }
+                                                            else { println!("wrong value of hashmap");}
+                                            
                                                         }
-                                                        else { println!("wrong value of hashmap");}
-                                        
                                                     }
-                                                }
-                                                _ => {}
-                                            } 
+                                                    _ => {}
+                                                } 
+                                            }
+                                            _ => {}
                                         }
-                                        _ => {}
-                                    }
-                                } 
+                                    } 
+                                
 
                                 // signature
 
-                                for stmt in &itemMethod.block.stmts {
-                                    let graph_num = graph.len_num();
-                                    graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1);
+                                    for stmt in &itemMethod.block.stmts {
+                                        let graph_num = graph.len_num();
+                                        graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1,&mut continue_now,&mut break_vec,&mut return_vec);
+                                    }
+                                    graph.push_method_node(&askfunction.to_string(), false, true, method_self_get.clone(), return_value_get.clone());
+                                    graph.add(graph.len_num()-2, graph.len_num()-1);
+                                    while !return_vec.is_empty(){
+                                        if let Some(u) = return_vec.pop(){
+                                            graph.add(u, graph.len_num()-1);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -358,7 +387,12 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
 
 // 解析节点插入
 
-fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, method_map: &HashMap<String,(i32,usize)> ,last_node_num: usize){
+fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, method_map: &HashMap<String,(i32,usize)> ,
+    last_node_num: usize,
+    continue_now:&mut  usize,
+    break_vec: &mut Vec<i32>,
+    return_vec: &mut Vec<usize>,
+){
     // 建图需要 前后加block节点
 
     // Todo： stmt中可能没有任何hashset变量出现，可能不需要插入任何节点 是否需要stmt中不进行任何节点插入操作，
@@ -367,7 +401,7 @@ fn graph_block (block: &syn::Block, var_def: &mut HashMap<String,(i32,bool,bool)
     graph.add(last_node_num, graph.len_num()-1);
     //
     for stmt in &block.stmts {
-        graph_stmt(stmt, var_def, graph, method_map,graph.len_num()-1); 
+        graph_stmt(stmt, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec); 
         // 存在可能性stmt中没有任何一个节点需要添加？
     }
     //
@@ -384,51 +418,41 @@ fn graph_pat (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,grap
                 let var_str = String::from(format!("{}",patident.ident));
                 if let Some(value) = var_def.get(&var_str) {
                     graph.push_node(value, &var_str);
-                    graph.add(graph.len_num()-2, graph.len_num()-1);
+                    graph.add(last_node_num, graph.len_num()-1);
                 }
                 else { println!("wrong value of hashmap");}
 
             }
         }
-        Pat::Tuple(pattuple) => {
-            for element in &pattuple.elems {
-                graph_pat(element, var_def, graph, graph.len_num()-1);
+        Pat::Reference(pat_reference) => {
+            // 到达reference节点需要继续递归
+            graph_pat(&pat_reference.pat, var_def, graph, last_node_num);
+        },
+        Pat::Type(patype) => {
+            // 可以管后面的type 可以不管
+            graph_pat(&patype.pat, var_def, graph, last_node_num);
+
+        }
+        Pat::TupleStruct(tupelstruct) =>{
+            for new_pat in &tupelstruct.pat.elems{
+                graph_pat(&new_pat, var_def, graph, last_node_num);
+            }
+            
+        }
+        Pat::Tuple(pattuple) =>{
+            for new_pat in &pattuple.elems{
+                graph_pat(&new_pat, var_def, graph, last_node_num);
+            }
+            
+        }
+        Pat::Slice(patslice) => {
+            for new_pat in &patslice.elems{
+                graph_pat(&new_pat, var_def, graph, last_node_num);
             }
         }
         _=> {}
     }
 }
-// pat2 一个新的临时变量，一定是& / &mut，必须设置成引用
-fn graph_pat2 (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, last_node_num: usize, new_mut:bool)
-{
-    match pat {
-        Pat::Ident(patident) => {
-            if var_def.contains_key(&String::from(format!("{}",patident.ident))){
-                
-                let var_str = String::from(format!("{}",patident.ident));
-                if let Some(value) = var_def.get(&var_str) {
-                    let mut new_value = (-1,false,false);
-                    if new_mut{
-                        new_value = (2,true,true);
-                    }else{
-                        new_value = (3,true,false);
-                    }
-                    graph.push_node(&new_value, &var_str);
-                    graph.add(graph.len_num()-2, graph.len_num()-1);
-                }
-                else { println!("wrong value of hashmap");}
-
-            }
-        }
-        Pat::Tuple(pattuple) => {
-            for element in &pattuple.elems {
-                graph_pat2(element, var_def, graph, graph.len_num()-1,new_mut);
-            }
-        }
-        _=> {}
-    }
-}
-
 
 
 // func名称解析
@@ -442,8 +466,124 @@ fn path_fmt(exprpath : &syn::ExprPath) -> String {
     pathname[0..pathname.len()-2].to_string()
 }
 
+
+
+// 解reference 有可能是其他表达式，需要解开
+// 这里解的时候必须全部变成新的 ref mutability 
+fn graph_expr_reference(
+    expr: &syn::Expr,
+    mutable:bool,
+    var_def: &mut HashMap<String,(i32,bool,bool)>,
+    graph: &mut Adjlist, 
+    method_map: &HashMap<String,(i32,usize)>,
+    last_node_num: usize,
+    continue_now:&mut  usize,
+    break_vec: &mut Vec<i32>,
+    return_vec: &mut Vec<usize>,
+
+) {
+    // 获取一个reference，对其pat进行解析 将其对应的变量求解
+    // 
+    // 
+    match expr{
+        Expr::Reference(exprRef)=> {
+            let mut new_mutable = false;
+            if let Some(_) = &exprRef.mutability{
+                new_mutable = true;
+            }  
+            graph_expr_reference(&exprRef.expr,new_mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+        }
+        Expr::Path(exprpath) => {
+            if let Some(var_name) = exprpath.path.get_ident(){
+                //如果名称在hashset之内就可以进行存储
+                if var_def.contains_key(&String::from(format!("{}",var_name))){
+                    // 必须是ref
+                    if let Some(_) = var_def.get(&String::from(format!("{}",var_name))) {
+                        let mut new_value = (-1,false,false);
+                        if mutable{
+                            new_value = (2,true,true);
+                        }else{
+                            new_value = (3,true,false);
+                        }
+                        graph.push_node(&new_value, &String::from(format!("{}",var_name)));
+                        graph.add(graph.len_num()-2, graph.len_num()-1);
+                    }
+                    else { println!("wrong value of hashmap");}
+
+                }
+            } 
+
+            
+        }
+        Expr::Field(exprfeild)=>{
+            match &exprfeild.base.as_ref(){
+                Expr::Path(exprpath) =>{
+                    if let Some(var_name) = exprpath.path.get_ident(){
+                        //如果名称在hashset之内就可以进行存储
+                        if var_def.contains_key(&String::from(format!("{}",var_name))){
+                            // 获取元组 从三个变量中获得 需要push的节点的信息
+                            if let Some(_) = var_def.get(&String::from(format!("{}",var_name))) {
+                                let mut new_value = (-1,false,false);
+                                if mutable{
+                                    new_value = (2,true,true);
+                                }else{
+                                    new_value = (3,true,false);
+                                }
+                                graph.push_node(&new_value, &String::from(format!("{}",var_name)));
+                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                            }
+                            else { println!("wrong value of hashmap");}
+        
+                        }
+                    }
+                }
+                _=>()
+            }
+        }
+        // let a = c+b;
+        Expr::Index(exprindex) => {
+            // 别名分析 需要加上 
+            graph_expr_reference(&exprindex.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+        }
+        Expr::Paren(exprparen) => {
+            // 找结构体第一个 目的是找到base
+            graph_expr_reference(&exprparen.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+        }
+        Expr::Try(exprtry) => {
+            // 找结构体第一个 目的是找到base
+            graph_expr_reference(&exprtry.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+        }
+        // 其他的正常继续
+        _=>{
+            graph_expr(expr, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+        }
+    }
+}
+
+// todo 需要建立一个 return节点 
+
+// // 每一个if branch的开头都需要需要连接 lastnode
+// fn graph_if_expr(expr_if: &syn::Expr,
+//     var_def: &mut HashMap<String,(i32,bool,bool)>,
+//     graph: &mut Adjlist, 
+//     method_map: &HashMap<String,(i32,usize)>,
+//     last_node_num: usize){
+        
+//     }
+
+
+
 // 对一个表达式进行构图，关键是寻找出现的变量是否在hashset之中\
-fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,graph: &mut Adjlist, method_map: &HashMap<String,(i32,usize)>,last_node_num: usize){
+fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
+    graph: &mut Adjlist, 
+    method_map: &HashMap<String,(i32,usize)>,
+    last_node_num: usize,
+    continue_now:&mut  usize,
+    break_vec: &mut Vec<i32>,
+    return_vec: &mut Vec<usize>,
+){
     // 表达式可能出现多个变量的情况
     match expr {
         // 函数调用
@@ -455,17 +595,18 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // 对于建立func节点 
             if let Expr::Path(exprpath) = &*exprcall.func{
 
+                let mut return_value = 0;
+                if let Some(fun_info) = method_map.get(&exprpath.path.segments[0].ident.to_string()){
+                    return_value = fun_info.1.clone();
+                }
 
-                let return_value = exprcall.args.len();
+                
+                // 检查returnvalue
                 graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, return_value);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
                 // 1 代表owner； 2代表mut ref ；3代表immutref；接下来是 ref 和 mutability
-                
-                
-                
-
                 for arg in &exprcall.args {
-                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
+                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
                 }
 
                 graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,return_value);
@@ -513,7 +654,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
 
 
                 for arg in &exprmethod.args {
-                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1);
+                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
                 }
                 graph.push_method_node(method_name, false, true, method_info.0, method_info.1);
                 graph.add(graph.len_num()-2, graph.len_num()-1);
@@ -525,27 +666,31 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
         }
         // todo:: exprindex 数组元素
         Expr::Assign(exprassign) => {
-            graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map, graph.len_num()-1);
-            graph_expr(&exprassign.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map, graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(&exprassign.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Expr::AssignOp(exprassignop) => {
-            graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1);
-            graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Expr::Binary(exprbinary) => {
-            graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,graph.len_num()-1);
-            graph_expr(&exprbinary.right.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(&exprbinary.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Expr::Cast(exprcast) => {
-            graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
+            graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Expr::Block(exprblock) => {
             
-            graph_block(&exprblock.block, var_def, graph, method_map, last_node_num);
+            graph_block(&exprblock.block, var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
 
         }
         Expr::Struct(exprstruct) => {
             // struct 表达式与 pat相关
+            for filed in &exprstruct.fields{
+                graph_expr(&filed.expr, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+            }
         }
         Expr::Reference(exprreference ) => {
             // 临时变量的产生 在这里会有变量变化的疑问，直接在在这里解开比较合适 解开method call
@@ -553,64 +698,40 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // 临时变量 处理三个？path 
             // 有reference证明是存在 &需要跟上&
             // 这个必定是个临时变量 需要修改
+            
+            // 必须要根据reference后方的东西传递一个进去
+
             let mut mutable = false;
             if let Some(_) = &exprreference.mutability{
                 mutable = true;
             }  
             // pat一个新的 
-            match exprreference.expr.as_ref(){
-                Expr::Path(exprpath) => {
-                    // 获取了新的 mutalble和 ref = true 
-                    if let Some(var_name) = exprpath.path.get_ident(){
-                        //如果名称在hashset之内就可以进行存储
-                        if var_def.contains_key(&String::from(format!("{}",var_name))){
-                            // 获取元组 从三个变量中获得 需要push的节点的信息
-                            if let Some(_) = var_def.get(&String::from(format!("{}",var_name))) {
-                                let mut new_value = (-1,false,false);
-                                if mutable{
-                                    new_value = (2,true,true);
-                                }else{
-                                    new_value = (3,true,false);
-                                }
-                                graph.push_node(&new_value, &String::from(format!("{}",var_name)));
-                                graph.add(graph.len_num()-2, graph.len_num()-1);
-                            }
-                            else { println!("wrong value of hashmap");}
-        
-                        }
-                    } 
-                }
-                Expr::MethodCall(exprmethodcall) => {
-                    // reference 右侧如果是新的method
-                    graph_expr(exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
-                }
-                _ => (),
-            }
+            graph_expr_reference(&exprreference.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
 
-
-            // graph_expr(&exprreference.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
         }
-
+        Expr::Field(exprfeild) => {
+            graph_expr(&exprfeild.base,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+        }
         Expr::If(exprif) => {
-            // 重写
+            // tod 建边重写 // 
 
             // if 前的判断语句
-            graph_expr (&exprif.cond.as_ref(), var_def, graph, method_map,last_node_num);
+            graph_expr (&exprif.cond.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
             // 建立分支节点
 
             // block start 前的节点
             let if_start = graph.len_num()-1;
 
-            graph_block(&exprif.then_branch, var_def, graph, method_map, if_start);
+            graph_block(&exprif.then_branch, var_def, graph, method_map, if_start,continue_now,break_vec,return_vec);
             // graph.add(graph.len_num()-2, graph.len_num()-1);
             // 第一个branch的结尾 block节点
             let first_brach_end = graph.len_num()-1;
             
             // else branch后的 expr只可能是if 或者block 
-            // TODO 多个if分支会导致出现图变复杂，暂且不考虑 else if 
+            
             if let Some(else_branch_expr) = &exprif.else_branch{
                 // 第二个block的前节点是 ifstart节点
-                graph_expr(else_branch_expr.1.as_ref(), var_def, graph, method_map,if_start);
+                graph_expr(else_branch_expr.1.as_ref(), var_def, graph, method_map,if_start,continue_now,break_vec,return_vec);
                 // 第二个branch尾节点
                 let second_branch_end = graph.len_num()-1;
                 // 创建一个空节点做if 的结尾
@@ -627,36 +748,118 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
 
             
         }
+        // 如何处理循环的break 以及 continue？以及return？
+        // 保存loop 起点应对continue
+        // 在loop 终点连接所有break
         Expr::While(exprwhile) => {
-
-            graph_expr (&exprwhile.cond.as_ref(), var_def, graph, method_map,graph.len_num()-1);
             let v = graph.len_num();
-            graph_block(&exprwhile.body, var_def, graph, method_map, graph.len_num()-1);
+            let tmp_continue = *continue_now;
+            // 碰到循环，
+            // 清理 break
+            *continue_now = graph.len_num();
+            break_vec.push(-1);
+
+            graph_expr (&exprwhile.cond.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            
+            graph_block(&exprwhile.body, var_def, graph, method_map, graph.len_num()-1,continue_now,break_vec,return_vec);
+            // blockend 连边
             let u = graph.len_num()-1;
             graph.add(u, v);
+            // 所有break连边
+            while !break_vec.is_empty() {
+                if let Some(break_u) = break_vec.pop(){
+                    if break_u==-1 {
+                        break;
+                    }
+                    graph.add(break_u as usize, u);
+                }
+
+            }
+            *continue_now = tmp_continue;
+            
+            // 在 loop while 期间传入参数变化，保留上一个
 
         }
         Expr::ForLoop(exprfor) => {
             // 循环在前后block加入一条返回边
             // pat需要单独解析！
             // Todo: 理解 pat 与siginature关系 
-            graph_pat(&exprfor.pat, var_def, graph, last_node_num);
-            
-            graph_expr (&exprfor.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1);
             let v = graph.len_num();
-            graph_block(&exprfor.body, var_def, graph, method_map, graph.len_num()-1);
+            let tmp_continue = *continue_now;
+            // 碰到循环，
+            // 清理 break
+            *continue_now = graph.len_num();
+            break_vec.push(-1);
+
+
+            graph_pat(&exprfor.pat, var_def, graph, graph.len_num()-1);
+            
+            graph_expr (&exprfor.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            
+            graph_block(&exprfor.body, var_def, graph, method_map, graph.len_num()-1,continue_now,break_vec,return_vec);
+
             let u = graph.len_num()-1;
             graph.add(u, v);
+            // 所有break连边
+            while !break_vec.is_empty() {
+                if let Some(break_u) = break_vec.pop(){
+                    if break_u==-1 {
+                        break;
+                    }
+                    graph.add(break_u as usize, u);
+                }
+
+            }
+            *continue_now = tmp_continue;
         }
         Expr::Loop(exprloop) => {
-            graph_block(&exprloop.body, var_def, graph, method_map,graph.len_num()-1);
+            let v = graph.len_num();
+            let tmp_continue = *continue_now;
+            // 碰到循环，
+            // 清理 break coninue 是新的点
+            *continue_now = graph.len_num();
+            break_vec.push(-1);
+
+            graph_block(&exprloop.body, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            let u = graph.len_num()-1;
+            graph.add(u, v);
+            // 所有break连边
+            while !break_vec.is_empty() {
+                if let Some(break_u) = break_vec.pop(){
+                    if break_u==-1 {
+                        break;
+                    }
+                    graph.add(break_u as usize, u);
+                }
+
+            }
+            *continue_now = tmp_continue;
         }
         Expr::Let(exprlet) => {
             graph_pat(&exprlet.pat, var_def, graph, graph.len_num()-1);
+            graph_expr (&exprlet.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Expr::Return(exprreturn) => {
-            // Todo 设立return节点 
+            // 设立return节点
+            // 所有的return都存储在一个returnvec之内，returnvec在函数结束时 吧所有的点都连接到mainblock上
+            // 后面有个expr
+            if let Some(expr_return_this ) =  &exprreturn.expr{
+                graph_expr (expr_return_this.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+            }
+            return_vec.push(graph.len_num()-1);
         }
+
+        Expr::Continue(exprcontinue) => {
+            // 设立 continue 节点，从上一个传递过来的for循环节点，在loop退出时改回去 
+            graph.add(graph.len_num()-1,continue_now.clone());
+        }
+        Expr::Break(ExprBreak) => {
+            // 设立break节点 ，存储一个break数组，在loop结束时 吧所有的break连接到loop终点block上
+
+            break_vec.push((graph.len_num()-1) as i32);
+        }
+
         // 终结点 变量
         Expr::Path(exprpath) =>{
             // let var = exprpath.path.get_ident();
@@ -683,14 +886,52 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             // Todo
             // graph_block(&exprunsafe.block, var_def, graph, method_map, graph.len_num()-1);
         }
+        Expr::Match(exprmatch) => {
+            // 
+            graph_expr (&exprmatch.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+            graph.push_block_start();
+           graph.add(graph.len_num()-2, graph.len_num()-1);
+            let matchnode = graph.len_num()-1;
+
+            let mut arm_end_vec = Vec::new();
+
+            //
+            // match 连边的时候必须是last node
+            // 如果一个arm是空就不连接
+            for arm in &exprmatch.arms{
+                let arm_start = graph.len_num()-1;
+                graph_pat(&arm.pat, var_def, graph, matchnode);
+                // 连接节点 后续继续
+                graph_expr(&arm.body.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+                if arm_start!=graph.len_num()-1{
+                    arm_end_vec.push((graph.len_num()-1).clone());
+                }
+                
+
+            }
+
+            // end结束 所有边都连block
+            // 后续连边需要 在结尾需要连 所有arm结束的边以及 blockend
+            graph.push_block_end();
+            for arm_end in &arm_end_vec {
+                graph.add(arm_end.clone(), graph.len_num()-1);
+            }
+            
+            // graph.add(graph.len_num()-2, graph.len_num()-1)
+
+            // 对arm如何
+        }
         Expr::Macro(exprmacro) => {
             // 只看println 不管别的 mac path无用
+            // println里必须是&
             let mut tokentree_buff = Vec::new();
             let mut first_lit = false;
             for item in exprmacro.mac.tokens.clone() {
                 match item {
                     proc_macro2::TokenTree::Punct(punct) => {
-                        if (!first_lit) {
+                        if !first_lit {
                             tokentree_buff.clear();
                             first_lit =true;
                         }else {
@@ -698,7 +939,10 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
                             tokensteram.extend(tokentree_buff);
                             let res: Result<syn::Expr, syn::Error> = syn::parse2(tokensteram);
                             match  res{
-                                Ok(exp) => graph_expr(&exp, var_def, graph, method_map, last_node_num),
+                                Ok(expr_print) => {
+                                    graph_expr_reference(&expr_print, true,var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
+                                    
+                                }
                                 Err(_) => println!("erro macro"),
                             }
                             tokentree_buff = Vec::new();
@@ -714,7 +958,10 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
             tokenstream_buff.extend(tokentree_buff);
             let res: Result<syn::Expr, syn::Error> = syn::parse2(tokenstream_buff);
             match res {
-                Ok(exp) => graph_expr(&exp, var_def, graph, method_map, last_node_num),
+                Ok(exp) => {
+                    graph_expr_reference(&exp,false, var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
+                    
+                }
                 Err(_) => debug!("Assert macro parse error"),
             }
 
@@ -727,7 +974,13 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,gr
 } // 
 
 
-fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, graph: &mut Adjlist,method_map: &HashMap<String,(i32,usize)> , last_node_num: usize){
+fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, graph: &mut Adjlist,method_map: 
+    &HashMap<String,(i32,usize)> , 
+    last_node_num: usize,
+    continue_now:&mut  usize,
+    break_vec: &mut Vec<i32>,
+    return_vec: &mut Vec<usize>,
+){
     //stmt;别名表;图; 表示节点应该插入在哪个节点的后面 ？ 节点后的位置如何判定 连边？
     // 有多个
 
@@ -782,18 +1035,16 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
                     // 如果是普通的命名 就不管后面的
                     // 如果是method 直接就call到method 下来
                     Expr::Reference(exprReference) => {
-                        // reference 右侧如果也是path就也无所谓
-                        match exprReference.expr.as_ref() {
-                            Expr::Path(exprpath) =>{
-                                // 如果是path就无所谓
-                            }
-                            _ =>{
-                                graph_expr(expr, var_def, graph, method_map,graph.len_num());
-                            }
+                        if let Some(_) = &exprReference.mutability{
+                            graph_expr_reference(&exprReference.expr,true,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+                        }else {
+                            graph_expr_reference(&exprReference.expr,false,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
                         }
+                        
                     }
                     _=>{
-                        graph_expr(expr, var_def, graph, method_map,graph.len_num());
+                        graph_expr(expr, var_def, graph, method_map,graph.len_num(),continue_now,break_vec,return_vec);
                     }
                 }      
             }
@@ -816,10 +1067,10 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
             }
         },
         Stmt::Semi(expr,_semi) => {
-            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1);
+            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         },
         Stmt::Expr(expr) => {
-            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1);
+            graph_expr(expr, var_def, graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
         }
         Stmt::Item(item) => {
             // Item fn?
@@ -854,23 +1105,23 @@ fn synparse_run() {
     // println!("{:#?}",ast); 打印ast
     // 目前假设函数名字就是main
     // 当前上下文不敏感
-
-    // get hashset 获取别名表
-    // Todo ： hashset 需要保存的不只string 还有mut ref等info
-    // let mut var_set = HashMap::new();
-    // var_set.insert("max".to_string(),);
-    // var_set.insert("min".to_string());
     
-    let name ="main";
+    let name ="some_f";
+
+    let mut variable_set = Vec::new();
+    variable_set.push("v".to_string());
+    variable_set.push("self".to_string());
+
+
+    let mut var_set = steengaard::get_steengaard_alias(path_name, name, &variable_set);
 
     
-
-    let mut var_set = alias_analysis::create_alias_hashmap(path_name,name);
 
     let method_map = method_call_names(path_name);
     // 打印别名表
+    println!("别名表如下");
     println!("{:?}",var_set);
-    
+    println!("");
     // 打印方法表
     // println!("{:?}",method_map);
 
@@ -882,7 +1133,11 @@ fn synparse_run() {
     // 生成并且打印图 获取图的样貌
     let graph = graph_generate(&ast, String::from("main"),&mut var_set, &method_map, &name);
     // 生成csv x / edge 向量
+    
+    println!("");
     graph.show();
+
+
     
     
 }
