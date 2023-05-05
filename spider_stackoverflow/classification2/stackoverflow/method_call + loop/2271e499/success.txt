@@ -1,0 +1,30 @@
+This error occurs because there are two mutable references being held to the same object at the same time, which is not allowed by Rust's borrowing rules. In this case, `current` is a mutable reference to an `Option<Box<Node>>`, and `current.as_mut().unwrap().next` is another mutable reference to the same `Option<Box<Node>>`. 
+
+To solve this error, one approach would be to use a nested `match` statement instead of a loop with mutable references. This allows for the second mutable reference to be created in a new scope, which allows the first mutable reference to be dropped before the second is created. Here's an example implementation of `NodeList::append` using this approach:
+
+```
+impl NodeList {
+    fn append(&mut self, novo: Node) {
+        if self.head.is_none() {
+            self.head = Some(Box::new(novo));
+        } else {
+            let mut current = &mut self.head;
+            loop {
+                match current {
+                    None => break,
+                    Some(node) => {
+                        if node.next.is_none() {
+                            node.next = Some(Box::new(novo));
+                            break;
+                        } else {
+                            current = &mut node.next;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+In this implementation, `current` is a mutable reference to an `Option<Box<Node>>` as before, but instead of using `as_mut()` to get a mutable reference to the `Box<Node>` inside, we use a `match` statement to pattern match on `current` and extract the `Box<Node>` using a nested `match` statement. This allows us to create a new mutable reference to the `Box<Node>` without having two mutable references to the same object at the same time.

@@ -1,0 +1,2 @@
+string_clone
+keep_vec

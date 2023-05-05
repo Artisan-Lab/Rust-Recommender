@@ -147,6 +147,16 @@ fn alias_union_this_expr(expr: &syn::Expr,  alias_of_this: &mut Vec<usize> ,unio
             alias_union_this_expr(&exprtry.expr.as_ref(), alias_of_this, union_find, alias_map, return_value_map);
 
         }
+        Expr::Struct(exprstruct) => {
+            // 找结构体第一个 目的是找到base
+            for struct_file in &exprstruct.fields{
+                alias_union_this_expr(&struct_file.expr, alias_of_this, union_find, alias_map, return_value_map);
+            }
+            if let Some(rest_expr) = &exprstruct.rest{
+                alias_union_this_expr(rest_expr.as_ref(), alias_of_this, union_find, alias_map, return_value_map);
+            }
+            
+        }
         _=>()
     }
 }
@@ -188,6 +198,7 @@ fn alias_union_expr(expr: &syn::Expr, union_find: &mut UnionFind ,alias_map: &Ha
                 alias_union_stmt(stmt, union_find, alias_map,return_value_map);
             }
         }
+        
         Expr::Let(exprlet) => {
             // 关键语句
             let mut vec1 = Vec::<usize>::new();

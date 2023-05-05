@@ -1,0 +1,24 @@
+This error occurs because `s` is borrowed as immutable by the `first_word` function, and then it is also borrowed as mutable by the `s.clear()` call. Rust's borrowing rules state that you can have either one mutable reference or any number of immutable references to a value at any given time, but not both. 
+
+To fix this error, you could create a new scope and create a new mutable reference to `s` after the immutable reference is no longer used, like so:
+
+```
+fn main() {
+    let mut s = String::from("hello world");
+
+    {
+        let word = first_word(&s);
+        println!("the first word is: {}", word);
+    } // word goes out of scope here, releasing the immutable borrow
+
+    s.clear(); // now we can create a mutable borrow
+
+    println!("the string is now: {}", s);
+}
+
+fn first_word(s: &String) -> &str {
+    // implementation of first_word function
+}
+```
+
+Here, we create a new scope with the braces `{}` and create a new reference to `s` with the `word` variable. When `word` goes out of scope, the immutable borrow of `s` is released, allowing us to create a mutable borrow with `s.clear()`.

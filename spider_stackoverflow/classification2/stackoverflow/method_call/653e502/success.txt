@@ -1,0 +1,13 @@
+The error message indicates that `rect1` is being borrowed as immutable while it's being borrowed as mutable at the same time. This is not allowed in Rust. In this case, `rect1.area()` borrows `rect1` as mutable and then we try to use `rect1` again to print its properties while it's still borrowed as immutable.
+
+To fix the error, we can separate the two operations into different statements so that `rect1` is not borrowed as immutable at the same time it's borrowed as mutable:
+
+```rust
+fn main() {
+    let mut rect1 = Rectangle {height: 20, width: 30, area: 0};
+    let area = rect1.area();
+    println!("Rectangle has height {} width {} and area {}", rect1.height, rect1.width, area);
+}
+```
+
+By doing this, we first compute the area of the rectangle and store it in a separate variable `area`. Then we print the properties of `rect1` and the computed area without borrowing `rect1` again.

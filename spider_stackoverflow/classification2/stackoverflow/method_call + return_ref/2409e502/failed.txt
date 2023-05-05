@@ -1,0 +1,44 @@
+The error message is indicating that `foo` is being borrowed as mutable when calling the `doo` method (`let bar = foo.doo();`), which means that it can't be borrowed as immutable later on (`&foo`) in the same scope. This is because mutable references in Rust are exclusive, and the compiler prevents multiple mutable references to the same data from being held at the same time to avoid data races. In this case, `bar` is a mutable reference to the same data as `foo`, and thus `foo` cannot be borrowed as immutable for the `println` statement. 
+
+To fix this, you can print `foo` before calling `doo` and binding its result to `bar`, like this:
+
+```rust
+#[derive(Debug)]
+struct Foo(i32);
+
+impl Foo {
+    fn doo(&mut self) -> &Self {
+        self.0 += 1;
+        self // implicit coercion
+    }
+}
+
+fn main() {
+    let mut foo = Foo(0);
+    println!("{:?}", &foo);
+    let bar = foo.doo();
+    println!("{:?}, {:?}", &foo, bar);
+}
+```
+
+Alternatively, you can change the type of `bar` to `&mut Foo` and borrow `foo` as mutable again, like this:
+
+```rust
+#[derive(Debug)]
+struct Foo(i32);
+
+impl Foo {
+    fn doo(&mut self) -> &mut Self {
+        self.0 += 1;
+        self // implicit coercion
+    }
+}
+
+fn main() {
+    let mut foo = Foo(0);
+    let bar = foo.doo();
+    println!("{:?}, {:?}", &foo, bar);
+}
+``` 
+
+Here, the `doo` method returns a mutable reference `&mut Self`, which allows you to borrow `foo` as mutable again in the same scope when calling `println`.

@@ -1,0 +1,16 @@
+The error message indicates that `u[i]` cannot be assigned to because it is currently borrowed. This is because `e` is a reference to `u[i]` that is pushed into the `v` vector. Since `v` might outlive the loop and `u`, it is not safe to hold a reference to `u` beyond its lifetime. To fix this, one solution is to change the type of `v` to hold owned values instead of references. Here is an example of how you can modify the code:
+
+```rust
+fn main() {
+    let mut u: [usize; 3] = [0; 3];
+    let mut v = vec![];
+    for i in 0..3 {
+        u[i] = i;
+        let e = u[i];
+        v.push(e);
+    }
+    println!("{:?}", v);
+}
+```
+
+In this modified code, `v` is a `Vec<usize>` instead of a `Vec<&usize>`, and the `push()` method is called with an owned value `e` instead of a reference to `u[i]`. The program now prints `[0, 1, 2]` as expected.

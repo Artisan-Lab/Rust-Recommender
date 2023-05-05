@@ -1,0 +1,45 @@
+This error occurs because you're trying to move out of `box_node` while it is still borrowed.
+
+In the `find_mut` function, `node` is a mutable reference to the root of the binary tree. In the loop, you are using pattern matching to match the `node` to `Some(box_node)` and checking if the `key` is equal to `box_node.key`. If the `key` is not equal, then you are moving the mutable reference to `box_node.left` or `box_node.right`.
+
+However, when you match to `other`, which is the case where `box_node.key` is equal to `key`, you're trying to return `other`, which is the `Option<Box<Node>>` that `node` is currently pointing to. Since `node` is still borrowed, you can't move out of `box_node`.
+
+To fix this, you can change the return type of `find_mut` to `Option<&mut Node>`, which allows you to return a mutable reference to the `Node` itself instead of the `Option<Box<Node>>`. This way, you can avoid the issue of moving out of the borrowed `box_node`.
+
+Here's an updated version of the code:
+
+```
+struct Node {
+    key: i32,
+    value: i32,
+    left: Option<Box<Node>>,
+    right: Option<Box<Node>>,
+}
+
+struct BinaryTree {
+     root: Option<Box<Node>>,
+}
+
+impl BinaryTree {
+    fn find_mut(&mut self, key: i32) -> Option<&mut Node> {
+        let mut node = &mut self.root;
+        loop {
+            match node {
+                Some(box_node) if box_node.key != key => {
+                    node = if box_node.key < key {
+                        &mut box_node.right
+                    } else {
+                        &mut box_node.left
+                    }
+                },
+                Some(box_node) => return Some(&mut **box_node),
+                None => return None,
+            }
+        }
+    }
+}
+
+fn main() {}
+```
+
+In the updated code, `find_mut` returns an `Option<&mut Node>` instead of `&mut Option<Box<Node>>`. The `loop` continues until it finds a matching key or reaches the end of the tree. If it finds a matching key, it returns a mutable reference to the `Node` by dereferencing the `Box` twice (`**box_node`). If it reaches the end of the tree, it returns `None`.

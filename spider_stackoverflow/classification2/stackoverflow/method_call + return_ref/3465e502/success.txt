@@ -1,0 +1,28 @@
+The error message is telling us that we cannot borrow `self.a` as mutable because it is also borrowed as immutable. The problem is in the `do_stuff` method where we are calling `self.a.do_something(self.get_b())`. 
+
+The `get_b` method returns a reference to `self.b`, which means that `self.a` is borrowed as immutable. When we call `self.a.do_something`, we are trying to borrow `self.a` as mutable at the same time, which is not allowed. 
+
+To fix this error, we need to make sure that we don't borrow `self.a` as immutable and mutable at the same time. One way to do this is to change the `do_something` method to take a reference to `B` instead of `&self`, like this:
+
+```rust
+pub fn do_something(&mut self, other: &B) {
+    self.a.value += other.value;
+}
+```
+
+Then, we can call this method with `self.b` instead of `self.get_b()`:
+
+```rust
+self.a.do_something(&self.b);
+```
+
+With these changes, the `do_stuff` method should look like this:
+
+```rust
+pub fn do_stuff(&mut self) -> i64 {
+    self.a.do_something(&self.b);
+    self.a.value()
+}
+``` 
+
+Now the code should compile without any errors.

@@ -1,0 +1,56 @@
+The error message indicates that `bag` was partially moved when it was matched against the `Food::Cake` variant in the `match` expression, and then the code tried to use `bag` again in the `println!` macro. Since `bag` has been partially moved, its fields are no longer available for use, and trying to access them would result in a compilation error.
+
+To fix this, you can modify the `match` expression to bind the `Food::Cake` variant to a variable, and then use that variable in the `println!` macro. This way, the entire `bag` struct will not be moved or partially moved, and all of its fields will remain available for use:
+
+```rust
+#[derive(Debug)]
+enum Food {
+    Cake,
+    Pizza,
+    Salad,
+}
+
+#[derive(Debug)]
+struct Bag {
+    food: Food
+}
+
+fn main() {
+    let bag = Bag { food: Food::Cake };
+    match bag.food {
+        Food::Cake => {
+            let cake = "cake";
+            println!("I got {}", cake);
+        },
+        x => println!("I got {:?}", x)
+    }
+
+    println!("{:?}", bag);
+}
+```
+
+Alternatively, you could clone the `bag` struct before matching against its `food` field:
+
+```rust
+#[derive(Debug)]
+enum Food {
+    Cake,
+    Pizza,
+    Salad,
+}
+
+#[derive(Debug, Clone)]
+struct Bag {
+    food: Food
+}
+
+fn main() {
+    let bag = Bag { food: Food::Cake };
+    match bag.food {
+        Food::Cake => println!("I got cake"),
+        x => println!("I got {:?}", x)
+    }
+
+    println!("{:?}", bag);
+}
+```

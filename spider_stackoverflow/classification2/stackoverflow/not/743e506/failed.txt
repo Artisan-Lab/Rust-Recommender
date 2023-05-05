@@ -1,0 +1,20 @@
+This error occurs because `r.width` is being borrowed by the `c` reference at the line `let c: &Rect = &r;`, and then an attempt is made to mutate `r.width` at the line `r.width = 40;`. Since `r` is already borrowed as immutable by `c`, it cannot be mutated until the immutable reference is dropped. 
+
+To fix this, you can either drop the immutable reference before attempting to mutate `r.width`, or you can use a mutable reference to `r` instead of an immutable reference to allow for mutation while borrowing. Here's an example of using a mutable reference:
+
+```rust
+#[derive(Debug)]
+struct Rect {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let mut r = Rect { width: 30, height: 30 };
+    let c: &mut Rect = &mut r;
+    c.width = 40;
+    println!("{:?},{:?}", r, c);
+}
+```
+
+In this example, we create a mutable reference `c` to `r`, which allows us to mutate `r.width` through `c.width` without any borrowing errors.

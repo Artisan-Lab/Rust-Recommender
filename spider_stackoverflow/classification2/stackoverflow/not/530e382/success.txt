@@ -1,0 +1,7 @@
+This code attempts to use a moved value, specifically `s1`, after assigning its ownership to another reference `s2`. 
+
+In Rust, when a value is moved, the original owner loses access to it, and any subsequent attempts to use the original owner will result in an error. 
+
+In this case, `s1` is a mutable reference to `s`. When `s1` is assigned to `s2`, `s2` becomes a new mutable reference to the same string that `s1` is referencing, and `s1` loses its ownership. Therefore, when `*s1 = String::from("world2");` tries to change the string through `s1`, it results in an error because `s1` no longer has ownership of the string. 
+
+To fix this error, you can change the last line to `println!("{:?}", s);` to print the modified string through its original owner `s`.

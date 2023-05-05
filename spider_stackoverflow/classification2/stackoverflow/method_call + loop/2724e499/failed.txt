@@ -1,0 +1,13 @@
+The error message indicates that `self.agents` is being borrowed mutably and immutably at the same time in the `step_agents` function. This is not allowed in Rust because it can lead to data races and other undefined behavior. 
+
+In this specific case, the issue is caused by the `&mut` reference used in the for loop. This creates an immutable reference to the hashmap keys and a mutable reference to the hashmap values, which is not allowed. To fix this, we can iterate over the mutable hashmap values directly like this:
+
+```rust
+fn step_agents(&mut self) {
+    for agent in self.agents.values_mut() {
+        self.do_stuff(agent);
+    }
+}
+```
+
+This will allow us to mutably borrow the agents in the hashmap without creating an immutable reference to the hashmap keys.

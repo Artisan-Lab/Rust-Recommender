@@ -1,0 +1,10 @@
+The error message indicates that the `second` method cannot be called with a mutable reference to `self` because `self` is already borrowed as immutable. The `self.a` reference is borrowed when it's passed as an argument to the `second` method, and since `second` takes `self` as a mutable reference, Rust cannot allow the immutable reference to `self.a` to still exist at the same time.
+
+One way to fix this is to use two separate statements to obtain the reference to `self.a` and then call `second` with `self` and the reference to `self.a`, like this:
+
+```
+let a_ref = &self.a;
+self.second(a_ref);
+```
+
+This creates a separate reference to `self.a` that does not conflict with the mutable reference to `self`.

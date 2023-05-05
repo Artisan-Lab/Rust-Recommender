@@ -1,0 +1,13 @@
+The error message indicates that the `get_title` method takes ownership of the `Element` instance, and thus the caller is not allowed to use it again. In this case, the `for` loop iterates over a shared reference to each item in the `items` vector. When the `get_title` method is called on the `item` reference, it moves the ownership of the `Element` instance out of the shared reference, and thus the next iteration of the loop is not allowed to use it again.
+
+To fix the error, you can change the `get_title` method to take a reference to `self` instead of taking ownership:
+
+```rust
+impl Element {
+    pub fn get_title(&self) -> &str {
+        &self.title
+    }
+}
+```
+
+With this change, the `get_title` method returns a reference to the `title` field, which can be safely used in the loop without taking ownership of the `Element` instances.

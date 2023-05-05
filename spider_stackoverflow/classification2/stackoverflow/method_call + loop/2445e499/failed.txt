@@ -1,0 +1,19 @@
+The error is stating that you cannot have multiple mutable references to the same object at the same time. In this case, you are iterating over the mutable references of `self.v` using `self.v.iter_mut()` and inside the loop, you are calling the mutable method `f_mut` on `self`. This means that you are creating multiple mutable references to `self`, which is not allowed.
+
+To fix this error, you can modify the `f` method to take ownership of `self.v` by changing `for _ in self.v.iter_mut()` to `for _ in self.v` and then call `f_mut` directly on `self` without using `iter_mut`:
+
+```
+impl A {
+    fn f(mut self) {
+        for _ in self.v {
+            self.f_mut();
+        }
+    }
+
+    fn f_mut(&mut self) {
+        self.a += 1;
+    }
+}
+```
+
+By taking ownership of `self.v`, the mutable references to `self` and `self.v` are separate, and there are no longer multiple mutable references to the same object at the same time.

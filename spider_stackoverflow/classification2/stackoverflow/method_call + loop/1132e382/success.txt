@@ -1,0 +1,38 @@
+This error is occurring because the `vec1` vector is being moved during the for loop, as the loop is consuming the vector by taking ownership of its elements one at a time. This means that `vec1` is no longer available to be used after the loop. 
+
+In this particular case, the code is trying to modify `vec1` by calling `vec1.push(7)` inside the loop, but since `vec1` has already been moved, this is not possible. 
+
+To fix this, you could use a `while` loop instead of a `for` loop, so that you can explicitly control the iteration and avoid the automatic consumption of the vector:
+
+```rust
+fn main() {
+    let mut vec1 = vec![4, 5];
+    vec1.push(6);
+    let mut i = 0;
+    while i < vec1.len() {
+        if vec1[i] % 2 == 0 {
+            vec1.push(7);
+        }
+        i += 1;
+    }
+    vec1.push(8);
+    println!("vec1={:?}", vec1);
+}
+```
+
+Alternatively, you could clone the vector before the loop so that the original vector is still available for modification:
+
+```rust
+fn main() {
+    let mut vec1 = vec![4, 5];
+    vec1.push(6);
+    let vec2 = vec1.clone();
+    for i in vec2 {
+        if i % 2 == 0 {
+            vec1.push(7);
+        }
+    }
+    vec1.push(8);
+    println!("vec1={:?}", vec1);
+}
+```

@@ -1,0 +1,39 @@
+The error message indicates that `self.const_data` is borrowed as immutable in `let num = self.const_data.get(name).unwrap();`, but `self` is also borrowed as mutable in `self.do_more(num);`. This is not allowed because Rust's borrow checker ensures that you can't have both mutable and immutable references to the same data at the same time, to avoid data races and other concurrency issues.
+
+To fix this error, you can create a local variable that holds a copy of the value in `const_data` and pass that to `do_more` instead. This will allow you to borrow `self` mutably without conflicting with the immutable borrow of `const_data`. Here's an example implementation:
+
+```
+use std::collections::HashMap;
+
+struct Process {
+    const_data: HashMap<String, i32>,
+    mut_data: i32,
+}
+
+impl Process {
+    fn do_more(&mut self, num: i32) {
+        self.mut_data += num;
+    }
+
+    fn do_something(&mut self, name: &str) {
+        if let Some(num) = self.const_data.get(name).cloned() {
+            self.do_more(num);
+        }
+    }
+}
+
+fn main() {
+    let mut p = Process {
+        const_data: HashMap::from([
+            ("foo".to_string(), 1),
+            ("bar".to_string(), 2),
+            ("buzz".to_string(), 3),
+        ]),
+        mut_data: 0,
+    };
+
+    p.do_something("foo");
+}
+```
+
+In this version, we use the `get` method to look up the value in `const_data`, and then use `cloned` to make a copy of the value so we can pass it to `do_more`. Since `num` is a copy of the value, we don't need to hold a reference to `const_data` while we're using it, so the borrow checker is happy to allow us to borrow `self` mutably for the call to `do_more`.

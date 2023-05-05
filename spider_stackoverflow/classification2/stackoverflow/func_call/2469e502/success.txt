@@ -1,0 +1,19 @@
+This error occurs because `values` is being mutably borrowed by the `&mut` reference passed to the `test` function, but it is also being immutably borrowed by the call to `values.len()`. Rust prevents mutable and immutable borrows of the same variable from overlapping in the same scope.
+
+To fix the error, you can store the length of `values` in a separate variable before passing it to `test`:
+
+```
+fn test(a: &mut [i32], place: usize) -> i32 {
+    a[place] /= 2;
+    return a[place];
+}
+
+fn main() {
+    let mut values = vec![1, 2, 3, 4];
+
+    let len = values.len();
+    let b = test(&mut values, len / 2);
+}
+```
+
+This way, the mutable reference to `values` is the only active borrow when `test` is called, and the immutably borrowed length does not overlap with the mutable borrow.

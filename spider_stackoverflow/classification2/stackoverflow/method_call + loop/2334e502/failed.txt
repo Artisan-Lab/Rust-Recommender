@@ -1,0 +1,19 @@
+This error occurs because `arr[i]` is being borrowed as mutable while `arr[i-1]` is still borrowed as immutable. Since the vector at index `i` is being modified inside the loop, Rust prevents borrowing it as immutable to prevent potential data races. 
+
+To fix the error, you need to make sure that the previous vector is no longer borrowed before borrowing the current vector as mutable. One way to do this is to use a separate code block for each iteration of the loop, which will limit the scope of the immutable borrow of the previous vector. Here is an example:
+
+```
+fn main() {
+    let mut arr: [Vec<u32>; 3] = [vec![1, 2, 3], Vec::new(), Vec::new()];
+    for i in 1..3usize {
+        {
+            let prev_vec: &Vec<u32> = &arr[i - 1];
+            for prev_num in prev_vec {
+                arr[i].push(prev_num * 2);
+            }
+        }
+    }
+}
+```
+
+By wrapping the code that borrows the previous vector in a block, the borrow is limited to the block's scope, and the mutable borrow of the current vector can occur outside of that scope.

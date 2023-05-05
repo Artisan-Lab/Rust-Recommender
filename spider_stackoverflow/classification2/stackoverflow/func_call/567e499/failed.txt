@@ -1,0 +1,23 @@
+The compilation error is occurring because you are trying to borrow `v` as mutable twice: once through `&mut v[0]` and again through `&mut v[1]`. Rust's borrow checker is preventing this because it could lead to undefined behavior if two mutable references are used to modify the same memory at the same time.
+
+To fix this, you can create two separate mutable references to `v` before calling the `change` function. Here's an example:
+
+```
+fn change(a: &mut i32, b: &mut i32) {
+    let c = *a;
+    *a = *b;
+    *b = c;
+}
+
+fn main() {
+    let mut v = vec![1, 2, 3];
+    let (first, second) =  mut_two(&mut v[0], &mut v[1]);
+    change(first, second);
+}
+
+fn mut_two<'a, 'b>(x: &'a mut i32, y: &'b mut i32) -> (&'a mut i32, &'b mut i32) {
+    (x, y)
+}
+```
+
+Here, we create two separate mutable references to `v[0]` and `v[1]` using the `mut_two` function, which returns a tuple of the two mutable references. We then pass these references to the `change` function and swap their values. Note that we use separate lifetimes for the two references to avoid any potential lifetime issues.

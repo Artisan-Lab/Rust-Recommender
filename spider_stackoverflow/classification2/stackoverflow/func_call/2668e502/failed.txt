@@ -1,0 +1,20 @@
+This code gives a compilation error because `a` is already borrowed as mutable when trying to call `f1(&a)`, which requires an immutable borrow. This is not allowed in Rust as it would violate the borrowing rules.
+
+To fix the error, you can create a new variable to hold an immutable reference to `a` before the mutable reference is created. Here's an updated version of the code that compiles successfully:
+
+```rust
+fn f1(a: &u32) {
+    print!("{:?}", a);
+}
+
+fn main() {
+    let mut a = 3;
+    let a_ref = &a;
+    let b = &mut a;
+    f1(&a_ref);
+    *b += 1;
+    print!("{:?}", b);
+}
+```
+
+In this version, we create a new variable `a_ref` that holds an immutable reference to `a`, and pass that to `f1` instead of `&a`. This way, we can still use `a` mutably later in the code.

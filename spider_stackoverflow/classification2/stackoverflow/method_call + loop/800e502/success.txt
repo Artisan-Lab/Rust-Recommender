@@ -1,0 +1,49 @@
+The error occurs because you are trying to mutably borrow `self` while there are immutable references to the same value. In this case, the function `some_f` borrows `self` immutably and then calls the `new_string` method which mutably borrows `self`. 
+
+One way to fix the error is to separate the creation of the new string and the retrieval of the string reference into different loops. For example, you could create all the new strings in one loop and then retrieve the string references in a second loop. Here's an example implementation:
+
+```
+use std::vec::*;
+
+struct Pool {
+    strings : Vec<String>
+}
+
+impl Pool {
+    pub fn new() -> Self {
+        Self {
+            strings: vec![]
+        }
+    }
+
+    pub fn some_f(&mut self) -> Vec<&str> {
+        let mut v = vec![];
+
+        // Create new strings
+        for i in 1..10 {
+            let string = format!("{}", i);
+            self.new_string(string);
+        }
+
+        // Retrieve string references
+        for i in 1..10 {
+            let string2 = &self.strings[i - 1];
+            v.push(&string2[..]);
+        }
+
+        v
+    }
+    
+    fn new_string(&mut self, string : String) {
+        self.strings.push(string);
+    }
+}
+
+fn main() {
+    let mut pool = Pool::new();
+    let strings = pool.some_f();
+    println!("{:?}", strings);
+}
+```
+
+This separates the mutable and immutable borrows into different loops, allowing the program to compile without errors.

@@ -1,0 +1,1 @@
+The error message indicates that `vec0` is borrowed as mutable in line 4 when `vec1` is created as a mutable reference to `vec0`. Therefore, you cannot access `vec0` as an immutable reference in line 6 because it is already borrowed as mutable.

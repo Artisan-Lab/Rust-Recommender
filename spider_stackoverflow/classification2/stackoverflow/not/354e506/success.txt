@@ -1,0 +1,11 @@
+The error message indicates that the code is trying to mutate `*x` while it's already borrowed as `r`. Specifically, `r` is a shared reference to `x`, which means that `x` cannot be modified until `r` goes out of scope. But the code tries to assign a new value to `*x` while `r` is still alive, which violates the borrowing rules of Rust and results in a compilation error. To fix this error, you need to make sure that there's no outstanding borrow of `x` when you mutate it. In this case, you can modify the code to use `x` directly instead of creating a reference to it, like this:
+
+```
+fn main() {
+    let mut x: Box<i32> = Box::new(4);
+    *x = 8;
+    println!("{}", x);
+}
+```
+
+This code creates a mutable reference to `x` and assigns a new value to it, without creating a shared reference like `r`. Therefore, the code can mutate `x` without violating the borrowing rules of Rust.

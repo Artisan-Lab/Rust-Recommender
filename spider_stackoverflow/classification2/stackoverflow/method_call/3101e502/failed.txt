@@ -1,0 +1,18 @@
+The error message indicates that `v` is borrowed both as mutable and immutable at the same time. This is not allowed in Rust as it would violate Rust's borrowing rules. In this case, the mutable borrow happens in the line `let mut s = v[..n].to_vec();` where `s` borrows the first `n` elements of `v` mutably. The immutable borrow happens in the line `v[i + v.len() - n] = s[1];` where we try to access `v` immutably while `s` still has a mutable reference to it.
+
+To fix this issue, we can split the `v` vector into two parts: the part that we want to modify and the part that we want to keep unchanged. We can then use separate mutable and immutable references to each part, avoiding the need for a mutable reference to `v` while we are still accessing it immutably. Here's an updated version of the code:
+
+```
+fn main() {
+    let mut v = vec![1, 2, 3, 4, 5];
+    let n = 3;
+    // checks on n and v.len() and whatever else...
+    let mut s = v[..n].to_vec();
+    let (left, right) = v.split_at_mut(v.len() - n);
+    for i in 0..n {
+        right[i] = s[1];
+    }
+}
+``` 
+
+In this version of the code, we split the `v` vector into two parts: `left` contains the elements we want to keep unchanged, and `right` contains the elements we want to modify. We use `split_at_mut` to split the vector at the index `v.len() - n`, which gives us two mutable references to non-overlapping parts of the vector. We can then use `right` to modify the elements we want to change, while `left` remains borrowed immutably. This avoids the need for a mutable reference to `v` while we are still accessing it immutably, and should allow the code to compile without errors.

@@ -1,0 +1,19 @@
+The error is saying that the mutable borrow of `self` in `some_mut_recursive_method` conflicts with the immutable borrow of `self` in the `for` loop in `some_method`.
+
+This is because the `for` loop is iterating over the `data` vector of `self`, which requires an immutable borrow of `self`. But then, inside the loop, `some_mut_recursive_method` is called, which requires a mutable borrow of `self`.
+
+You can fix this by splitting up the mutable and immutable borrows. One way to do this is to move the call to `some_mut_recursive_method` outside the `for` loop, like this:
+
+```rust
+fn some_method(&mut self) -> Result<(), Box<dyn Error>> {
+    for num in self.data.iter() {
+        println!("{num}");
+    }
+
+    self.some_mut_recursive_method()?;
+
+    Ok(())
+}
+``` 
+
+By doing this, the immutable borrow of `self` inside the `for` loop ends before the mutable borrow in `some_mut_recursive_method` begins, so there is no conflict.

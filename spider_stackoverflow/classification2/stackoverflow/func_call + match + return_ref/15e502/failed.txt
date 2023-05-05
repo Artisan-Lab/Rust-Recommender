@@ -1,0 +1,22 @@
+The error message indicates that the vector `v` is being borrowed as immutable and mutable at the same time. This is not allowed in Rust, as borrowing rules require that either one mutable reference or any number of immutable references can exist to a value at any given time. 
+
+In this case, the issue is that `&v[0]` creates an immutable borrow of `v`, and then later on `f` is called with `v` being borrowed mutably. To fix this issue, you can try creating a separate variable to store the reference to `v[0]` before calling `f`, so that the immutable borrow is dropped before the mutable borrow is created. Here's an updated version of the code that should work:
+
+```
+fn f(v: &mut Vec<i32>, a: bool) -> &i32 {
+    let x = &v[0]; // create separate variable to store immutable borrow
+    match x {
+        _ if a => {
+            f(v, !a);
+            x // return reference to `v[0]`
+        }
+        _ => x,
+    }
+}
+
+fn main() {
+    let mut a = Vec::<i32>::new();
+    a.push(1);
+    let c = f(&mut a, true);
+}
+```

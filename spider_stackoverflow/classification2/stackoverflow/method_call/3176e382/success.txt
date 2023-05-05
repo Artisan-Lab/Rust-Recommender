@@ -1,0 +1,24 @@
+This error occurs because the value `x` is moved into the `bar` method when it is called, but then it is also used as an argument for `foo`. Since `bar` takes ownership of `self`, `x` is no longer available in the main scope, and the use of `x.foo()` results in a borrow of a moved value error. 
+
+To fix this issue, you can pass the value returned by `foo()` as a separate argument to `bar()` instead of chaining the method calls: 
+
+```
+fn main() {
+    let x = AB { a: 3, b: 5 };
+    let result = x.bar(x.foo());
+    println!("{}", result);
+}
+``` 
+
+becomes 
+
+```
+fn main() {
+    let x = AB { a: 3, b: 5 };
+    let foo_result = x.foo();
+    let result = x.bar(foo_result);
+    println!("{}", result);
+}
+``` 
+
+This way, the value returned by `foo()` is borrowed separately from `x` and passed to `bar()`.

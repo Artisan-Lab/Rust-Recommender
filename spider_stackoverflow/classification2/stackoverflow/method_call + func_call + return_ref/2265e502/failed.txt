@@ -1,0 +1,15 @@
+The error occurs because `s` is borrowed as immutable by the call to `first_word(&s)`, and at the same time, it is also borrowed as mutable by the call to `s.clear()`. 
+
+The function `first_word` returns a string slice that points to a position in the original string `s`, and this string slice has an immutable borrow on `s` that lasts as long as the string slice exists. Since `word` is assigned to the result of `first_word(&s)`, it holds a string slice that borrows `s`. Thus, when the call to `s.clear()` tries to borrow `s` mutably, Rust compiler detects the mutable borrow as invalid since there is an outstanding immutable borrow. 
+
+Therefore, to fix the error, we have to make sure that there are no outstanding immutable borrows when `s.clear()` is called. One way to do this is by changing the function `first_word` to return a string slice that doesn't borrow `s`. We can simply return a string literal instead of returning a string slice pointing to the input string. This way, `word` will not hold a borrow on `s`, and we can call `s.clear()` safely.
+
+Here's the modified version of `first_word` that returns a string literal:
+
+```rust
+fn first_word(s: &str) -> &str {
+    "there"
+}
+```
+
+With this modification, the program will compile and run without errors, but the function `first_word` always returns the same string `"there"`, regardless of the input string.

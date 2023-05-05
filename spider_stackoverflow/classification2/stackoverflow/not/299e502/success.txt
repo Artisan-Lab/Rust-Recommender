@@ -1,0 +1,45 @@
+This error message is telling you that you cannot borrow `s` as immutable because it is already borrowed as mutable. This means that you have a mutable reference to `s` in `r1`, and you are trying to create an immutable reference to `s` in `r2` at the same time. Rust's borrowing rules state that you can have either one mutable reference or any number of immutable references, but not both at the same time. This is to prevent data races, which can occur when multiple threads access the same data concurrently and at least one of them is modifying it. 
+
+To fix this error, you need to make sure that you are not borrowing `s` mutably and immutably at the same time. In this case, you could remove the immutable borrow in `r2`, like this:
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &mut s;
+
+    println!("{}", r1);
+}
+```
+
+Or, you could change the order of the borrows so that the immutable borrow happens first, like this:
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    let r2 = &s;
+    let r1 = &mut s;
+
+    println!("{}", r1);
+}
+```
+
+However, this will result in another error: "cannot borrow `s` as mutable because it is also borrowed as immutable", because you are trying to create a mutable borrow `r1` while there is an immutable borrow `r2` in scope. To fix this, you could remove the immutable borrow, or you could create a new scope for the immutable borrow, like this:
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &mut s;
+
+    {
+        let r2 = &s;
+        println!("{}", r2);
+    }
+
+    println!("{}", r1);
+}
+```
+
+In this example, the immutable borrow `r2` is created in a new scope, so it does not overlap with the mutable borrow `r1`.

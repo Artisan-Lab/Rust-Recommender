@@ -1,0 +1,22 @@
+The error message indicates that the function `to_bytes()` is returning a reference to the local variable `bytes`, which is deallocated when the function returns. This means that the returned reference is invalid and can lead to undefined behavior if it is used.
+
+To fix this error, you can allocate the buffer on the heap using a `Vec<u8>` instead of an array on the stack. Here is an updated version of the code:
+
+```rust
+struct SomeData(u8, u8);
+
+impl SomeData {
+    fn to_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+
+        // fill up buffer with some data in `SomeData`.
+        bytes.push(self.0);
+        bytes.push(self.1);
+
+        // return vector
+        bytes
+    }
+}
+```
+
+In this version, `bytes` is allocated on the heap using `Vec::with_capacity(16)`. The data is pushed into the vector using the `push()` method, which adds elements to the end of the vector. Finally, the vector is returned, which transfers ownership of the allocated memory to the caller.

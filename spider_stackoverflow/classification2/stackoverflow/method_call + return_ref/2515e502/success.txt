@@ -1,0 +1,22 @@
+The error message indicates that `vec` is being borrowed immutably on line 12 when calling `last()`, but then it's being borrowed mutably on line 14 when calling `remove()`. Rust doesn't allow mutable and immutable references to exist at the same time, as this can lead to race conditions and other types of bugs.
+
+One way to fix this issue is to avoid borrowing `vec` on line 12 by storing the result of `last()` in a separate variable, like this:
+
+```
+let curr = vec.last();
+if curr.is_none() {
+    return false;
+}
+let curr = curr.unwrap();
+```
+
+This way, we avoid borrowing `vec` immutably when calling `last()`, and we only borrow it mutably on line 14 when we're removing the last element. Also, note that we're using `is_none()` to check if `last()` returned `None` instead of comparing the result to `unwrap()`, as the latter can lead to a panic if `vec` is empty.
+
+Another way to fix this issue is to clone the last element of `vec` before removing it, like this:
+
+```
+let curr = vec.last().unwrap().clone();
+vec.pop();
+```
+
+This way, we avoid borrowing `vec` mutably and immutably at the same time, as we're cloning the last element before removing it. Note that `clone()` is being used to create a new `String` from the reference to the last element of `vec`.

@@ -1,0 +1,15 @@
+The error is due to the fact that the variable `a` was moved into the first `for` loop, and then it cannot be used again in the second `for` loop. One way to solve the issue is to use a reference to `a` in the second loop, like this:
+
+```
+fn main() {
+    let a = vec![1, 2, 3];
+    for i in &a {
+        println!("{}", i);
+    }
+    for j in &a {
+        println!("{}", j);
+    }
+}
+```
+
+Here, `&a` creates an immutable reference to `a`, which can be used multiple times.

@@ -1,0 +1,25 @@
+The error is caused because `inner` is a local variable and its lifetime is limited to the innermost block that it's declared in. Therefore, when you borrow a reference to it and store it in `tmp`, you cannot use that reference outside the block because `inner` has already been dropped.
+
+To fix this, you need to extend the lifetime of `inner` so that it lives long enough for the second `println!` statement to access it. One way to do this is to declare `inner` outside the inner block so that it lives until the end of the outer block:
+
+```
+struct X {payload : i32}
+
+fn main() {
+    let pl = X{payload : 44};
+    let inner;
+    {
+        let mut x = &pl;
+        {
+            inner = X{payload : 30};
+            let tmp = std::mem::replace(&mut x, &inner);
+            println! ("data ={:?}", x.payload);
+            let _f = std::mem::replace(&mut x, &tmp);
+        }
+        println! ("data ={:?}", x.payload);
+    }
+    println! ("data ={:?}", inner.payload);
+}
+```
+
+This way, `inner` lives until the end of the outer block and its reference can be safely used after the second `println!` statement.

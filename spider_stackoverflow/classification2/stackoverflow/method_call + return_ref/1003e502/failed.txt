@@ -1,0 +1,15 @@
+The error occurs because in the `do_work` method, you are calling the mutable `remove1` method while `self.t.get()` is borrowed as immutable. Since the `remove1` method is mutating `self.l`, Rust's borrow checker won't allow you to borrow `self` mutably (`&mut self`) while also borrowing it immutably (`&self`).
+
+To fix the error, you can create a temporary variable to hold the value returned by `self.t.get()`, and then call `remove1` on `self` using that temporary variable:
+
+```rust
+fn do_work(&mut self, v: u16) -> bool {
+    let res = match self.t.get(&v) {
+        None => return false,
+        Some(r) => r,
+    };
+    self.remove1(res)
+}
+```
+
+This way, you are no longer borrowing `self` mutably and immutably at the same time, so the error should be resolved.

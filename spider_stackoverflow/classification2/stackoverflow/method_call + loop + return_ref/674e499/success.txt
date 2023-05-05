@@ -1,0 +1,26 @@
+The error message is telling us that we are trying to borrow `self` mutably more than once at a time, which is not allowed by Rust's borrowing rules. In particular, in the `it` method, we are iterating over a vector of strings and calling the `find` method, which takes a mutable reference to `self`. Since we are iterating mutably over `self.items` in the previous iteration of the loop, we cannot call `find` on `self` again until the mutable reference is dropped.
+
+To fix this error, we can use a different approach to searching for an item in the `HashMap`. Instead of iterating over a vector of keys and calling `find` for each one, we can use the `get` method on the `HashMap`, which takes an immutable reference and returns an `Option` with a reference to the value if it exists.
+
+Here's an updated version of the `it` method that uses `get`:
+
+```
+impl Struct {
+    fn find(&mut self, key: &String) -> Option<&Box<Calculation>> {
+        self.items.get(key)
+    }
+
+    fn it(&mut self) -> Option<&Box<Calculation>> {
+        for key in vec!["1","2","3"] {
+            if let Some(result) = self.items.get(&key.to_owned()) {
+                return Some(result);
+            }
+        }
+        None
+    }
+}
+```
+
+In this version of the `it` method, we use `self.items.get(&key.to_owned())` to look up the key in the `HashMap`. This method returns an `Option<&Box<Calculation>>`, which we can check with `if let Some(result) = ...`. If the value exists, we return `Some(result)`. If we've finished iterating over all the keys and haven't found a value, we return `None`. 
+
+Note that we don't need to use a mutable reference to `self` in this version of the `it` method, so there's no risk of mutable borrowing conflicts.

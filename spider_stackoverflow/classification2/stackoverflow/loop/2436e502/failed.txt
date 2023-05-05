@@ -1,0 +1,25 @@
+This error occurs because `triangle` is borrowed as mutable in `current_row`, but then it is also borrowed as immutable in `last_row`. Since mutable references can't coexist with immutable references to the same data, the compiler throws an error.
+
+To fix this error, we can make a copy of the `i+1` row and borrow the copy instead of borrowing `triangle`. We can do this using the `clone` method of `Vec`. Here's how we can modify the code:
+
+```rust
+use std::cmp;
+
+fn minimum_total(mut triangle: Vec<Vec<i32>>) -> i32 {
+    for i in (0..triangle.len()-1).rev() {
+        let current_row = &mut triangle[i];
+        let last_row = triangle[i+1].clone();
+        for j in 0..current_row.len() {
+            current_row[j] = cmp::min(last_row[j], last_row[j+1]) + current_row[j];
+        }
+    }
+
+    triangle[0][0]
+}
+
+fn main() {
+    println!("{}", minimum_total(vec![vec![2],vec![3,4],vec![6,5,7],vec![4,1,8,3]]));
+}
+```
+
+Now we are borrowing the copy of `triangle[i+1]` instead of borrowing `triangle`, and hence we can avoid the error.

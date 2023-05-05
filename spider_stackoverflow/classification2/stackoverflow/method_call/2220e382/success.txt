@@ -1,0 +1,14 @@
+This error occurs because `item.my_first_string` has been moved into `my_second_string` field of the `Bar` struct, so it is no longer owned by `item`. Therefore, calling `is_empty()` method on `item.my_first_string` is not allowed since it requires a mutable reference to the string. One way to fix this issue is to clone the string when assigning it to `my_second_string` field, like this:
+
+```
+impl From<Foo> for Bar {
+    fn from(item: Foo) -> Self {
+        Bar {
+            my_second_string: item.my_first_string.clone(),
+            string_is_empty: item.my_first_string.is_empty(),
+        }
+    }
+}
+``` 
+
+This way, a new `String` object is created and moved into `my_second_string` field, leaving the original `String` object owned by `item` unchanged, and allowing us to call `is_empty()` method on it.

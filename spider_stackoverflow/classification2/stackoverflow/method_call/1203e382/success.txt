@@ -1,0 +1,38 @@
+The error message is indicating that the value `d` has been moved, meaning that ownership of it has been transferred to another variable, and so it cannot be used again. In this case, the `get_val1` and `get_val2` methods take ownership of `self` as a parameter, which means that they move `d` and take ownership of it. Therefore, when you try to use `d` again in the following lines of code, the compiler complains that the value has already been moved and cannot be used anymore.
+
+To fix this, you can change the method signatures to take `&self` instead of `self`. This means that the methods will borrow a reference to `self` rather than taking ownership of it. Here's an updated version of the code that compiles successfully:
+
+```
+#[derive(Debug, Clone)]
+struct MyData {
+    val1: i32,
+    val2: String,
+}
+
+impl MyData {
+    pub fn get_val1(&self) -> i32 {
+        return self.val1.clone();
+    }
+
+    pub fn get_val2(&self) -> String {
+        return self.val2.clone();
+    }
+
+    pub fn get_both(&self) -> (i32, String) {
+        return (self.val1, self.val2.clone());
+    }
+}
+
+fn main() {
+    let d = MyData {
+        val1: 35,
+        val2: String::from("Hello World"),
+    };
+
+    let both = d.get_both();
+    let x = d.get_val1();
+    let y = d.get_val2();
+}
+```
+
+In addition, you should also change the `get_both` method to clone the `String` in the tuple, since it takes ownership of `self` and therefore must clone the `String` to avoid moving it out of the struct.

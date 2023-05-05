@@ -1,0 +1,15 @@
+This code will not compile because `foo` is already being mutably borrowed when `f` is called with a shared reference to `foo`. This is not allowed since mutable references are exclusive; they prevent any other kind of borrowing until the mutable reference goes out of scope.
+
+To fix this, you need to make sure that `foo` is not being mutably borrowed when `f` is called. One way to do this is to create a new variable that is a shared reference to `foo.b`, like so:
+
+```
+fn main() {
+    let mut foo = A { b: B { c: 2 } };
+    let bar = &mut foo.b;
+    let b_ref = &foo.b;
+    f(&foo);
+    g(bar);
+}
+```
+
+Now, `f` is called with a shared reference to `foo.b` instead of a shared reference to the whole `foo` struct. This means that `foo` is no longer being mutably borrowed at the same time as the shared reference, and the code will compile without errors.

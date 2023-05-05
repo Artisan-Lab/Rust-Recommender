@@ -1,0 +1,19 @@
+The error message is indicating that `even` and `odd` have been moved, which means that their ownership has been transferred to some other variables. However, the variables `even` and `odd` are used again in the loop, causing the error. Rust does not allow us to use a variable that has been moved because it can lead to issues like use-after-free or double-free.
+
+To fix the issue, we can make a copy of the `even` and `odd` variables before they are moved. One way to do this is by implementing the `Clone` trait for the `Counts` struct and then using the `clone()` method to make a copy of the variables. Here's an example of how to implement the `Clone` trait for the `Counts` struct:
+
+```rust
+#[derive(Debug, Clone)]
+struct Counts {
+    value: u16,
+    count: u8,
+}
+```
+
+With this change, we can make a copy of `even` and `odd` using the `clone()` method:
+
+```rust
+let mut s = if i % 2 == 0 { even.clone() } else { odd.clone() };
+```
+
+Now the program should compile without errors.

@@ -1,0 +1,31 @@
+The problem is that `input` is being borrowed mutably in line 10 by `io::stdin().read_line(&mut input)`, but it is also being borrowed immutably in line 12 by `input.split_whitespace()`. Since mutable references cannot be held at the same time as immutable references, we need to separate these two borrowings.
+
+One solution is to create a new `String` instance for each line of input. We can then push each word into the `words` vector and drop the `String` instance at the end of each iteration of the loop. Here's an updated version of the code:
+
+```rust
+use std::io;
+
+fn main() {
+    let mut words = Vec::new();
+
+    loop {
+        let mut input = String::new();
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => {
+                let words_line: Vec<&str> = input.split_whitespace().collect();
+                match words_line.get(0) {
+                    Some(&word) => {
+                        words.push(word.to_string());
+                    },
+                    _ => continue,
+                }
+            }
+            Err(_) => break
+        }
+    }
+
+    println!("{:?}", words);
+}
+```
+
+In this version, we create a new `String` instance in each iteration of the loop, and read the input into that instance. We then collect the words into a `Vec<&str>` as before, and push the first word (if it exists) into the `words` vector as a `String`. Finally, we let the `input` instance drop at the end of each iteration.

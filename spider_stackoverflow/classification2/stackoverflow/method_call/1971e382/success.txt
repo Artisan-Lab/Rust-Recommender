@@ -1,0 +1,28 @@
+The error message indicates that `p` has been moved when it was used in the operator `+`. This is because the `Add` trait takes ownership of its arguments. 
+
+To fix this, you can either clone `p` before using it in the operator, or you can implement the `Copy` trait for the `Point` struct:
+
+```
+use std::ops::{Add};
+
+#[derive(Clone, Copy)]
+struct Point {
+    x: i32,
+    y: i32
+}
+
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, other: Point) -> Point {
+        Point {x: self.x + other.x, y: self.y + other.y}
+    }
+}
+
+fn main() {
+    let p: Point = Point {x: 1, y: 0};
+    let pp = p + p;
+}
+```
+
+In this example, we added the `Clone` and `Copy` traits to the `Point` struct to allow cloning the struct instead of moving it. Alternatively, you can directly implement the `Copy` trait for the `Point` struct to allow the struct to be copied instead of moved.

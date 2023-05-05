@@ -1,0 +1,29 @@
+The error message is indicating that `self` (of type `&mut UserHandler`) is being mutably borrowed twice. The first mutable borrow occurs when getting a mutable reference to the user object with the specified ID: `self.users.get_mut(&user_id)`. The second mutable borrow occurs when calling `self.handle_user_data(user, data)` with a mutable reference to the user object.
+
+The borrow checker prevents this because having multiple mutable references to the same data at the same time can lead to data races and other issues.
+
+To fix this error, we can pass the user ID to `handle_user_data` instead of passing a mutable reference to the user object. Then we can get a mutable reference to the user object inside `handle_user_data` using the ID.
+
+Here's an updated implementation of `UserHandler`:
+
+```rust
+struct UserHandler {
+    users: HashMap<i32, User>,
+    counter: i32,
+}
+
+impl UserHandler {
+    fn handle_data(&mut self, user_id: i32, data: &str) {
+        self.handle_user_data(user_id, data);
+    }
+    
+    fn handle_user_data(&mut self, user_id: i32, data: &str) {
+        if let Some(user) = self.users.get_mut(&user_id) {
+            user.send("Message received!");
+            self.counter += 1;
+        }
+    }
+}
+```
+
+In `handle_user_data`, we use the user ID to get a mutable reference to the user object, and then call `user.send` and increment `self.counter` using that mutable reference.

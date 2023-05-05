@@ -1,0 +1,23 @@
+This error occurs because `self.get()` borrows `self` immutably, and `self.value += 1` tries to borrow `self` mutably. Since a mutable reference and an immutable reference cannot exist at the same time, this results in a compilation error.
+
+To fix this, you can change the return type of `get_and_increment` to return a mutable reference to `self.value` instead of a slice reference to `&[u8]`. This way, you can increment `self.value` directly without needing to borrow `self` mutably again. Here's the modified code:
+
+```rust
+pub struct Something {
+    value: usize,
+}
+
+impl Something {
+    pub fn get_and_increment(&mut self) -> &mut usize {
+        let res = &mut self.value;
+        self.value += 1;
+        res
+    }
+
+    pub fn get(&self) -> &[u8] {
+        &[3; 2]
+    }
+}
+``` 
+
+Now `get_and_increment` returns a mutable reference to `self.value`, which allows you to increment it directly without borrowing `self` mutably again.

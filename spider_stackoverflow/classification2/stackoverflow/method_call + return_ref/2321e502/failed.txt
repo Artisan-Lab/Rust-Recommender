@@ -1,0 +1,17 @@
+The error message indicates that `f` has been borrowed as mutable by calling `f.get_index()`, and cannot be borrowed as immutable by calling `f.use_index()` while the mutable borrow is still active.
+
+One way to fix this would be to create a new variable to hold the mutable borrow of `f` and use that in the subsequent call to `f.use_index()`.
+
+Here's an example of how this can be done:
+
+```rust
+fn main () {
+    let mut f = Foo{x: 12};
+    if let Some(index) = f.get_index() {
+        let borrowed_f = &f;
+        borrowed_f.use_index(index);
+    }
+}
+```
+
+By creating a new variable `borrowed_f` that is borrowed as immutable and using that in the call to `f.use_index()`, we can avoid the mutable and immutable borrows from conflicting.

@@ -1,0 +1,26 @@
+This error occurs because the code is trying to move the value out of an `Option` enum variant while borrowing the option's value mutably.
+
+To fix the error, the code needs to replace the `let Some(se)` pattern match with a `let Some(&mut se)` pattern match, so that it borrows the value rather than moving it. Here's an updated version of the code with the fix:
+
+```
+enum SomeEnum {
+    Foo,
+    Bar,
+}
+
+struct SomeStruct {
+    attrib: SomeEnum,
+    next_attrib: Option<SomeEnum>,
+}
+
+impl SomeStruct {
+    pub fn apply_changes(&mut self) {
+        if let Some(&mut se) = self.next_attrib.as_mut() {
+            self.attrib = se;
+        }
+        self.next_attrib = None;
+    }
+}
+```
+
+Note that the `se` variable is now a mutable reference (`&mut se`) rather than a value (`se`). Also, the `as_mut()` method is used to borrow the value mutably from the `Option` enum variant. Finally, the `Copy` trait is not required for the `SomeEnum` type in this case.

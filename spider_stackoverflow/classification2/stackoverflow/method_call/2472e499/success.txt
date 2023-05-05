@@ -1,0 +1,11 @@
+The error message is telling us that we're trying to borrow `b` as mutable more than once at a time. In this case, we're trying to pass the result of `b.bar()` as an argument to `b.foo()`, which means that we're trying to borrow `b` mutably for the first time to call `b.bar()`, and then borrow it mutably again to call `b.foo()`. Since we can't have two mutable borrows of the same value at the same time, the compiler gives us an error.
+
+One way to fix this error is to split the code into two separate statements, like this:
+
+```
+let mut b = A{};
+let i = b.bar();
+b.foo(i);
+```
+
+This way, we borrow `b` mutably only once per statement, and the code compiles without errors.

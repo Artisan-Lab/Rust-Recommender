@@ -1,0 +1,32 @@
+The error message indicates that the variable `my_array` has been moved to the function `max` and cannot be used again in the function `min`. To fix this, you can pass the vector as a reference to both functions instead of moving it:
+
+```
+fn main() {
+    let my_array = vec![61, 14, 71, 23, 42, 8, 13, 66];
+    let max = max(&my_array);
+    let min = min(&my_array);
+    println!("Max value is {}.", max);
+}
+
+fn max(array: &Vec<i32>) -> i32 {
+    let mut max = array[0];
+    for val in array {
+        if max < *val {
+            max = *val;
+        }
+    }
+    max
+}
+
+fn min(array: &Vec<i32>) -> i32 {
+    let mut min = array[0];
+    for val in array {
+        if min > *val {
+            min = *val;
+        }
+    }
+    min
+}
+```
+
+By passing the vector as a reference (`&Vec<i32>`) instead of moving it (`Vec<i32>`), both functions can access the vector without taking ownership of it. Note that we need to dereference the values in the loop to access their actual values.

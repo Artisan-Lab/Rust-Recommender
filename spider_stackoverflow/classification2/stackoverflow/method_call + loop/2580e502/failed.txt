@@ -1,0 +1,11 @@
+The error message is telling us that we cannot borrow `self` as immutable while it's already borrowed as mutable. In this case, the issue is that the `send` method is borrowing `self` (i.e., the `Manager` instance) as immutable while we already have a mutable reference to `self` inside the loop. The mutable reference is obtained through the `iter_mut` method on the `packages` vector.
+
+To fix this error, we need to change the signature of the `send` method to take a mutable reference to `self` instead of an immutable reference:
+
+```rust
+fn send(&mut self, package: &mut Package) {
+    package.id = 23;
+}
+```
+
+This way, the `send` method can borrow `self` as mutable without conflicting with the mutable reference obtained in the loop.

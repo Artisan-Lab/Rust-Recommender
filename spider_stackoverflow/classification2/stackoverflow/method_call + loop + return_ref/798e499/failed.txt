@@ -1,0 +1,21 @@
+The error message indicates that there is a mutable borrow conflict in the `some_f` method of the `Pool` struct. Specifically, in the for loop, `self` is mutably borrowed by `self.new_string(string)`, but it is also mutably borrowed in the next iteration of the loop. This is not allowed in Rust.
+
+One way to fix this is to create a new vector of strings, and then create string references from that vector. Here's an example implementation of `some_f` that avoids the mutable borrow conflict:
+
+```rust
+pub fn some_f(&mut self) -> Vec<&str> {
+    let mut v = vec![];
+    let mut new_strings = vec![];
+
+    for i in 1..10 {
+        let string = format!("{}", i);
+        new_strings.push(string);
+        v.push(&new_strings.last().unwrap()[..]);
+    }
+
+    self.strings.append(&mut new_strings);
+    v
+}
+```
+
+In this implementation, the new strings are first added to a separate vector `new_strings`. Then, string references are created from the new vector and added to the `v` vector. Finally, the `new_strings` vector is appended to the `self.strings` vector. This way, we avoid the mutable borrow conflict.

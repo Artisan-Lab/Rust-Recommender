@@ -1,0 +1,30 @@
+The compilation error occurs because `&self` is an immutable reference to `MainStruct`, but `self.helper` is a mutable reference to `HelperStruct`. You cannot have both an immutable and a mutable reference to the same value at the same time.
+
+To fix this error, you can change `&self` to `&mut self` in `call_helper()` to make `self` a mutable reference to `MainStruct`. This way, you can pass `&mut self` to `the_method()` and call `self.helper.the_method(self)` instead of `self.helper.the_method(&self)`. Here's the corrected code:
+
+```
+struct HelperStruct {
+    
+}
+
+struct MainStruct {
+    helper: HelperStruct,
+}
+
+impl MainStruct {
+    pub fn call_helper(&mut self) { 
+        // &mut self because the_method changes inner state of HelperStruct
+        self.helper.the_method(self);
+    }
+}
+
+impl HelperStruct {
+    pub fn the_method(&mut self, owner: &mut MainStruct) {
+        
+    }
+}
+
+fn main() {
+    
+}
+```

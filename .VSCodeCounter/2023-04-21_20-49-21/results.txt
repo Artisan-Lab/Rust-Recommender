@@ -1,0 +1,56 @@
+Date : 2023-04-21 20:49:21
+Directory : /home/zhangzhicong/.ssh/Rust-Recommender/src
+Total : 24 files,  3297 codes, 0 comments, 781 blanks, all 4078 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Rust     |         24 |      3,297 |          0 |        781 |      4,078 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         24 |      3,297 |          0 |        781 |      4,078 |
+| . (Files)                                                             |          6 |        170 |          0 |         80 |        250 |
+| NN                                                                    |          1 |         10 |          0 |          3 |         13 |
+| NN/test                                                               |          1 |         10 |          0 |          3 |         13 |
+| graphcsv                                                              |          8 |        100 |          0 |         20 |        120 |
+| graphcsv/code                                                         |          8 |        100 |          0 |         20 |        120 |
+| parse                                                                 |          9 |      3,017 |          0 |        678 |      3,695 |
+| parse (Files)                                                         |          8 |      2,991 |          0 |        672 |      3,663 |
+| parse/tests                                                           |          1 |         26 |          0 |          6 |         32 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                              | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/NN/test/1.rs             | Rust     |         10 |          0 |          3 |         13 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/connection.rs            | Rust     |         58 |          0 |         36 |         94 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/1.rs       | Rust     |         25 |          0 |          2 |         27 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/2.rs       | Rust     |          7 |          0 |          0 |          7 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/3.rs       | Rust     |          7 |          0 |          0 |          7 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/4.rs       | Rust     |         10 |          0 |          3 |         13 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/5.rs       | Rust     |          8 |          0 |          0 |          8 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/6.rs       | Rust     |         13 |          0 |          4 |         17 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/7.rs       | Rust     |         12 |          0 |          5 |         17 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/test.rs    | Rust     |         18 |          0 |          6 |         24 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/lib.rs                   | Rust     |         10 |          0 |          2 |         12 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/main.rs                  | Rust     |          7 |          0 |         10 |         17 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/message.rs               | Rust     |         29 |          0 |          8 |         37 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/adjlist.rs         | Rust     |        371 |          0 |         70 |        441 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/alias_analysis.rs  | Rust     |        664 |          0 |        123 |        787 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/method_call.rs     | Rust     |        377 |          0 |        115 |        492 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/mod.rs             | Rust     |         15 |          0 |          1 |         16 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/parse_var.rs       | Rust     |      1,056 |          0 |        223 |      1,279 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/steengaard.rs      | Rust     |        459 |          0 |        114 |        573 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/test_read_write.rs | Rust     |         37 |          0 |         24 |         61 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/tester.rs          | Rust     |         12 |          0 |          2 |         14 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/parse/tests/1.rs         | Rust     |         26 |          0 |          6 |         32 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/socket.rs                | Rust     |         54 |          0 |         21 |         75 |
+| /home/zhangzhicong/.ssh/Rust-Recommender/src/threads.rs               | Rust     |         12 |          0 |          3 |         15 |
+| Total                                                                 |          |      3,297 |          0 |        781 |      4,078 |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+

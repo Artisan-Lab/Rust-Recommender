@@ -1,0 +1,457 @@
+"filename", "language", "Rust", "comment", "blank", "total"
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E310 01/buggy.rs", "Rust", 60, 0, 11, 71
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E310 01/fixed.rs", "Rust", 60, 0, 11, 71
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 01/buggy.rs", "Rust", 16, 0, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 01/fixed.rs", "Rust", 17, 0, 4, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 02/buggy/src/main.rs", "Rust", 9, 0, 5, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 02/fixed/src/main.rs", "Rust", 34, 1, 11, 46
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 03/buggy.rs", "Rust", 20, 0, 4, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 03/fixed.rs", "Rust", 22, 0, 4, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 04/buggy.rs", "Rust", 36, 0, 2, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 04/fixed.rs", "Rust", 36, 0, 2, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 05/buggy.rs", "Rust", 21, 0, 5, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 05/fixed.rs", "Rust", 24, 0, 5, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 06/buggy.rs", "Rust", 23, 1, 6, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 06/fixed/src/main.rs", "Rust", 28, 0, 3, 31
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E382 07/buggy.rs", "Rust", 8, 0, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E499 01/buggy.rs", "Rust", 18, 0, 5, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E499 01/fixed.rs", "Rust", 18, 1, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 01/buggy.rs", "Rust", 17, 0, 7, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 01/fixed.rs", "Rust", 17, 0, 7, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 02/buggy.rs", "Rust", 29, 0, 6, 35
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 02/fixed.rs", "Rust", 33, 0, 5, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 03/buggy.rs", "Rust", 28, 0, 5, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 03/fixed.rs", "Rust", 24, 0, 5, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 04/buggy.rs", "Rust", 28, 0, 5, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E502 04/fixed.rs", "Rust", 29, 0, 5, 34
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E507 01/buggy.rs", "Rust", 13, 0, 2, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E507 01/fixed.rs", "Rust", 18, 3, 6, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E507 02/buggy.rs", "Rust", 21, 0, 5, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E507 02/fixed.rs", "Rust", 19, 0, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E515 01/buggy.rs", "Rust", 27, 0, 6, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E515 01/fixed.rs", "Rust", 24, 0, 6, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E597 01/buggy.rs", "Rust", 18, 0, 6, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E597 01/fixed.rs", "Rust", 22, 0, 7, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E597 02/buggy.rs", "Rust", 25, 0, 8, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E597 02/fixed.rs", "Rust", 25, 0, 8, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 01/buggy.rs", "Rust", 31, 1, 6, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 01/fixed.rs", "Rust", 31, 1, 6, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 02/buggy.rs", "Rust", 16, 0, 2, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 02/fixed.rs", "Rust", 16, 0, 2, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 03/buggy.rs", "Rust", 17, 0, 2, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 03/fixed.rs", "Rust", 17, 0, 2, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 04/buggy.rs", "Rust", 10, 0, 3, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/E782 04/fixed.rs", "Rust", 13, 0, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N closure 01/buggy.rs", "Rust", 14, 0, 3, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N closure 01/fixed.rs", "Rust", 16, 0, 3, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 01/buggy.rs", "Rust", 7, 0, 1, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 01/fixed.rs", "Rust", 7, 0, 1, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 02/buggy.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 02/fixed.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 02/unsafe_fix.rs", "Rust", 23, 0, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 03/buggy.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 03/fixed-1.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/N lifetime 03/fixed-2.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/doc/code_pattern/NN 01/main.rs", "Rust", 8, 1, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call + return_ref/e515/1.rs", "Rust", 6, 0, 5, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e106/1.rs", "Rust", 5, 0, 4, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e382/1.rs", "Rust", 7, 0, 5, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e499/1.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e502/1.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e502/2.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e502/3.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e502/4.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e505/1.rs", "Rust", 8, 0, 5, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/func_call/e597/1.rs", "Rust", 9, 0, 7, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e382/1.rs", "Rust", 6, 0, 7, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e499/1.rs", "Rust", 8, 0, 4, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e502/1.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e502/2.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e502/3.rs", "Rust", 0, 0, 1, 1
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e506/1.rs", "Rust", 7, 0, 5, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/loop/e506/2.rs", "Rust", 7, 0, 4, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/match/e382/1.rs", "Rust", 9, 0, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/match/e505/1.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/match/e507/1.rs", "Rust", 8, 1, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + func_call + return_ref/e499/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + func_call + return_ref/e502/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + func_call + return_ref/e505/1.rs", "Rust", 10, 0, 4, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop + return_ref/e499/1.rs", "Rust", 17, 0, 10, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e382/1.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e499/1.rs", "Rust", 14, 0, 8, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e502/1.rs", "Rust", 14, 0, 7, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e502/2.rs", "Rust", 14, 0, 8, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e502/3.rs", "Rust", 19, 7, 12, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + loop/e505/1.rs", "Rust", 7, 0, 2, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e499/1.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e499/2.rs", "Rust", 15, 0, 15, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e499/3.rs", "Rust", 16, 0, 14, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e499/4.rs", "Rust", 17, 0, 10, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e502/1.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e502/2.rs", "Rust", 13, 0, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e502/3.rs", "Rust", 16, 0, 14, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e502/4.rs", "Rust", 15, 0, 15, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call + return_ref/e506/1.rs", "Rust", 17, 0, 13, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e382/1.rs", "Rust", 10, 0, 5, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e382/2.rs", "Rust", 12, 0, 10, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e382/3.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e499/1.rs", "Rust", 15, 1, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e499/2.rs", "Rust", 14, 1, 6, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/1.rs", "Rust", 12, 1, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/2.rs", "Rust", 15, 0, 6, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/3.rs", "Rust", 15, 0, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/4.rs", "Rust", 16, 0, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/5.rs", "Rust", 15, 1, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/6.rs", "Rust", 12, 0, 5, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e502/7.rs", "Rust", 12, 0, 4, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e505/1.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e505/2.rs", "Rust", 13, 0, 10, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e505/3.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e507/1.rs", "Rust", 13, 0, 9, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e507/2.rs", "Rust", 13, 0, 9, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e507/3.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/method_call/e515/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e382/1.rs", "Rust", 6, 2, 2, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e382/2.rs", "Rust", 5, 0, 0, 5
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e382/3.rs", "Rust", 8, 0, 5, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e499/1.rs", "Rust", 7, 0, 4, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e502/1.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e502/2.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e505/1.rs", "Rust", 7, 2, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e505/2.rs", "Rust", 9, 0, 4, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e506/1.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e506/2.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/createnew/not/e597/1.rs", "Rust", 9, 0, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call + match + return_ref/15e502/right.rs", "Rust", 15, 11, 4, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call + match + return_ref/15e502/wrong.rs", "Rust", 17, 2, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call + return_ref/2756e499/wrong.rs", "Rust", 10, 0, 3, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/1585e382/right.rs", "Rust", 24, 0, 2, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/1585e382/wrong.rs", "Rust", 24, 0, 2, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/183e106/right.rs", "Rust", 13, 1, 4, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/183e106/wrong.rs", "Rust", 13, 0, 2, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/2299e597/right.rs", "Rust", 15, 1, 1, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/2299e597/wrong.rs", "Rust", 14, 0, 1, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/2469e502/right.rs", "Rust", 9, 0, 4, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/2469e502/wrong.rs", "Rust", 8, 2, 4, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/2668e502/wrong.rs", "Rust", 10, 1, 1, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/3213e502/wrong.rs", "Rust", 14, 1, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/567e499/right.rs", "Rust", 13, 9, 4, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/567e499/wrong.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/691e505/right.rs", "Rust", 18, 0, 6, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/691e505/wrong.rs", "Rust", 17, 0, 6, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/func_call/876e597/wrong.rs", "Rust", 36, 2, 9, 47
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/1006e506/right.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/1006e506/wrong.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/2436e502/right.rs", "Rust", 14, 0, 3, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/2436e502/wrong.rs", "Rust", 14, 1, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/2688e502/right.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/2688e502/wrong.rs", "Rust", 20, 1, 6, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/3211e382/right.rs", "Rust", 10, 0, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/loop/3211e382/wrong.rs", "Rust", 10, 0, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/match/1068e382/right.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/match/1068e382/wrong.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + func_call/2265e502/right.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + func_call/2265e502/wrong.rs", "Rust", 9, 1, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + func_call/3045e502/wrong.rs", "Rust", 15, 1, 7, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop + return_ref/674e499/right.rs", "Rust", 23, 9, 8, 40
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop + return_ref/674e499/wrong.rs", "Rust", 24, 0, 8, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop + return_ref/798e499/right.rs", "Rust", 29, 6, 6, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop + return_ref/798e499/wrong.rs", "Rust", 26, 0, 6, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/1132e382/right.rs", "Rust", 11, 0, 0, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/1132e382/wrong.rs", "Rust", 11, 0, 0, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/123e502/right.rs", "Rust", 33, 3, 10, 46
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/123e502/wrong.rs", "Rust", 29, 3, 9, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2334e502/right.rs", "Rust", 12, 0, 0, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2334e502/wrong.rs", "Rust", 9, 1, 3, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2445e499/right.rs", "Rust", 14, 0, 2, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2445e499/wrong.rs", "Rust", 17, 0, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2580e502/right.rs", "Rust", 38, 0, 5, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2580e502/wrong.rs", "Rust", 38, 1, 4, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2724e499/right.rs", "Rust", 42, 0, 10, 52
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/2724e499/wrong.rs", "Rust", 35, 2, 8, 45
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/800e502/right.rs", "Rust", 29, 6, 6, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + loop/800e502/wrong.rs", "Rust", 27, 9, 6, 42
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + match + return_ref/863e505/right.rs", "Rust", 29, 1, 2, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + match + return_ref/863e505/wrong.rs", "Rust", 29, 0, 4, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/1003e502/wrong.rs", "Rust", 34, 8, 11, 53
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/1542e515/right.rs", "Rust", 11, 2, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/1542e515/wrong.rs", "Rust", 11, 2, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2321e502/wrong.rs", "Rust", 23, 1, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2356e502/right.rs", "Rust", 26, 0, 6, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2356e502/wrong.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2409e502/wrong.rs", "Rust", 13, 1, 2, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2515e502/right.rs", "Rust", 35, 2, 0, 37
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2515e502/wrong.rs", "Rust", 36, 0, 1, 37
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2601e502/right.rs", "Rust", 21, 1, 3, 25
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2601e502/wrong.rs", "Rust", 19, 2, 2, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2687e499/right.rs", "Rust", 40, 7, 9, 56
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/2687e499/wrong.rs", "Rust", 30, 7, 7, 44
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/3269e506/right.rs", "Rust", 16, 0, 4, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/3269e506/wrong.rs", "Rust", 16, 0, 4, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/3465e502/right.rs", "Rust", 40, 4, 6, 50
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/3465e502/wrong.rs", "Rust", 40, 5, 8, 53
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/96e502/right.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call + return_ref/96e502/wrong.rs", "Rust", 9, 4, 2, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/1167e507/wrong.rs", "Rust", 25, 0, 3, 28
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/1203e382/right.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/1203e382/wrong.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/131e502/right.rs", "Rust", 17, 2, 6, 25
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/131e502/wrong.rs", "Rust", 17, 3, 7, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/192e597/right.rs", "Rust", 9, 2, 3, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/192e597/wrong.rs", "Rust", 10, 0, 11, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/1971e382/right.rs", "Rust", 15, 0, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/1971e382/wrong.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2220e382/right.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2220e382/wrong.rs", "Rust", 17, 0, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2271e499/right.rs", "Rust", 35, 0, 4, 39
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2271e499/wrong.rs", "Rust", 40, 0, 4, 44
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2472e499/right.rs", "Rust", 14, 0, 3, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2472e499/wrong.rs", "Rust", 13, 0, 3, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2739e507/right.rs", "Rust", 15, 0, 1, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2739e507/wrong.rs", "Rust", 16, 0, 2, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2883e502/right.rs", "Rust", 18, 0, 4, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/2883e502/wrong.rs", "Rust", 18, 1, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3101e502/right.rs", "Rust", 9, 1, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3101e502/wrong.rs", "Rust", 8, 2, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3164e507/right.rs", "Rust", 24, 0, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3164e507/wrong.rs", "Rust", 24, 0, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3176e382/right.rs", "Rust", 18, 0, 2, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3176e382/wrong.rs", "Rust", 17, 0, 2, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/3348e382/wrong.rs", "Rust", 28, 0, 8, 36
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/376e507/right.rs", "Rust", 33, 3, 7, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/376e507/wrong.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/653e502/right.rs", "Rust", 15, 0, 3, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/method_call/653e502/wrong.rs", "Rust", 15, 2, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/1215e716/right.rs", "Rust", 12, 0, 2, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/1215e716/wrong.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/1378e382/right.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/1378e382/wrong.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/2243e716/right.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/2243e716/wrong.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/2439e382/right.rs", "Rust", 27, 0, 5, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/2439e382/wrong.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/2750e716/wrong.rs", "Rust", 8, 1, 3, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/287e506/right.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/287e506/wrong.rs", "Rust", 6, 1, 1, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/299e502/right.rs", "Rust", 6, 0, 2, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/299e502/wrong.rs", "Rust", 6, 1, 2, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/3048e382/right.rs", "Rust", 14, 1, 9, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/3048e382/wrong.rs", "Rust", 26, 1, 11, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/3234e716/right.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/3234e716/wrong.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/354e506/wrong.rs", "Rust", 6, 0, 0, 6
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/363e502/right.rs", "Rust", 6, 0, 2, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/363e502/wrong.rs", "Rust", 6, 1, 3, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/530e382/right.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/530e382/wrong.rs", "Rust", 8, 1, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/608e502/right.rs", "Rust", 8, 0, 2, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/608e502/wrong.rs", "Rust", 8, 1, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/743e506/right.rs", "Rust", 11, 0, 2, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification/stackoverflow/not/743e506/wrong.rs", "Rust", 11, 4, 1, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call + return_ref/e515/1.rs", "Rust", 6, 0, 5, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e106/1.rs", "Rust", 5, 0, 4, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e382/1.rs", "Rust", 7, 0, 5, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e499/1.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e502/1.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e502/2.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e502/3.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e502/4.rs", "Rust", 6, 0, 6, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e505/1.rs", "Rust", 8, 0, 5, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/func_call/e597/1.rs", "Rust", 9, 0, 7, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e382/1.rs", "Rust", 6, 0, 7, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e499/1.rs", "Rust", 8, 0, 4, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e502/1.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e502/2.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e506/1.rs", "Rust", 7, 0, 5, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/loop/e506/2.rs", "Rust", 7, 0, 4, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/match/e382/1.rs", "Rust", 9, 0, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/match/e505/1.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/match/e507/1.rs", "Rust", 8, 1, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + func_call + return_ref/e499/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + func_call + return_ref/e502/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + func_call + return_ref/e505/1.rs", "Rust", 10, 0, 4, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop + return_ref/e499/1.rs", "Rust", 17, 0, 10, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e382/1.rs", "Rust", 6, 0, 3, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e499/1.rs", "Rust", 14, 0, 8, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e502/1.rs", "Rust", 14, 0, 7, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e502/2.rs", "Rust", 14, 0, 8, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e502/3.rs", "Rust", 19, 7, 12, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + loop/e505/1.rs", "Rust", 7, 0, 2, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e499/1.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e499/2.rs", "Rust", 15, 0, 15, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e499/3.rs", "Rust", 16, 0, 14, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e499/4.rs", "Rust", 17, 0, 10, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e502/1.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e502/2.rs", "Rust", 13, 0, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e502/3.rs", "Rust", 16, 0, 14, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e502/4.rs", "Rust", 15, 0, 15, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call + return_ref/e506/1.rs", "Rust", 17, 0, 13, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e382/1.rs", "Rust", 10, 0, 5, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e382/2.rs", "Rust", 12, 0, 10, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e382/3.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e499/1.rs", "Rust", 15, 1, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e499/2.rs", "Rust", 14, 1, 6, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/1.rs", "Rust", 12, 1, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/2.rs", "Rust", 15, 0, 6, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/3.rs", "Rust", 15, 0, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/4.rs", "Rust", 16, 0, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/5.rs", "Rust", 15, 1, 5, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/6.rs", "Rust", 12, 0, 5, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e502/7.rs", "Rust", 12, 0, 4, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e505/1.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e505/2.rs", "Rust", 13, 0, 10, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e505/3.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e507/1.rs", "Rust", 13, 0, 9, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e507/2.rs", "Rust", 13, 0, 9, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e507/3.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/method_call/e515/1.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e382/1.rs", "Rust", 6, 2, 2, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e382/2.rs", "Rust", 5, 0, 0, 5
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e382/3.rs", "Rust", 8, 0, 5, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e499/1.rs", "Rust", 7, 0, 4, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e502/1.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e502/2.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e505/1.rs", "Rust", 7, 2, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e505/2.rs", "Rust", 9, 0, 4, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e506/1.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e506/2.rs", "Rust", 6, 0, 4, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/createnew/not/e597/1.rs", "Rust", 9, 0, 0, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call + match + return_ref/15e502/right.rs", "Rust", 15, 11, 4, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call + match + return_ref/15e502/wrong.rs", "Rust", 17, 2, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call + return_ref/2756e499/wrong.rs", "Rust", 10, 0, 3, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/1585e382/right.rs", "Rust", 24, 0, 2, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/1585e382/wrong.rs", "Rust", 24, 0, 2, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/183e106/right.rs", "Rust", 13, 1, 4, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/183e106/wrong.rs", "Rust", 13, 0, 2, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/2299e597/right.rs", "Rust", 15, 1, 1, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/2299e597/wrong.rs", "Rust", 14, 0, 1, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/2469e502/right.rs", "Rust", 9, 0, 4, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/2469e502/wrong.rs", "Rust", 8, 2, 4, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/2668e502/wrong.rs", "Rust", 10, 1, 1, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/3213e502/wrong.rs", "Rust", 14, 1, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/567e499/right.rs", "Rust", 13, 9, 4, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/567e499/wrong.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/691e505/right.rs", "Rust", 18, 0, 6, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/691e505/wrong.rs", "Rust", 17, 0, 6, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/func_call/876e597/wrong.rs", "Rust", 36, 2, 9, 47
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/1006e506/right.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/1006e506/wrong.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/2436e502/right.rs", "Rust", 14, 0, 3, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/2436e502/wrong.rs", "Rust", 14, 1, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/2688e502/right.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/2688e502/wrong.rs", "Rust", 20, 1, 6, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/3211e382/right.rs", "Rust", 10, 0, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/loop/3211e382/wrong.rs", "Rust", 10, 0, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/match/1068e382/right.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/match/1068e382/wrong.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + func_call/2265e502/right.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + func_call/2265e502/wrong.rs", "Rust", 9, 1, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + func_call/3045e502/wrong.rs", "Rust", 15, 1, 7, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop + return_ref/674e499/right.rs", "Rust", 23, 9, 8, 40
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop + return_ref/674e499/wrong.rs", "Rust", 24, 0, 8, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop + return_ref/798e499/right.rs", "Rust", 29, 6, 6, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop + return_ref/798e499/wrong.rs", "Rust", 26, 0, 6, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/1132e382/right.rs", "Rust", 11, 0, 0, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/1132e382/wrong.rs", "Rust", 11, 0, 0, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/123e502/right.rs", "Rust", 33, 3, 10, 46
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/123e502/wrong.rs", "Rust", 29, 3, 9, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2334e502/right.rs", "Rust", 12, 0, 0, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2334e502/wrong.rs", "Rust", 9, 1, 3, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2445e499/right.rs", "Rust", 14, 0, 2, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2445e499/wrong.rs", "Rust", 17, 0, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2580e502/right.rs", "Rust", 38, 0, 5, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2580e502/wrong.rs", "Rust", 38, 1, 4, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2724e499/right.rs", "Rust", 42, 0, 10, 52
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/2724e499/wrong.rs", "Rust", 35, 2, 8, 45
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/800e502/right.rs", "Rust", 29, 6, 6, 41
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + loop/800e502/wrong.rs", "Rust", 27, 9, 6, 42
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + match + return_ref/863e505/right.rs", "Rust", 29, 1, 2, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + match + return_ref/863e505/wrong.rs", "Rust", 29, 0, 4, 33
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/1003e502/wrong.rs", "Rust", 34, 8, 11, 53
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/1542e515/right.rs", "Rust", 11, 2, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/1542e515/wrong.rs", "Rust", 11, 2, 4, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2321e502/wrong.rs", "Rust", 23, 1, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2356e502/right.rs", "Rust", 26, 0, 6, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2356e502/wrong.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2409e502/wrong.rs", "Rust", 13, 1, 2, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2515e502/right.rs", "Rust", 35, 2, 0, 37
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2515e502/wrong.rs", "Rust", 36, 0, 1, 37
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2601e502/right.rs", "Rust", 21, 1, 3, 25
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2601e502/wrong.rs", "Rust", 19, 2, 2, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2687e499/right.rs", "Rust", 40, 7, 9, 56
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/2687e499/wrong.rs", "Rust", 30, 7, 7, 44
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/3269e506/right.rs", "Rust", 16, 0, 4, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/3269e506/wrong.rs", "Rust", 16, 0, 4, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/3465e502/right.rs", "Rust", 40, 4, 6, 50
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/3465e502/wrong.rs", "Rust", 40, 5, 8, 53
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/96e502/right.rs", "Rust", 9, 0, 1, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call + return_ref/96e502/wrong.rs", "Rust", 9, 4, 2, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/1167e507/wrong.rs", "Rust", 25, 0, 3, 28
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/1203e382/right.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/1203e382/wrong.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/131e502/right.rs", "Rust", 17, 2, 6, 25
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/131e502/wrong.rs", "Rust", 17, 3, 7, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/192e597/right.rs", "Rust", 9, 2, 3, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/192e597/wrong.rs", "Rust", 10, 0, 11, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/1971e382/right.rs", "Rust", 15, 0, 5, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/1971e382/wrong.rs", "Rust", 15, 0, 4, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2220e382/right.rs", "Rust", 18, 0, 3, 21
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2220e382/wrong.rs", "Rust", 17, 0, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2271e499/right.rs", "Rust", 35, 0, 4, 39
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2271e499/wrong.rs", "Rust", 40, 0, 4, 44
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2472e499/right.rs", "Rust", 14, 0, 3, 17
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2472e499/wrong.rs", "Rust", 13, 0, 3, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2739e507/right.rs", "Rust", 15, 0, 1, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2739e507/wrong.rs", "Rust", 16, 0, 2, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2883e502/right.rs", "Rust", 18, 0, 4, 22
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/2883e502/wrong.rs", "Rust", 18, 1, 4, 23
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3101e502/right.rs", "Rust", 9, 1, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3101e502/wrong.rs", "Rust", 8, 2, 0, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3164e507/right.rs", "Rust", 24, 0, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3164e507/wrong.rs", "Rust", 24, 0, 3, 27
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3176e382/right.rs", "Rust", 18, 0, 2, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3176e382/wrong.rs", "Rust", 17, 0, 2, 19
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/3348e382/wrong.rs", "Rust", 28, 0, 8, 36
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/376e507/right.rs", "Rust", 33, 3, 7, 43
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/376e507/wrong.rs", "Rust", 20, 0, 6, 26
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/653e502/right.rs", "Rust", 15, 0, 3, 18
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/method_call/653e502/wrong.rs", "Rust", 15, 2, 3, 20
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/1215e716/right.rs", "Rust", 12, 0, 2, 14
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/1215e716/wrong.rs", "Rust", 10, 0, 1, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/1378e382/right.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/1378e382/wrong.rs", "Rust", 22, 1, 6, 29
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/2243e716/right.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/2243e716/wrong.rs", "Rust", 12, 0, 3, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/2439e382/right.rs", "Rust", 27, 0, 5, 32
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/2439e382/wrong.rs", "Rust", 25, 0, 5, 30
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/2750e716/wrong.rs", "Rust", 8, 1, 3, 12
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/287e506/right.rs", "Rust", 7, 1, 0, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/287e506/wrong.rs", "Rust", 6, 1, 1, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/299e502/right.rs", "Rust", 6, 0, 2, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/299e502/wrong.rs", "Rust", 6, 1, 2, 9
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/3048e382/right.rs", "Rust", 14, 1, 9, 24
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/3048e382/wrong.rs", "Rust", 26, 1, 11, 38
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/3234e716/right.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/3234e716/wrong.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/354e506/wrong.rs", "Rust", 6, 0, 0, 6
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/363e502/right.rs", "Rust", 6, 0, 2, 8
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/363e502/wrong.rs", "Rust", 6, 1, 3, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/530e382/right.rs", "Rust", 11, 0, 4, 15
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/530e382/wrong.rs", "Rust", 8, 1, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/608e502/right.rs", "Rust", 8, 0, 2, 10
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/608e502/wrong.rs", "Rust", 8, 1, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/743e506/right.rs", "Rust", 11, 0, 2, 13
+"/home/zhangzhicong/.ssh/Rust-Recommender/spider_stackoverflow/classification2/stackoverflow/not/743e506/wrong.rs", "Rust", 11, 4, 1, 16
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/1.rs", "Rust", -1, 1, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/3.rs", "Rust", -1, 1, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/4.rs", "Rust", -1, 1, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/5.rs", "Rust", -1, 1, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/6.rs", "Rust", -2, 2, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/graphcsv/code/7.rs", "Rust", -2, 2, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/adjlist.rs", "Rust", 1, 0, 1, 2
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/method_call.rs", "Rust", -57, 57, 0, 0
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/parse_var.rs", "Rust", 51, 0, 38, 89
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/steengaard.rs", "Rust", 9, 0, 2, 11
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/test_read_write.rs", "Rust", 199, 0, 52, 251
+"/home/zhangzhicong/.ssh/Rust-Recommender/src/parse/tests/1.rs", "Rust", 14, 0, -2, 12
+"Total", "-", 7380, 416, 2023, 9819

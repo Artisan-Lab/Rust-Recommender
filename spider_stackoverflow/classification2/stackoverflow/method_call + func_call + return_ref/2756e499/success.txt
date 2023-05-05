@@ -1,0 +1,21 @@
+The error is caused by attempting to borrow `*slice` mutably twice, which is not allowed by Rust's borrowing rules. To fix it, we need to split the mutable slice into two non-overlapping mutable slices. We can use the `split_at_mut` method provided by Rust to achieve this:
+
+```rust
+fn split_at_mut(slice: &mut [i32], mid: usize) -> (&mut [i32], &mut [i32]) {
+    let len = slice.len();
+
+    assert!(mid <= len);
+
+    let (left, right) = slice.split_at_mut(mid);
+
+    (left, right)
+}
+
+fn main() {
+    let mut vector = vec![1, 2, 3, 4, 5, 6];
+    let (left, right) = split_at_mut(&mut vector, 3);
+    println!("{:?}, {:?}", left, right);
+}
+```
+
+In this version, `slice.split_at_mut(mid)` creates two non-overlapping mutable slices from the original slice, `slice`. These slices are then returned as a tuple.

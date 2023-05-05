@@ -1,0 +1,19 @@
+One way to fix this error is to avoid having a reference to `Thing`'s `value` in the `increment_if_odd` function. Here's one possible implementation:
+
+```
+struct Thing {
+    value: i32
+}
+
+impl Thing {
+    fn increment_if_odd(&mut self) -> &i32 {
+        if self.value % 2 == 0 {
+            return &self.value;
+        }
+        self.value += 1;
+        &self.value
+    }
+}
+```
+
+This implementation removes the need for the `increment_if_odd` function to borrow `Thing`'s `value` field separately, by making `increment_if_odd` a method of `Thing` itself. This way, the mutable borrow of `Thing` is exclusive, and there's no need for a separate immutable borrow of `value`.

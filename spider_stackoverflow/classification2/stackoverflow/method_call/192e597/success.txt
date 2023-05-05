@@ -1,0 +1,23 @@
+The error message is telling you that the `string_clone` variable does not live long enough to be pushed onto the `keep_vec` vector. This is because `string_clone` is a local variable in the inner block and is dropped at the end of the block, before the vector is used outside of the block. One way to fix this is to create a new `String` object with the same value as `string_clone` and push that onto the vector instead. Here's an example:
+
+```
+fn main() {
+    let mut keep_vec: Vec<&str> = vec![];
+
+    let new_string = "New String".to_string();
+
+
+    {
+        let second_string = "Second String".to_string();
+
+
+        
+        let string_clone = second_string.clone();
+
+
+        
+        keep_vec.push(&*string_clone);
+        
+    }
+
+   

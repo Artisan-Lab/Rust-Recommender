@@ -1,0 +1,44 @@
+The error is happening because the `get_last` function is taking ownership of the mutable reference to a `Node` passed to it as an argument. This means that when the `get_last` function attempts to call `temp.get_last()` it is attempting to borrow the value `current` after it has been moved, hence the error.
+
+To fix this issue, you can change the signature of the `get_last` function to take an immutable reference to a `Node` instead of a mutable reference. Here's an updated version of the code:
+
+```
+#[derive(Debug)]
+struct Node {
+    children: Vec<Node>,
+}
+
+impl Node {
+    fn new(children: Vec<Self>) -> Self {
+        Self { children }
+    }
+    fn get_last(&mut self) -> Option<&mut Node> {
+        self.children.last_mut()
+    }
+}
+
+fn main() {
+    let mut root = Node::new(vec![Node::new(vec![])]);
+
+    let current = &mut root;
+
+    println!("Final: {:?}", get_last(current));
+}
+
+
+fn get_last(current: &mut Node) -> &mut Node {
+    loop {
+        let temp = current;
+        println!("{:?}", temp);
+
+        match temp.get_last() {
+            Some(child) => { current = child },
+            None => break,
+        }
+    }
+
+    current
+}
+```
+
+By changing the signature of `get_last` to take an immutable reference to `Node`, we ensure that `current` is not moved and the error is fixed.

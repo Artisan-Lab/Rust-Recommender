@@ -1,0 +1,30 @@
+The error message indicates that the method `get_a_new_foo()` moves `self`, which conflicts with the fact that `self` is borrowed as mutable in `replace_foo()`. To resolve this issue, we can change the signature of `get_a_new_foo()` to take ownership of `self` by replacing `self` with `mut self`. Here's the corrected code:
+
+```
+enum Foo {
+    A,
+    B(Vec<u32>),
+}
+
+impl Foo {
+    fn get_a_new_foo(mut self) -> Foo {
+        match self {
+            Foo::A => Foo::B(vec![]),
+            Foo::B(mut v) => {
+                let len = v.len() as u32;
+                v.push(len - 1);
+                Foo::B(v)
+            }
+        }
+    }
+}
+
+struct Bar(Foo);
+impl Bar {
+    fn replace_foo(&mut self) -> () {
+        self.0 = self.0.get_a_new_foo();
+    }
+}
+
+fn main() {}
+```

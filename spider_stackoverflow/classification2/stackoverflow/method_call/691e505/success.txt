@@ -1,0 +1,34 @@
+The compilation error is occurring because you're trying to insert `person1` into the `first_name_table` HashMap while it's already borrowed by the `last_name_table` HashMap. This is because `&person1` is being stored in the `last_name_table`, and then `person1` is being moved into the `first_name_table`, which would invalidate the borrow in the `last_name_table`.
+
+To fix this, you can insert a reference to `person1` into the `first_name_table` HashMap, similar to what you did with the `last_name_table` HashMap. Here's an example of how to modify your code to avoid the compilation error:
+
+```rust
+use std::collections::HashMap;
+
+struct Person {
+    id: i32,
+}
+
+fn main() -> std::io::Result<()> {
+    let mut first_name_table = HashMap::new();
+    let mut last_name_table = HashMap::new();
+
+    let person1 = Person { id: 1 };
+    let first_name1 = "first1";
+    let last_name1 = "last1";
+
+    last_name_table.insert(last_name1, &person1);
+    first_name_table.insert(first_name1, &person1);
+
+    let person2 = Person { id: 2 };
+    let first_name2 = "first2";
+    let last_name2 = "last2";
+
+    last_name_table.insert(last_name2, &person2);
+    first_name_table.insert(first_name2, &person2);
+
+    Ok(())
+}
+```
+
+Here, we're storing references to `person1` and `person2` in both HashMaps. This way, we don't move the values out of the variables and we avoid the compilation error caused by the borrow checker.

@@ -1,0 +1,52 @@
+The problem is that `pig` is a local variable inside the `to_pig_latin` function, and you are trying to assign a mutable reference to it to the `s` variable which has a different lifetime.
+
+To fix this, you can change the signature of the `to_pig_latin` function to return a `String` instead of taking a mutable reference to a `&str`. Then, you can assign the result of the function to the `s` variable inside the loop in `main`.
+
+Here's the modified code:
+
+```rust
+use std::io::{self, Write};
+
+fn main() {
+    let mut v = vec![
+        String::from("kaka"),
+        String::from("Apple"),
+        String::from("everett"),
+        String::from("Robin"),
+    ];
+
+    for s in &mut v {
+        *s = to_pig_latin(s);
+    }
+
+    for (i, s) in v.iter().enumerate() {
+        print!("{}", s);
+
+        if i < v.len() - 1 {
+            print!(", ");
+        }
+    }
+
+    io::stdout().flush().unwrap();
+}
+
+fn to_pig_latin(s: &str) -> String {
+    let first = s.chars().nth(0).unwrap();
+
+    if "aeiouAEIOU".contains(first) {
+        format!("{}-{}", s, "hay")
+    } else {
+        let mut word = String::new();
+
+        for (i, c) in s.char_indices() {
+            if i != 0 {
+                word.push(c);
+            }
+        }
+
+        format!("{}-{}{}", word, first.to_lowercase(), "ay")
+    }
+}
+```
+
+Note that we also changed the loop in `main` to use an immutable reference to `s`, as we don't need to mutate it anymore. Instead, we reassign the entire `String` returned by `to_pig_latin` to the `s` variable.

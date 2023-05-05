@@ -8,11 +8,15 @@ use std::io::{self,prelude::*};
 use std::ptr::read;
 use std::{vec, string};
 
-
+use proc_macro2::Span;
 use csv;
 use proc_macro2::Ident;
-use syn::token::Continue;
+use quote::ToTokens;
+use quote::spanned::Spanned;
 
+
+use syn::token::Continue;
+use proc_macro2::TokenStream;
 use crate::parse::steengaard;
 
 use super::adjlist::Adjlist;
@@ -294,6 +298,7 @@ fn graph_generate(ast: &syn::File, funcname: String, var_set: &mut HashMap<Strin
                         for stmt in &func.block.stmts {
                             // 传入图 别名表
                             let graph_num = graph.len_num();
+                            
                             graph_stmt(&stmt , var_set, &mut graph, method_map , graph_num-1,&mut continue_now,&mut break_vec,&mut return_vec);
 
                         }
@@ -432,9 +437,11 @@ fn graph_pat (pat: &syn::Pat, var_def: &mut HashMap<String,(i32,bool,bool)>,grap
             // 可以管后面的type 可以不管
             graph_pat(&patype.pat, var_def, graph, last_node_num);
 
-        }
+        } // 只有第一个是lastnodenum
         Pat::TupleStruct(tupelstruct) =>{
+
             for new_pat in &tupelstruct.pat.elems{
+
                 graph_pat(&new_pat, var_def, graph, last_node_num);
             }
             
@@ -491,7 +498,7 @@ fn graph_expr_reference(
             if let Some(_) = &exprRef.mutability{
                 new_mutable = true;
             }  
-            graph_expr_reference(&exprRef.expr,new_mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr_reference(&exprRef.expr,new_mutable,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
         }
         Expr::Path(exprpath) => {
             if let Some(var_name) = exprpath.path.get_ident(){
@@ -506,7 +513,7 @@ fn graph_expr_reference(
                             new_value = (3,true,false);
                         }
                         graph.push_node(&new_value, &String::from(format!("{}",var_name)));
-                        graph.add(graph.len_num()-2, graph.len_num()-1);
+                        graph.add(last_node_num, graph.len_num()-1);
                     }
                     else { println!("wrong value of hashmap");}
 
@@ -530,7 +537,7 @@ fn graph_expr_reference(
                                     new_value = (3,true,false);
                                 }
                                 graph.push_node(&new_value, &String::from(format!("{}",var_name)));
-                                graph.add(graph.len_num()-2, graph.len_num()-1);
+                                graph.add(last_node_num, graph.len_num()-1);
                             }
                             else { println!("wrong value of hashmap");}
         
@@ -543,21 +550,21 @@ fn graph_expr_reference(
         // let a = c+b;
         Expr::Index(exprindex) => {
             // 别名分析 需要加上 
-            graph_expr_reference(&exprindex.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr_reference(&exprindex.expr,mutable,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
         }
         Expr::Paren(exprparen) => {
             // 找结构体第一个 目的是找到base
-            graph_expr_reference(&exprparen.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr_reference(&exprparen.expr,mutable,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
 
         }
         Expr::Try(exprtry) => {
             // 找结构体第一个 目的是找到base
-            graph_expr_reference(&exprtry.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr_reference(&exprtry.expr,mutable,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
 
         }
         // 其他的正常继续
         _=>{
-            graph_expr(expr, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(expr, var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
         }
     }
 }
@@ -593,25 +600,35 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
             // 对于建图 目前考虑和block类似 开头结尾构建func起点以及终点 对于owner需要考虑特殊标注？
             // 首先建立func节点
             // 对于建立func节点 
+
             if let Expr::Path(exprpath) = &*exprcall.func{
 
-                let mut return_value = 0;
-                if let Some(fun_info) = method_map.get(&exprpath.path.segments[0].ident.to_string()){
-                    return_value = fun_info.1.clone();
-                }
+                let func_nmae = &format!("{}", path_fmt(&exprpath));
+                if let Some(_)  = method_map.get(func_nmae) {
 
-                
-                // 检查returnvalue
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, return_value);
-                graph.add(graph.len_num()-2, graph.len_num()-1);
-                // 1 代表owner； 2代表mut ref ；3代表immutref；接下来是 ref 和 mutability
-                for arg in &exprcall.args {
-                    graph_expr(arg, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
-                }
 
-                graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,return_value);
-                graph.add(graph.len_num()-2, graph.len_num()-1);
-                // 节点构建后遍历其signature
+                    let mut return_value = 0;
+                    if let Some(fun_info) = method_map.get(&exprpath.path.segments[0].ident.to_string()){
+                        return_value = fun_info.1.clone();
+                    }
+                    
+                    // 这里把整个func接进去了 其实不用 比如一个没有备注过的function可以不管？
+                    // 检查returnvalue
+                    graph.push_func_node(&format!("{}", path_fmt(&exprpath)), true, false, return_value);
+                    graph.add(last_node_num, graph.len_num()-1);
+
+                    
+
+                    // 1 代表owner； 2代表mut ref ；3代表immutref；接下来是 ref 和 mutability
+                    for arg in &exprcall.args {
+                        graph_expr(arg, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+                    }
+
+                    graph.push_func_node(&format!("{}", path_fmt(&exprpath)), false, true,return_value);
+                    graph.add(graph.len_num()-2, graph.len_num()-1);
+
+                    // 节点构建后遍历其signature
+                }
             }
         
 
@@ -621,12 +638,25 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
             // methodcall 节点与func call相同 创建methodcall节点 并且遍历其arg
             // method 节点插入
             let method_name = &String::from(format!("{}",exprmethod.method));
+            let lastone = graph.len_num()-1;
+            graph_expr(&exprmethod.receiver, var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+
+            let nowone = graph.len_num()-1;
+            
             if let Some(method_info) = method_map.get(method_name){
                 // method_info.0是self选项 method_info.1是arg number
                 // 找到当前method
                 // 
+                
                 graph.push_method_node(method_name, true, false, method_info.0 ,method_info.1);
-                graph.add(graph.len_num()-2, graph.len_num()-1);
+                
+                if lastone == nowone{
+                    graph.add(last_node_num, graph.len_num()-1);
+                }else {
+                    graph.add(graph.len_num()-2, graph.len_num()-1);
+                }
+
+                
 
                 // 获取了当前的method 还需要插入一个self节点？ 隐式调用了self 把self放进去 插入一个self名字的节点
                 let mut statement = (0,false,false);
@@ -664,21 +694,56 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
             // 优先处理一个method_call hash表 根据表进行处理
 
         }
-        // todo:: exprindex 数组元素
+        Expr::Index(exprindex) => {
+            let lastone = graph.len_num()-1;
+            graph_expr(&exprindex.index, var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
+            let nowone = graph.len_num()-1;
+            if lastone!=nowone{
+                graph_expr(&exprindex.expr, var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+            }
+            else {
+                graph_expr(&exprindex.expr, var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+            }
+        }
         Expr::Assign(exprassign) => {
-            graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map, graph.len_num()-1,continue_now,break_vec,return_vec);
-            graph_expr(&exprassign.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            let lastone = graph.len_num()-1;
+            graph_expr(&exprassign.right.as_ref(), var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
+            let nowone = graph.len_num()-1;
+            if lastone!=nowone{
+                graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+
+            }
+            else {
+                graph_expr(&exprassign.left.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+            }
         }
         Expr::AssignOp(exprassignop) => {
-            graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
-            graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            let lastone = graph.len_num()-1;
+            graph_expr(&exprassignop.right.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+            let nowone = graph.len_num()-1;
+            if lastone!=nowone{
+                graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            }
+            else {
+                graph_expr(&exprassignop.left.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+
+            }
         }
         Expr::Binary(exprbinary) => {
-            graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
-            graph_expr(&exprbinary.right.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            let lastone = graph.len_num()-1;
+            graph_expr(&exprbinary.right.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+            let nowone = graph.len_num()-1;
+            if lastone!=nowone{
+                graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            }
+            else {
+                graph_expr(&exprbinary.left.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+
+            }        
         }
         Expr::Cast(exprcast) => {
-            graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(&exprcast.expr.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
         }
         Expr::Block(exprblock) => {
             
@@ -706,21 +771,24 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
                 mutable = true;
             }  
             // pat一个新的 
-            graph_expr_reference(&exprreference.expr,mutable,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr_reference(&exprreference.expr,mutable,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
 
         }
         Expr::Field(exprfeild) => {
-            graph_expr(&exprfeild.base,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
+            graph_expr(&exprfeild.base,var_def,graph,method_map,last_node_num,continue_now,break_vec,return_vec);
         }
         Expr::If(exprif) => {
-            // tod 建边重写 // 
+            // if 和else相连接
 
             // if 前的判断语句
-            graph_expr (&exprif.cond.as_ref(), var_def, graph, method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
-            // 建立分支节点
 
+            
+
+            graph_expr (&exprif.cond.as_ref(), var_def, graph, method_map,last_node_num,continue_now,break_vec,return_vec);
+            // 建立分支节点
+            
             // block start 前的节点
-            let if_start = graph.len_num()-1;
+            let if_start = graph.len_num()-1; // 这个节点需要连接else边
 
             graph_block(&exprif.then_branch, var_def, graph, method_map, if_start,continue_now,break_vec,return_vec);
             // graph.add(graph.len_num()-2, graph.len_num()-1);
@@ -731,6 +799,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
             
             if let Some(else_branch_expr) = &exprif.else_branch{
                 // 第二个block的前节点是 ifstart节点
+
                 graph_expr(else_branch_expr.1.as_ref(), var_def, graph, method_map,if_start,continue_now,break_vec,return_vec);
                 // 第二个branch尾节点
                 let second_branch_end = graph.len_num()-1;
@@ -738,10 +807,12 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
 
                 graph.push_block_none();
                 // 连接两个block尾节点和最后的空节点
-                
                 graph.add(second_branch_end, graph.len_num()-1);
+                
                 graph.add(first_brach_end, graph.len_num()-1);
-            }
+            }else { // 如果没有elsebranch 那么需要连接一个从if expr 到结尾的节点
+                graph.add(if_start, graph.len_num()-1);
+            }   
             
             
 
@@ -870,7 +941,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
                     // 获取元组 从三个变量中获得 需要push的节点的信息
                     if let Some(value) = var_def.get(&String::from(format!("{}",var_name))) {
                         graph.push_node(value, &String::from(format!("{}",var_name)));
-                        graph.add(graph.len_num()-2, graph.len_num()-1);
+                        graph.add(last_node_num, graph.len_num()-1);
                     }
                     else { println!("wrong value of hashmap");}
 
@@ -940,7 +1011,7 @@ fn graph_expr(expr: &syn::Expr, var_def: &mut HashMap<String,(i32,bool,bool)>,
                             let res: Result<syn::Expr, syn::Error> = syn::parse2(tokensteram);
                             match  res{
                                 Ok(expr_print) => {
-                                    graph_expr_reference(&expr_print, true,var_def, graph, method_map, last_node_num,continue_now,break_vec,return_vec);
+                                    graph_expr_reference(&expr_print, true,var_def, graph, method_map, graph.len_num()-1,continue_now,break_vec,return_vec);
                                     
                                 }
                                 Err(_) => println!("erro macro"),
@@ -991,80 +1062,28 @@ fn graph_stmt(stmt: &syn::Stmt, var_def: &mut HashMap<String,(i32,bool,bool)>, g
         // 解析 let 表达式
         Stmt::Local(loc) =>{
             // let 语句 先判断名称后确定是否加入
-            let mut pushornot = false;
-            let mut var_str = "no".to_string();
-            match &loc.pat {
-                // owner todo: 这里代码需要简化
-                Pat::Ident(patident) => {
-                    // 判断是否存在在哈希表
-                    if var_def.contains_key(&String::from(format!("{}",patident.ident))){
-                        // 确认存在，存入图中
-                        // 需要确认节点内部 是否是引用
-                        var_str = String::from(format!("{}",patident.ident));
-                        pushornot = true;
-                        varloc.Name = Some(String::from(format!("{}",patident.ident)));
-                        if let Some(_mutable) = &patident.mutability {
-                            varloc.Mutability = true;
-                        }
-                    }
-                }
-                // reference
-                Pat::Reference(patref) => {
-                    if let Pat::Ident(patident) = &*patref.pat {
-                        if var_def.contains_key(&String::from(format!("{}",patident.ident))){
-                            pushornot = true;
-                            var_str = String::from(format!("{}",patident.ident));
-                            varloc.Name = Some(String::from(format!("{}", patident.ident)));
-                            if let Some(_mutable) = &patref.mutability {
-                                varloc.Mutability = true;
-                            }
-                        }
-                    }
-                }
-                _ => println!("Not support stmt")
-            }
-
+            let mut pushornot = graph.len_num();
+            
             // 赋值后面语句的表达式
             // 不能直接expr 与表达式有关
-            if let Some((_eq, expr)) = &loc.init {
-                
-                match expr.as_ref() {
-                    Expr::Path(exprpath) =>{
-                        // 如果是path就无所谓
-                    }
-                    // 如果是普通的命名 就不管后面的
-                    // 如果是method 直接就call到method 下来
-                    Expr::Reference(exprReference) => {
-                        if let Some(_) = &exprReference.mutability{
-                            graph_expr_reference(&exprReference.expr,true,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
-                        }else {
-                            graph_expr_reference(&exprReference.expr,false,var_def,graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
 
-                        }
-                        
-                    }
-                    _=>{
-                        graph_expr(expr, var_def, graph, method_map,graph.len_num(),continue_now,break_vec,return_vec);
-                    }
-                }      
+            // 获取
+
+
+            if let Some((_eq, expr_stmt)) = &loc.init {
+                graph_expr(expr_stmt, var_def, graph, method_map, last_node_num, continue_now, break_vec, return_vec);   
             }
-
-
+            if pushornot == graph.len_num(){
+                graph_pat( &loc.pat, var_def, graph, last_node_num);
+            }else {
+                graph_pat( &loc.pat, var_def, graph, graph.len_num()-1);
+            }
+            
             // 应当在hashset 中存储 mutablility 以及 reference内容
             // 节点编号可能会出问题？什么时候push?
             // 是否应当在结束后push/add
             // 还是let声明 不需要存储正在定义的变量 只需要后面出现的变量？
             // 这里需要后面出现的变量名称返回值改名为当前let语句中的identifyname 
-            if pushornot {
-                // println!("{:?}qweqw",varloc.Name);
-                varloc.Number = graph.len_num();
-                // todo statement 需要根据Ident/Reference修改吗？
-                if let Some(value) = var_def.get(&var_str) {
-                    graph.push_node(value, &var_str);
-                    graph.add(graph.len_num()-2, graph.len_num()-1);
-                }
-                else { println!("wrong value of hashmap");}
-            }
         },
         Stmt::Semi(expr,_semi) => {
             graph_expr(expr, var_def, graph,method_map,graph.len_num()-1,continue_now,break_vec,return_vec);
@@ -1106,11 +1125,11 @@ fn synparse_run() {
     // 目前假设函数名字就是main
     // 当前上下文不敏感
     
-    let name ="some_f";
+    let name ="main";
 
     let mut variable_set = Vec::new();
-    variable_set.push("v".to_string());
-    variable_set.push("self".to_string());
+    variable_set.push("f".to_string());
+    //variable_set.push("self".to_string());
 
 
     let mut var_set = steengaard::get_steengaard_alias(path_name, name, &variable_set);
@@ -1142,6 +1161,111 @@ fn synparse_run() {
     
 }
 
+#[test]
+fn test_csv_creat2(){
+
+    let code_path = "./src/parse/tests/1.rs";
+    let funcname ="f";
+    let csv_path = "./src/parse/tests/1";
+    let mut vars_vec = Vec::new();
+    vars_vec.push("v".to_string());
+
+
+    csv_creat2(code_path, csv_path, funcname, &vars_vec);
+
+}
+
+
+pub fn csv_creat2(code_path: &str, csv_path: &str, funcname: &str, vars_vec: &Vec<String>)
+{
+    // 目录是当前cmd下目录相对路径
+    // 读取文件
+    let mut file = File::open(Path::new(code_path))
+        .expect("csv_creat open file failed ");
+    let mut content = String::new();
+    file.read_to_string(&mut content);
+    let ast = syn::parse_file(&content)
+        .expect("ast failed");
+    // 图生成
+    let method_map = method_call_names(code_path);
+    
+    let mut var_set = steengaard::get_steengaard_alias(code_path, funcname, vars_vec);
+
+
+ //    let mut var_set = alias_analysis::create_alias_hashmap(code_path,funcname);
+    // let name = String::from("main");
+    
+    
+    let graph = graph_generate(&ast, funcname.to_string(),&mut var_set, &method_map, funcname);
+    // 已经得到graph之后
+    
+    
+    
+    use csv::Writer;
+    let xcsv = csv_path.to_string() + "x.csv";
+    let edgecsv = csv_path.to_string() + "edge.csv";
+
+    let mut wtr1 = Writer::from_path(&xcsv).expect("read csv wrong");
+    let mut wtr2 = Writer::from_path(&edgecsv).expect("read csv wrong");
+    // graph.show(); 函数体内部有bug
+    // 生成x
+    
+    for i in 0..graph.len_num() {
+        // 变量名称如何表示？
+        let y = graph.vector_x_attribute(i);
+        // 暂且不管function call的名字 只考虑变量名相同关系
+        // 用hashmap中的顺位表示变量的string有待商榷
+        let mut varnumber =0;
+        // 如果是-1 就不操作
+        if y.0 != "-1".to_string(){
+            for key in var_set.keys() {
+                if key.to_string() == y.0.to_string() {
+                    break;
+                }
+                varnumber+= 1;
+            }
+
+        }else {
+            varnumber = -1;
+        }
+        
+        // 用methodmap中的顺位表示函数的String有待商榷
+        let mut mehotdnumber =0;
+        // 如果是node节点就不管
+        if y.4 != "-1".to_string(){
+            for key in method_map.keys() {
+                if key.to_string() == y.4.to_string() {
+                    break;
+                }
+                mehotdnumber+= 1;
+            }
+        }else {
+            mehotdnumber = -1;
+        }
+        let x = (varnumber,y.1,y.2,y.3,mehotdnumber,y.5,y.6,y.7,y.8);        
+        wtr1.write_record(&[x.0.to_string(), x.1.to_string(), x.2.to_string(),x.3.to_string(),x.4.to_string(),x.5.to_string(),x.6.to_string(),x.7.to_string(),x.8.to_string()])
+            .expect("write_wrong");
+    }
+
+    for i in 0..graph.len_num() {
+        let edge = graph.vector_edge_attribute(i);
+        for e in edge {
+            // println!("123123123");
+            wtr2.write_record(&[i.to_string(), e.to_string()])
+                .expect("write_wrong");
+        }
+    } 
+    
+    wtr1.flush().expect("write_wrong");
+    wtr2.flush().expect("write_wrong");
+    // 创建了两个csv表，一个是x向量，一个是edge向量
+
+
+    // 输出到csv中
+}
+
+
+
 
 // 对于单个的code代码，通过graph_generate生成csv x/edge
 pub fn csv_creat(code_path: &str, csv_path: &str, funcname: &str)
@@ -1149,7 +1273,7 @@ pub fn csv_creat(code_path: &str, csv_path: &str, funcname: &str)
     // 目录是当前cmd下目录相对路径
     // 读取文件
     let mut file = File::open(Path::new(code_path))
-        .expect("open file failed ");
+        .expect("csv_creat open file failed ");
     let mut content = String::new();
     file.read_to_string(&mut content);
     let ast = syn::parse_file(&content)
@@ -1277,3 +1401,7 @@ fn csv_create_test()
     // 创建了两个csv表，一个是x向量，一个是edge向量
 
 }
+
+
+
+// 通过 funcname 获取 行数
