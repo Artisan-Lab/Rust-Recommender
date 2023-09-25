@@ -1,0 +1,1 @@
+https://www.reddit.com/r/learnrust/comments/xl8hh5/lifetime_problem_with_storing_a_vec_in_another_vec/

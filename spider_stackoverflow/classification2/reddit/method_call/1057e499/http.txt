@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/160tl2a/how_to_resolve_this_lifetime_error_while/

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/yg9sez/need_help_errore0382_borrow_of_moved_value_new_to/

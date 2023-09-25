@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/t6d968/how_can_i_make_this_generic_api_request_function/

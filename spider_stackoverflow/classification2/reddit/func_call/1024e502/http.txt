@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/6bx36a/why_does_this_invalidate_the_borrow_checker/

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/learnrust/comments/9o8j87/trouble_understanding_generics_with_a_mut_type/

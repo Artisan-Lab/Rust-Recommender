@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/64qyi6/newb_q_how_to_use_struct_with_owned_vec_and_ref/

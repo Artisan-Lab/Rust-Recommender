@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/nalkjf/take_next_char_from_the_iterator/

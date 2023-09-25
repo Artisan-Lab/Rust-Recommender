@@ -1,0 +1,1 @@
+https://www.reddit.com/r/learnrust/comments/119pqsn/rust_error_borrowed_value_does_not_live_long/

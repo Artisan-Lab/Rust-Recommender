@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/ptbj9g/what_is_the_proper_way_to_write_this_pattern_in/

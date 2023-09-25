@@ -1,0 +1,1 @@
+https://www.reddit.com/r/learnrust/comments/ibob5f/creating_a_fifo_stack_in_rust/

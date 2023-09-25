@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/6v9x5r/why_isnt_the_compiler_complaining/

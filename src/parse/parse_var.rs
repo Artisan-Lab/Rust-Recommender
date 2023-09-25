@@ -1125,10 +1125,12 @@ fn synparse_run() {
     // 目前假设函数名字就是main
     // 当前上下文不敏感
     
-    let name ="main";
+    let name ="append";
 
     let mut variable_set = Vec::new();
-    variable_set.push("f".to_string());
+    variable_set.push("current".to_string());
+    // variable_set.push("v".to_string());
+
     //variable_set.push("self".to_string());
 
 

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/t3kif8/should_rust_have_untouchable_references/

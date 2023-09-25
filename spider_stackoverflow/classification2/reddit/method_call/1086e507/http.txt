@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/vpbyik/object_within_struct_then_exposing_as_well/

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/150jxiy/understanding_the_no_mutable_reference_with_live/

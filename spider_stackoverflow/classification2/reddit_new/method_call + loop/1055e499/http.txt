@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/kmz4os/any_tricks_for_e0499_cannot_borrow_mut_in_loop/

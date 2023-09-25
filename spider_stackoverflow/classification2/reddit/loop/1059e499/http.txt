@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/13ov2m3/mutably_borrowed_here_in_the_previous_iteration/

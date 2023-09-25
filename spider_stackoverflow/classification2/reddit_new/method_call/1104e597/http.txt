@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/14g577b/media_hashmap_behaviour_inside_a_loop_due_to/

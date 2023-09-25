@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/ayee99/value_lives_long_enough_in_one_match_arm_but_not/

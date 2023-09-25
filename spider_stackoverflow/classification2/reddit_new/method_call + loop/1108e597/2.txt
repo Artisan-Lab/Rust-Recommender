@@ -1,0 +1,2 @@
+goto_fn
+new_state_vec

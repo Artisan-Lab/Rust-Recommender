@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/6cvshh/borrow_outlives_nested_scope/

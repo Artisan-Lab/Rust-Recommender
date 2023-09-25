@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/8hrbi8/strange_behavior_of_borrowing/

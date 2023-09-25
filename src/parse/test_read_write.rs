@@ -198,13 +198,14 @@ fn write_all_csvs3(){
     // 读取所有的数据增强文件，并且把所有生成的embeddeding都放入codei文件夹下
     // 读取codei 文件夹下内容
     // "./spider_stackoverflow/src/dataok/codei/i.rs"
-    let baseadd ="./spider_stackoverflow/classification2/stackoverflow".to_string();
+    let baseadd ="./spider_stackoverflow/classification2/reddit".to_string();
     let mut classfication_ = Vec::new();
     classfication_.push("func_call");
     classfication_.push("func_call + match + return_ref");
     classfication_.push("func_call + return_ref");
     classfication_.push("loop");
     classfication_.push("match");
+    classfication_.push("match + return_ref");
     classfication_.push("method_call");
     classfication_.push("method_call + func_call");
     classfication_.push("method_call + func_call + return_ref");
@@ -306,6 +307,9 @@ fn write_all_csvs3(){
 
                         let time_start = Instant::now();
 
+                        
+
+                        println!("{} {}",i,b);
                         parse_var::csv_creat2(&address_rs, &address_csv, &name_func, &vars_vec);
                         
                         let name = i.to_string() + &b.to_string();

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/io9udn/why_is_field_access_alone_considered_a_move_here/

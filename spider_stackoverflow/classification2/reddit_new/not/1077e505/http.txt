@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/p7jhko/question_about_referencing_copy_types/

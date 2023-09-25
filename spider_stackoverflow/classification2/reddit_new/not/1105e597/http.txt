@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/dezfd7/borrow_checks_and_smart_pointers_like_mutexguard/

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/r3bew2/how_to_let_rust_know_that_a_mutable_borrow_no/

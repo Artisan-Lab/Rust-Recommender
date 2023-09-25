@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/742ww8/borrowed_value_needs_to_live_until_here_why/

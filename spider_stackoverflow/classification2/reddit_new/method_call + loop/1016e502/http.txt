@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/fhe96y/borrow_checker_objects_that_use_other_objects_in/

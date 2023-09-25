@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/13i15ka/returning_different_err_with_the_same_vec_does/

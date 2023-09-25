@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/epmcgs/cannot_fathom_move_strictness_here/

@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/s0u4l8/why_does_this_rust_program_compile_lifetimes_are/

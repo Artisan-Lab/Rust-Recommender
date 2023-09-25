@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/7cwxtl/how_do_i_solve_cannot_borrow_self_as_mutable/

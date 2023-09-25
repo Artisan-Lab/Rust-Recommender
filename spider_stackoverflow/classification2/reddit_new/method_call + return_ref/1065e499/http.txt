@@ -1,0 +1,1 @@
+https://www.reddit.com/r/rust/comments/uusn1q/confusing_with_directly_mutable_borrow_vs_mutable/

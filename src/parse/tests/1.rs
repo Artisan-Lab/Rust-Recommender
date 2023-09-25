@@ -1,27 +1,44 @@
-struct Foo {
-    x: i64
+struct Node {
+    valor: Option<String>,
+    next: Option<Box<Node>>,
 }
 
-impl Foo {
-    fn get_index(&mut self) -> Option<&i64> {
-        if self.x < 0 {
-            self.x = 0;
-            None
+impl Node {
+    fn new(valor: Option<String>) -> Node {
+        Node { valor, next: None }
+    }
+}
+
+struct NodeList {
+    head: Option<Box<Node>>,
+}
+impl NodeList {
+    fn new() -> NodeList {
+        NodeList { head: None }
+    }
+    fn append(&mut self, novo: Node) {
+        if self.head.is_none() {
+            self.head = Some(Box::new(novo));
         } else {
-            Some(&self.x)
+            let mut current: &mut Option<Box<Node>> = &mut self.head;
+            loop {
+                let after: &mut Option<Box<Node>> = &mut (current.as_mut().unwrap()).next;
+                if after.is_none() {
+                    break;
+                } else {
+                    current = after;
+                }
+            }
+            current.as_mut().unwrap().next = Some(Box::new(novo));
         }
     }
-    
-    fn use_index(&self, index: &i64) {
-        println!("{}", *index);
-    }
 }
 
-fn main ()
-{
-    let mut f = Foo{x: 12};
-    if let Some(index) = f.get_index() {
-        f.use_index(index);    
+fn main() {
+    let mut lista = NodeList::new();
+
+    for c in "açafrão".chars() {
+        let s = String::from(c);
+        lista.append(Node::new(Some(s)));
     }
 }
-// 这个问题与1003类似 因为返回的一个&i64 与self同生命周期了
